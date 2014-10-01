@@ -5,6 +5,7 @@
   "dependencies": {
     "engine.io-parser": "^1.1.0",
     "express": "^4.3.1",
+    "mysql": "^2.5.1",
     "parseqs": "0.0.3",
     "socket.io": "^1.1.0",
     "xmlhttprequest": "^1.6.0"
