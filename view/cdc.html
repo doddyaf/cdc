@@ -52,20 +52,20 @@
 		</nav><!-- Menu Utama End -->
 		<main>
 			<div class="container">
-				<div class="form-box">
+				<div class="box box--form">
 					<!-- CDC Form -->
 					<form action="" id="cdc-form">
 						<!-- CDC Form Content -->
 						<div class="form-group">
-						  	<input type="text" name="content" class="form-control" id="cdc-form-content" placeholder="Your Post Here..">
+						  	<textarea name="content" class="cdc-form__content form-control" id="cdc-form-content" placeholder="Your Post Here.."></textarea>
 						</div>
 						<!-- CDC Form Category -->
 						<div class="form-group">
-						  	<select name="category" class="form-control" id="cdc-form-category">
+							<select name="category" class="cdc-form__category form-control" id="cdc-form-category">
 						  		<option value="0">Post Category..</option>
 						  		<option value="1">Walk Interview</option>
-						  		<option value="2">Job Fair</option>
-						  	</select>
+								<option value="2">Job Fair</option>
+							</select>
 						</div>
 						<!-- CDC Form Submit Button -->
 						<input class="btn-lg btn-primary btn-block" type="submit" value="Post">
@@ -73,29 +73,76 @@
 				</div>
 				<!-- All CDC Posts -->
 				<div class="posts-container" id="posts">
-					
-				</div><!-- All CDC Posts End -->
+					<!-- <div class="box post">
+						<div class="post__user">
+							<img src="/images/{{user_image}}" class="post__user__picture" alt="PP"> <span class="post__user__name">{{first_name}} {{last_name}}</span>
+						</div>
+						<div class="post__content">{{content}}</div>
+						<div class="post__category">{{category_name}}</div>
+					</div> -->
+				</div>
+				<!-- All CDC Posts End -->
 			</div>
 		</main>
 		<footer class="footer">
 	        <div class="container">
-	            <p>&copy; CDC & TRACER STUDY - ITI</p>
+	            <p>&copy; CDC &amp; TRACER STUDY - ITI</p>
 	        </div>
 	    </footer>
 
+		<!-- Handlebars Templates -->
+		<script type="text/x-handlebars-template" id="cdc-post-template">
+			{{#each posts}}
+		    <div class="box post">
+				<div class="post__user">
+					<img src="/images/{{user_image}}" class="post__user__picture" alt="PP"> <span class="post__user__name">{{first_name}} {{last_name}}</span>
+				</div>
+				<div class="post__content">{{content}}</div>
+				<div class="post__category">{{category_name}}</div>
+			</div>
+			{{/each}}
+		</script>
+
+		<script type="text/x-handlebars-template" id="cdc-post-item-template">
+		    <div class="box post">
+				<div class="post__user">
+					<img src="/images/{{user_image}}" class="post__user__picture" alt="PP"> <span class="post__user__name">{{first_name}} {{last_name}}</span>
+				</div>
+				<div class="post__content">{{content}}</div>
+				<div class="post__category">{{category_name}}</div>
+			</div>
+		</script>
+		
 	    <!-- Scripts -->
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="/js/vendor/jquery-1.11.0.min.js"></script>
 		<script src="/js/vendor/bootstrap.min.js"></script>
+		<script src="/js/vendor/handlebars-v2.0.0.js"></script>
 		<script>
 			var socket = io();
 			jQuery(document).ready(function($) {
+				var sourceCdcPost = $("#cdc-post-template").html();
+				var cdcPostTemplate = Handlebars.compile(sourceCdcPost);
+
+				var sourceCdcPostItem = $("#cdc-post-item-template").html();
+				var cdcPostItemTemplate = Handlebars.compile(sourceCdcPostItem);
+
+				// Ambil Semua Postingan CDC
+				$.get('http://localhost:3000/api/cdc/all', function(data) {
+					var postsJSON = $.parseJSON(data);
+
+					var htmlCdcPost = cdcPostTemplate(postsJSON);
+
+					$('#posts').prepend(htmlCdcPost);
+					console.log(data);
+				});
+
+				// Fungsi pada saat cdc form di-submit
 				$('#cdc-form').submit( function() {
 					var cdcPost = {};
+					cdcPost.user_id = 1;
 					cdcPost.content = $('#cdc-form-content').val();
-					cdcPost.category_id = $('#cdc-form-category').val();
-
-					console.log(cdcPost.content);
+					cdcPost.post_category_id = $('#cdc-form-category').val();
 
 					socket.emit('cdc post', cdcPost);
 
@@ -105,19 +152,36 @@
 
 					return false;
 				});
+
+				// Real-Time CDC Post
 				socket.on('cdc post', function(msg) {
-					var category;
+					// var category;
 					
-					if ( msg.category_id == 1) {
-						category = 'Walk Interview';
+					// if ( msg.post_category_id == 1) {
+					// 	category = 'Walk Interview';
+					// }
+					// else if ( msg.post_category_id == 2) {
+					// 	category = 'Job Fair';
+					// }
+
+					// var cdcPostItem = '<div class="box box--post"><div class="box--post__user"><img src="" alt="Profile Picture"></div><div class="box--post__content">'+ msg.content +'</div><div class="box--post__category">'+ category +'</div></div>';
+
+					var first_name = "Doddy";
+					var last_name = "Agung";
+
+					msg.first_name = first_name;
+					msg.last_name = last_name;
+
+					if (msg.post_category_id == 1) {
+						msg.category_name = "Walk Interview";
 					}
-					else if ( msg.category_id == 2) {
-						category = 'Job Fair';
+					else if (msg.post_category_id == 2) {
+						msg.category_name = "Job Fair";
 					}
 
-					var cdcPostItem = '<div class="post-item"><div class="post-item-content">'+ msg.content +'</div><div class="post-item-category">'+ category +'</div></div>';
+					var htmlCdcPost = cdcPostItemTemplate(msg);
 
-					$('#posts').prepend(cdcPostItem);
+					$('#posts').prepend(htmlCdcPost);
 				});
 			});
 		</script>

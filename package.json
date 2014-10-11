@@ -1,7 +1,7 @@
 {
-  "name": "socket-chat-example",
+  "name": "cdc-iti",
   "version": "0.0.1",
-  "description": "my first socket.io app",
+  "description": "Career Development Center - ITI",
   "dependencies": {
     "engine.io-parser": "^1.1.0",
     "express": "^4.3.1",
