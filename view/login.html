@@ -20,7 +20,7 @@
 		<!--[if lt IE 7]>
 			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 		<![endif]-->
-	<nav class="navbar navbar-primary navbar-fixed-top" role="navigation">
+	<nav class="navbar navbar-default navbar-primary navbar-fixed-top" role="navigation">
 	  	<div class="container">
 			<div class="navbar-header">
 			  	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -46,7 +46,6 @@
 					
 					</li>
 					<li><a href="faq">FAQ</a></li>
-					<li><a href="logout">Logout</a></li>
 				</ul>
 			</div><!--/.navbar-collapse -->
 	  	</div>
@@ -54,7 +53,8 @@
 	<main>
 		<div class="jumbotron">
 			<div class="container">
-				<form class="box-login" method="post" action="login" role="form">
+				<form class="box-login" method="post" action="/login" role="form">
+					<h2 class="box__title">Log In</h2>
 					<div class="form-group">
 					  	<input type="text" name="user_email" placeholder="Email" class="form-control">
 					</div>
@@ -62,7 +62,7 @@
 					  	<input type="password" name="user_password" placeholder="Password" class="form-control">
 					</div>
 					<a class="pull-left" href="register">Register Here</a>
-					<button type="submit" class="btn btn-success pull-right">Sign in</button>
+					<button type="submit" class="btn btn-success pull-right">Log In</button>
 				</form>
 			</div>
 		</div>

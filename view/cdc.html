@@ -128,7 +128,7 @@
 				var cdcPostItemTemplate = Handlebars.compile(sourceCdcPostItem);
 
 				// Ambil Semua Postingan CDC
-				$.get('http://localhost:3000/api/cdc/all', function(data) {
+				$.get('http://localhost:3000/api/cdc/', function(data) {
 					var postsJSON = $.parseJSON(data);
 
 					var htmlCdcPost = cdcPostTemplate(postsJSON);
