@@ -33,8 +33,8 @@
 			</div>
 			<div class="navbar-collapse collapse">
 			  	<ul class="nav navbar-nav">
-					<li class="active"><a href="cdc">CDC</a></li>
-					<li class="dropdown">
+					<li><a href="cdc">CDC</a></li>
+					<li class="active dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tracer Study <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="ts-form">Isi Form</a></li>
@@ -51,133 +51,101 @@
 			</div><!--/.navbar-collapse -->
 	  	</div>
 	</nav>
+
 	<main>
-		<div class="container">
+		<div class="container" id="loader-container">
+			<img class="loader" src="/images/spinner.gif" alt="Loading..">
+		</div>
+		<div class="container hidden" id="information-container">
+			<div class="callout callout-info information">
+				Anda telah mengisi form, lihat statistik di <a href="http://localhost:3000/ts-statistik">Tracer Study Statistik</a>
+			</div>
+		</div>
+		<div class="box container hidden" id="form-container">
 			<font color="orange"><h1>Form Tracer Study</h1></font>
-			<div class="col-lg-8 col-md-8">
-				<form action="submit-tracer" method="post" id="tracer-study-form">
-					<div class="form-group">
-						<label>Alamat Rumah</label>
-						<textarea rows="4" cols="50"></textarea>
-					</div>
+			<form action="" method="post" class="row" id="tracer-study-form">
+				<div class="col-lg-8 col-md-8">	
 					<div class="form-group">
 						<label>Lama Bekerja (dalam tahun)</label>
-						<input type="number" name="lama_bekerja" class="form-control">
+						<input type="number" name="lama_bekerja" class="form-control" required>
 					</div>
+					
 					<div class="form-group">
 						<label>Gaji</label>
-						<select>
-						  <option>[ pilih ]</option>
+						<select name="gaji" class="form-control" required>
 						  <option value="1">< 1 juta</option>
 						  <option value="2">1 juta - 3 juta</option>
-						  <option value="2">3 juta - 5 juta</option>
-						  <option value="2"> > 5 juta</option>
+						  <option value="3">3 juta - 5 juta</option>
+						  <option value="4"> > 5 juta</option>
 						</select>
 					</div>
+
 					<h3>Kecocokan Dengan Jurusan Kuliah :</h3>
 					<div class="form-group">
 						<label for="kecocokan-1">Sesuai</label>
-						<input type="radio" name="kecocokan" id="kecocokan-1" value="1" class="form-control">
+						<input type="radio" name="kecocokan" id="kecocokan-1" value="1" class="form-control" required>
 						<label for="kecocokan-2">Masih ada kaitannya</label>
-						<input type="radio" name="kecocokan" id="kecocokan-2" value="2" class="form-control">
+						<input type="radio" name="kecocokan" id="kecocokan-2" value="2" class="form-control" required>
 						<label for="kecocokan-3">Tidak sama sekali</label>
-						<input type="radio" name="kecocokan" id="kecocokan-3" value="3" class="form-control">
+						<input type="radio" name="kecocokan" id="kecocokan-3" value="3" class="form-control" required>
 					</div>
-					<div class="form-group">
-						<label>No telp / Hp</label>
-						<input type="text" name="telephone" class="form-control">
-					</div>
-					<div class="form-group">
-						<label>Jenjang Studi</label>
-						<select>
-						  <option>[ pilih ]</option>
-						  <option value="1">S1</option>
-						  <option value="2">D3</option>
-						</select>
-					</div>
-					<div class="form-group">
-						<label>Program Studi</label>
-						<select>
-						  <option value="1">[ pilih ]</option>
-						  <option value="2">Teknik Informatika</option>
-						  <option value="3">Teknik Sipil</option>
-						  <option value="4">Teknik Kimia</option>
-						  <option value="5">Teknik Arsitektur</option>
-						  <option value="6">Teknik Perancangan Wilayah Kota</option>
-						  <option value="7">Teknik Elektro</option>
-						  <option value="8">Teknik Mesin</option>
-						  <option value="9">Teknik Industri</option>
-						  <option value="10">Teknik Industri Pertanian</option>
-						  <option value="11">Mekatronika</option>
-						  <option value="12">Otomotif</option>
-						  <option value="13">Manajemen</option>
-						</select>
-					</div>
-					<div class="form-group">
-						<label>Tahun Masuk</label>
-						<input type="text" name"tahun masuk" class="form-control">	
-					</div>
-					<div class="form-group">
-						<label>Tahun Lulus</label>
-						<input type="text" name"tahun lulus" class="form-control">
-					</div>
+					
 					<div class="form-group">
 						<label>Kondisi Sekarang</label>
-						<select class="form-control">
-						  	<option>[ pilih ]</option>
-						  	<option>Bekerja</option>
-						  	<option>Belum bekerja</option>
+						<select class="form-control" name="status" required>
+						  	<option value="1">Bekerja</option>
+						  	<option value="2">Belum bekerja</option>
 						</select>
 					</div>
+					
 					<div class="form-group">
 						<label>Pekerjaan Saat Ini</label>
-						<input type="text" name="pekerjaan saat ini" class="form-control">
+						<input type="text" name="pekerjaan" class="form-control" required>
 					</div>
-					<div class="form-group">
-						<label>Lainnya</label>
-						<input type="text" name="lainnya" class="form-control">
-					</div>
+					
 					<div class="form-group">
 						<label>Alamat Pekerjaan</label>
-						<textarea rows="4" cols="50"></textarea>
+						<textarea class="form-control" name="alamat_pekerjaan" required></textarea>
 					</div>
-				</form>
-			</div>
-		</div>
-		<div class="container">
-			<font color="orange"><h1>Masukan Bagi Institut Teknologi Indonesia</h1></font>
-			<div class="col-md-4 col-md-4">
-				<div class="form-group">
-					<label>Apakah proses dan materi pendidikan di Institut Teknologi Indonesia bermanfaat untuk pekerjaan Anda ?</label>
-					<select class="form-control">
-						<option>[ pilih ]</option>
-						<option>Ya</option>
-						<option>Sebagian</option>
-						<option>Tidak</option>
-					</select>
+
+					<hr>
+
+					<font color="orange"><h1>Masukan Bagi Institut Teknologi Indonesia</h1></font>
+
+					<div class="form-group">
+						<label>Apakah proses dan materi pendidikan di Institut Teknologi Indonesia bermanfaat untuk pekerjaan Anda ?</label>
+						<select class="form-control" name="manfaat" required>
+							<option value="Ya">Ya</option>
+							<option value="Sebagian">Sebagian</option>
+							<option value="Tidak">Tidak</option>
+						</select>
+					</div>
+					
+					<div class="form-group">
+						<label>Tambahan yang diperlukan bagi lulusan Institut Teknologi Indonesia ?</label>
+						<textarea class="form-control" name="masukan" required></textarea>
+					</div>
+					
+					<div class="form-group">
+						<label>Saran untuk Institut Teknologi Indonesia ?</label>
+						<textarea class="form-control" name="saran" required></textarea>
+					</div>
+					
+					<button type="submit" class="btn btn-success pull-right" id="button-submit">Submit</button>
 				</div>
-				<div class="form-group">
-					<label>Tambahan yang diperlukan bagi lulusan Institut Teknologi Indonesia ?</label>
-					<textarea rows="6" cols="115"></textarea>
-				</div>
-				<div class="form-group">
-					<label>Saran untuk Institut Teknologi Indonesia ?</label>
-					<textarea rows="6" cols="115"></textarea>
-				</div>
-				<button type="submit" class="btn btn-success pull-right">Submit</button>
-			</div>
+			</form>
 		</div>
 	</main>
-    <footer>
+
+    <footer class="footer">
         <div class="container">
-            <p>&copy; CDC & TRACER STUDY - ITI</p>
+            &copy; CDC & TRACER STUDY - ITI
         </div>
     </footer>
+    
     <script src="/js/vendor/jquery-1.11.0.min.js"></script>
-    <!-- <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script> -->
-
     <script src="/js/vendor/bootstrap.min.js"></script>
-
+	<script src="/js/ts-form.js"></script>
     <script src="/js/main.js"></script>
 </body>
 </html>

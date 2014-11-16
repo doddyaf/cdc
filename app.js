@@ -126,6 +126,32 @@ User.register = function (req, res, user_email, user_password) {
 	});
 };
 
+var TracerStudy = {};
+
+TracerStudy.check = function (user_id, callback) {
+	var queryGetAnswer = "SELECT user_id FROM answer WHERE user_id = '" + user_id + "'";
+
+	connection.query(queryGetAnswer, function(err, rows, fields) {
+		if (err) throw err;
+
+		var isUserHadFillTheForm = false;
+
+		if (rows.length !== 0) {
+			isUserHadFillTheForm = true;
+		}
+
+		console.log(rows);
+
+        callback(null, isUserHadFillTheForm);
+	});
+};
+
+TracerStudy.insert = function (answer) {
+	var query = connection.query('INSERT INTO answer SET ?', answer, function(err, result) {
+		if (err) throw err;
+	});
+};
+
 // MIDDLEWARES
 // ==============================================
 
@@ -165,6 +191,37 @@ router.get('/api/cdc/', function(req, res){
 		res.send(result);
 	};
 	var allPosts = cdc.getAllPosts(callback);
+});
+
+router.post('/api/ts', function(req, res){
+	// res.sendfile('view/ts-form.html');
+
+	var answer = {};
+
+	answer.user_id			= req.session.user_id;
+	answer.lama_bekerja		= req.body.lama_bekerja;
+	answer.gaji_id			= req.body.gaji;
+	answer.kecocokan_id		= req.body.kecocokan;
+	answer.status_id		= req.body.status;
+	answer.pekerjaan		= req.body.pekerjaan;
+	answer.alamat_pekerjaan	= req.body.alamat_pekerjaan;
+	answer.manfaat			= req.body.manfaat;
+	answer.masukan			= req.body.masukan;
+	answer.saran			= req.body.saran;
+
+	TracerStudy.insert(answer);
+
+	res.send('success');
+});
+
+router.get('/api/ts/check', function(req, res){
+	var user_id = req.session.user_id;
+
+	var callback = function(err, result){
+		res.send(result);
+	};
+
+	TracerStudy.check(user_id, callback);
 });
 
 router.get('/', function(req, res){
