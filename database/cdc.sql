@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 02, 2014 at 11:49 AM
+-- Generation Time: Nov 16, 2014 at 12:40 PM
 -- Server version: 5.5.27
 -- PHP Version: 5.4.7
 
@@ -44,6 +44,35 @@ INSERT INTO `alumni_email` (`id`, `email`, `is_registered`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `answer`
+--
+
+CREATE TABLE IF NOT EXISTS `answer` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `lama_bekerja` double NOT NULL,
+  `gaji_id` int(11) NOT NULL,
+  `kecocokan_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `pekerjaan` text NOT NULL,
+  `alamat_pekerjaan` text NOT NULL,
+  `manfaat` varchar(8) NOT NULL,
+  `masukan` text NOT NULL,
+  `saran` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `answer`
+--
+
+INSERT INTO `answer` (`id`, `user_id`, `lama_bekerja`, `gaji_id`, `kecocokan_id`, `status_id`, `pekerjaan`, `alamat_pekerjaan`, `manfaat`, `masukan`, `saran`) VALUES
+(1, 1, 2, 2, 1, 1, 'Programmer', 'Gading Serpong', 'Ya', 'AAAA', 'BBBBB');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `gallery`
 --
 
@@ -70,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `post` (
   `post_category_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `post`
@@ -85,7 +114,9 @@ INSERT INTO `post` (`id`, `user_id`, `content`, `image`, `post_category_id`) VAL
 (6, 1, 'asda', '', 0),
 (7, 1, 'Dibutuhkan Programmer', '', 1),
 (8, 1, 'Yeah Programmer', '', 2),
-(9, 1, 'Microsoft Punya nih', '', 2);
+(9, 1, 'Microsoft Punya nih', '', 2),
+(10, 1, 'ada lowongan nih doy', '', 1),
+(11, 1, 'asdfsdf', '', 1);
 
 -- --------------------------------------------------------
 
@@ -140,22 +171,6 @@ INSERT INTO `program` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `question_answer`
---
-
-CREATE TABLE IF NOT EXISTS `question_answer` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `lama_bekerja` double NOT NULL,
-  `gaji` double NOT NULL,
-  `kecocokan_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `user`
 --
 
@@ -189,6 +204,8 @@ CREATE TABLE IF NOT EXISTS `user_detail` (
   `user_id` int(11) NOT NULL,
   `program_id` int(11) NOT NULL,
   `class_of` varchar(4) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `address` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `program_id` (`program_id`)
@@ -197,6 +214,12 @@ CREATE TABLE IF NOT EXISTS `user_detail` (
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `answer`
+--
+ALTER TABLE `answer`
+  ADD CONSTRAINT `answer_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `gallery`
@@ -209,12 +232,6 @@ ALTER TABLE `gallery`
 --
 ALTER TABLE `post`
   ADD CONSTRAINT `post_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `question_answer`
---
-ALTER TABLE `question_answer`
-  ADD CONSTRAINT `question_answer_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user_detail`
