@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 16, 2014 at 12:40 PM
+-- Generation Time: Nov 22, 2014 at 12:15 PM
 -- Server version: 5.5.27
 -- PHP Version: 5.4.7
 
@@ -50,6 +50,7 @@ INSERT INTO `alumni_email` (`id`, `email`, `is_registered`) VALUES
 CREATE TABLE IF NOT EXISTS `answer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
+  `lama_menunggu` int(11) NOT NULL,
   `lama_bekerja` double NOT NULL,
   `gaji_id` int(11) NOT NULL,
   `kecocokan_id` int(11) NOT NULL,
@@ -61,14 +62,7 @@ CREATE TABLE IF NOT EXISTS `answer` (
   `saran` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `answer`
---
-
-INSERT INTO `answer` (`id`, `user_id`, `lama_bekerja`, `gaji_id`, `kecocokan_id`, `status_id`, `pekerjaan`, `alamat_pekerjaan`, `manfaat`, `masukan`, `saran`) VALUES
-(1, 1, 2, 2, 1, 1, 'Programmer', 'Gading Serpong', 'Ya', 'AAAA', 'BBBBB');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -99,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `post` (
   `post_category_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 --
 -- Dumping data for table `post`
@@ -116,7 +110,8 @@ INSERT INTO `post` (`id`, `user_id`, `content`, `image`, `post_category_id`) VAL
 (8, 1, 'Yeah Programmer', '', 2),
 (9, 1, 'Microsoft Punya nih', '', 2),
 (10, 1, 'ada lowongan nih doy', '', 1),
-(11, 1, 'asdfsdf', '', 1);
+(11, 1, 'asdfsdf', '', 1),
+(12, 1, 'Testing', '', 1);
 
 -- --------------------------------------------------------
 

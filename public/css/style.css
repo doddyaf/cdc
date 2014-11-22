@@ -14,6 +14,9 @@ body {
 #messages { list-style-type: none; margin: 0; padding: 0; }
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
+.form-control:focus {
+	box-shadow: none;
+}
 .loader {
 	display: block;
 	margin: 25px auto;
@@ -43,10 +46,15 @@ body {
 	max-width: 350px;
 	text-align: center;
 }
+.box__title,
+.box__subtitle {
+	color: #03A9F4;
+}
 .box__title {
 	margin-top: 0;
-	margin-bottom: 20px;
+	margin-bottom: 30px;
 	padding-bottom: 15px;
+	text-align: center;
 	font-size: 2.5em;
 	font-weight: bold;
 	font-family: 'Open Sans';
@@ -84,6 +92,8 @@ textarea.cdc-form__content {
 .gallery {
 	margin-top: 25px;
 }
-
+.form-group {
+	margin-bottom: 25px;
+}
 
 

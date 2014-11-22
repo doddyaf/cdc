@@ -66,15 +66,15 @@ connection.connect();
 // CUSTOM FUNCTIONS
 // ==============================================
 
-var cdc = {};
+var CDC = {};
 
-cdc.insertPost = function (post) {
+CDC.insertPost = function (post) {
 	var query = connection.query('INSERT INTO post SET ?', post, function(err, result) {
 		if (err) throw err;
 	});
 };
 
-cdc.getAllPosts = function (callback) {
+CDC.getAllPosts = function (callback) {
 	var allPosts = '';
 	
 	var queryGetAllPosts = 'SELECT post.*, user.first_name, user.last_name, post_category.name AS category_name FROM post, user, post_category WHERE user.id = user_id AND post_category.id = post_category_id ORDER BY post.id DESC';
@@ -190,15 +190,16 @@ router.get('/api/cdc/', function(req, res){
 	var callback = function(err, result){
 		res.send(result);
 	};
-	var allPosts = cdc.getAllPosts(callback);
+	var allPosts = CDC.getAllPosts(callback);
 });
 
 router.post('/api/ts', function(req, res){
 	// res.sendfile('view/ts-form.html');
 
-	var answer = {};
+	var answer = {}; // object
 
 	answer.user_id			= req.session.user_id;
+	answer.lama_menunggu	= req.body.lama_menunggu;
 	answer.lama_bekerja		= req.body.lama_bekerja;
 	answer.gaji_id			= req.body.gaji;
 	answer.kecocokan_id		= req.body.kecocokan;
@@ -305,7 +306,7 @@ io.on('connection', function(socket){
 io.on('connection', function(socket){
 	socket.on('cdc post', function(msg){
 		io.emit('cdc post', msg);
-		cdc.insertPost(msg);
+		CDC.insertPost(msg);
 	});
 });
 

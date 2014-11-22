@@ -61,60 +61,79 @@
 				Anda telah mengisi form, lihat statistik di <a href="http://localhost:3000/ts-statistik">Tracer Study Statistik</a>
 			</div>
 		</div>
-		<div class="box container hidden" id="form-container">
-			<font color="orange"><h1>Form Tracer Study</h1></font>
-			<form action="" method="post" class="row" id="tracer-study-form">
-				<div class="col-lg-8 col-md-8">	
+		<div class="container hidden" id="form-container">
+			<div class="box col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2 ">
+				<h1 class="box__title">Form Tracer Study</h1>
+				<form action="" method="post" id="tracer-study-form">
 					<div class="form-group">
-						<label>Lama Bekerja (dalam tahun)</label>
-						<input type="number" name="lama_bekerja" class="form-control" required>
+						<label for="input-lama-menunggu">Waktu tunggu anda mendapatkan pekerjaan</label>
+						<select name="lama_menunggu" class="form-control" id="input-lama-menunggu" required>
+							<option value="1">Sudah mendapatkan pekerjaan sebelum lulus</option>
+						  	<option value="2">Dibawah 1 bulan</option>
+						  	<option value="3">1 - 2 bulan</option>
+						  	<option value="4">3 - 5 bulan</option>
+						  	<option value="4">5 bulan - 1 tahun</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="input-lama-bekerja">Lama bekerja (dalam tahun)</label>
+						<input type="number" name="lama_bekerja" class="form-control" id="input-lama-bekerja" required>
 					</div>
 					
 					<div class="form-group">
-						<label>Gaji</label>
-						<select name="gaji" class="form-control" required>
-						  <option value="1">< 1 juta</option>
-						  <option value="2">1 juta - 3 juta</option>
-						  <option value="3">3 juta - 5 juta</option>
-						  <option value="4"> > 5 juta</option>
+						<label for="input-gaji">Gaji</label>
+						<select name="gaji" class="form-control" id="input-gaji" required>
+							<option value="1">< 1 juta</option>
+						  	<option value="2">1 juta - 3 juta</option>
+						  	<option value="3">3 juta - 5 juta</option>
+						  	<option value="4"> > 5 juta</option>
 						</select>
 					</div>
 
-					<h3>Kecocokan Dengan Jurusan Kuliah :</h3>
 					<div class="form-group">
-						<label for="kecocokan-1">Sesuai</label>
-						<input type="radio" name="kecocokan" id="kecocokan-1" value="1" class="form-control" required>
-						<label for="kecocokan-2">Masih ada kaitannya</label>
-						<input type="radio" name="kecocokan" id="kecocokan-2" value="2" class="form-control" required>
-						<label for="kecocokan-3">Tidak sama sekali</label>
-						<input type="radio" name="kecocokan" id="kecocokan-3" value="3" class="form-control" required>
+						<label>Kecocokan dengan jurusan kuliah :</label>
+						<div class="radio">
+							<label>
+								<input type="radio" name="kecocokan" id="input-kecocokan-1" value="1" required> Sesuai
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" name="kecocokan" id="input-kecocokan-2" value="2" required> Masih ada kaitannya
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" name="kecocokan" id="input-kecocokan-3" value="3" required> Tidak berkaitan sama sekali
+							</label>
+						</div>
 					</div>
 					
 					<div class="form-group">
-						<label>Kondisi Sekarang</label>
-						<select class="form-control" name="status" required>
+						<label for="input-status">Kondisi sekarang</label>
+						<select class="form-control" name="status" id="input-status" required>
 						  	<option value="1">Bekerja</option>
 						  	<option value="2">Belum bekerja</option>
 						</select>
 					</div>
 					
 					<div class="form-group">
-						<label>Pekerjaan Saat Ini</label>
-						<input type="text" name="pekerjaan" class="form-control" required>
+						<label for="input-pekerjaan">Pekerjaan saat ini</label>
+						<input type="text" name="pekerjaan" class="form-control" id="input-pekerjaan" required>
 					</div>
 					
 					<div class="form-group">
-						<label>Alamat Pekerjaan</label>
-						<textarea class="form-control" name="alamat_pekerjaan" required></textarea>
+						<label for="input-alamat-pekerjaan">Alamat pekerjaan</label>
+						<textarea class="form-control" name="alamat_pekerjaan" id="input-alamat-pekerjaan" required></textarea>
 					</div>
 
 					<hr>
 
-					<font color="orange"><h1>Masukan Bagi Institut Teknologi Indonesia</h1></font>
+					<h2 class="box__subtitle">Masukan Bagi Institut Teknologi Indonesia</h2>
 
 					<div class="form-group">
-						<label>Apakah proses dan materi pendidikan di Institut Teknologi Indonesia bermanfaat untuk pekerjaan Anda ?</label>
-						<select class="form-control" name="manfaat" required>
+						<label for="input-manfaat">Apakah proses dan materi pendidikan di Institut Teknologi Indonesia bermanfaat untuk pekerjaan Anda ?</label>
+						<select class="form-control" name="manfaat" id="input-manfaat" required>
 							<option value="Ya">Ya</option>
 							<option value="Sebagian">Sebagian</option>
 							<option value="Tidak">Tidak</option>
@@ -122,18 +141,18 @@
 					</div>
 					
 					<div class="form-group">
-						<label>Tambahan yang diperlukan bagi lulusan Institut Teknologi Indonesia ?</label>
-						<textarea class="form-control" name="masukan" required></textarea>
+						<label for="input-masukan">Tambahan yang diperlukan bagi lulusan Institut Teknologi Indonesia ?</label>
+						<textarea class="form-control" name="masukan" id="input-masukan" required></textarea>
 					</div>
 					
 					<div class="form-group">
-						<label>Saran untuk Institut Teknologi Indonesia ?</label>
-						<textarea class="form-control" name="saran" required></textarea>
+						<label for="input-saran">Saran untuk Institut Teknologi Indonesia ?</label>
+						<textarea class="form-control" name="saran" id="input-saran" required></textarea>
 					</div>
 					
 					<button type="submit" class="btn btn-success pull-right" id="button-submit">Submit</button>
-				</div>
-			</form>
+				</form>
+			</div>
 		</div>
 	</main>
 
@@ -145,6 +164,7 @@
     
     <script src="/js/vendor/jquery-1.11.0.min.js"></script>
     <script src="/js/vendor/bootstrap.min.js"></script>
+    <script src="/js/tracerstudy.js"></script>
 	<script src="/js/ts-form.js"></script>
     <script src="/js/main.js"></script>
 </body>
