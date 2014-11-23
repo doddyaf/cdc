@@ -152,11 +152,29 @@ TracerStudy.insert = function (answer) {
 	});
 };
 
+TracerStudy.getAllWorkPercentage = function(callback) {
+	var allPosts = {};
+
+	var queryGetAllPosts = 'SELECT post.*, user.first_name, user.last_name, post_category.name AS category_name FROM post, user, post_category WHERE user.id = user_id AND post_category.id = post_category_id ORDER BY post.id DESC';
+
+	connection.query(queryGetAllPosts, function(err, rows, fields) {
+		if (err) throw err;
+
+		allPosts.posts = rows;
+
+		jsonAllPosts = JSON.stringify(allPosts);
+
+        callback(null, jsonAllPosts);
+	});
+};
+
 // MIDDLEWARES
 // ==============================================
 
 // route middleware that will happen on every request
 router.use(function(req, res, next) {
+	// for development, always set session user id to 1
+	req.session.user_id = 1;
 
 	// log each request to the console
 	console.log(req.method, req.url);
@@ -187,15 +205,12 @@ router.use(function(req, res, next) {
 
 // RESTful API
 router.get('/api/cdc/', function(req, res){
-	var callback = function(err, result){
+	CDC.getAllPosts(function(err, result){
 		res.send(result);
-	};
-	var allPosts = CDC.getAllPosts(callback);
+	});
 });
 
 router.post('/api/ts', function(req, res){
-	// res.sendfile('view/ts-form.html');
-
 	var answer = {}; // object
 
 	answer.user_id			= req.session.user_id;
@@ -218,11 +233,27 @@ router.post('/api/ts', function(req, res){
 router.get('/api/ts/check', function(req, res){
 	var user_id = req.session.user_id;
 
-	var callback = function(err, result){
+	TracerStudy.check(user_id, function(err, result){
 		res.send(result);
-	};
+	});
+});
 
-	TracerStudy.check(user_id, callback);
+router.get('/api/ts/percentage', function(req, res){
+	var allPercentage = [{
+        name: 'Informatika',
+        data: [null,null,null,null,null,null,null,null,null,90,95,90,80,76,82,66,70,88,78,90,95,90,80,76,82,66,70,88]
+    }, {
+        name: 'Teknik Kimia',
+        data: [90,89,83,72,86,62,71,84,79,76,90,89,83,72,86,62,71,84,79,76,90,89,83,72,86,62,71,84]
+    }, {
+        name: 'Teknik Industri',
+        data: [null,null,86,74,83,61,73,87,74,99,86,74,83,61,73,87,74,99,100,80,86,74,83,61,73,87,74,99]
+    }, {
+        name: 'Teknik Mesin',
+        data: [98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89]
+    }];
+
+	res.json(allPercentage);
 });
 
 router.get('/', function(req, res){
