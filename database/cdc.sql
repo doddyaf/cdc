@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 22, 2014 at 12:15 PM
+-- Generation Time: Dec 08, 2014 at 11:49 PM
 -- Server version: 5.5.27
 -- PHP Version: 5.4.7
 
@@ -62,7 +62,14 @@ CREATE TABLE IF NOT EXISTS `answer` (
   `saran` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `answer`
+--
+
+INSERT INTO `answer` (`id`, `user_id`, `lama_menunggu`, `lama_bekerja`, `gaji_id`, `kecocokan_id`, `status_id`, `pekerjaan`, `alamat_pekerjaan`, `manfaat`, `masukan`, `saran`) VALUES
+(1, 1, 1, 1, 2, 1, 1, 'programmer', 'aaaaassssss', 'Ya', 'bbbbbbb', 'ccccccccccddcddcdddd');
 
 -- --------------------------------------------------------
 
@@ -177,16 +184,21 @@ CREATE TABLE IF NOT EXISTS `user` (
   `password` varchar(50) NOT NULL,
   `dob` varchar(10) NOT NULL,
   `type` varchar(10) NOT NULL,
-  PRIMARY KEY (`id`)
+  `program_id` int(11) NOT NULL,
+  `class_of` int(11) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `address` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `program_id` (`program_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `first_name`, `last_name`, `email`, `password`, `dob`, `type`) VALUES
-(1, 'Doddy', 'Agung Faiskara', 'doddyaf@gmail.com', '699a8bda35b1e87d852cfc3fa211b9c5', '12-12-1992', 'admin'),
-(2, 'Fazlur', 'Rahman', 'f.rahman.id@gmail.com', 'e91229bfe8420a803d7db002a2dc1cb7', '24-12-1992', 'user');
+INSERT INTO `user` (`id`, `first_name`, `last_name`, `email`, `password`, `dob`, `type`, `program_id`, `class_of`, `phone`, `address`) VALUES
+(1, 'Doddy', 'Agung Faiskara', 'doddyaf@gmail.com', '699a8bda35b1e87d852cfc3fa211b9c5', '12-12-1992', 'admin', 1, 2010, '0833333', 'Pondok Benda'),
+(2, 'Fazlur', 'Rahman', 'f.rahman.id@gmail.com', 'e91229bfe8420a803d7db002a2dc1cb7', '24-12-1992', 'user', 1, 2010, '0833322222', 'Golden Vienna');
 
 -- --------------------------------------------------------
 
@@ -204,7 +216,14 @@ CREATE TABLE IF NOT EXISTS `user_detail` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `program_id` (`program_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `user_detail`
+--
+
+INSERT INTO `user_detail` (`id`, `user_id`, `program_id`, `class_of`, `phone`, `address`) VALUES
+(1, 1, 1, '2010', '62831313131', 'asdfsfdsf');
 
 --
 -- Constraints for dumped tables
@@ -227,6 +246,12 @@ ALTER TABLE `gallery`
 --
 ALTER TABLE `post`
   ADD CONSTRAINT `post_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `user`
+--
+ALTER TABLE `user`
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`program_id`) REFERENCES `program` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user_detail`
