@@ -155,17 +155,23 @@ TracerStudy.insert = function (answer) {
 TracerStudy.getAllWorkPercentage = function(callback) {
 	var allPosts = {};
 
+	var Informatika = "";
+
+	var queryGetPercentage = "SELECT COUNT(user_detail.user_id) AS total, user_detail.class_of FROM user_detail, answer WHERE answer.status_id = '1' AND user_detail.user_id = answer.user_id GROUP BY user_detail.class_of";
+
+	var queryInformatika = "SELECT COUNT(answer.user_id) AS total, user.class_of FROM answer, user WHERE answer.status_id = '1' AND user.program_id = '1' GROUP BY user.class_of";
+
 	var queryGetAllPosts = 'SELECT post.*, user.first_name, user.last_name, post_category.name AS category_name FROM post, user, post_category WHERE user.id = user_id AND post_category.id = post_category_id ORDER BY post.id DESC';
 
-	connection.query(queryGetAllPosts, function(err, rows, fields) {
+	connection.query(queryInformatika, function(err, rows, fields) {
 		if (err) throw err;
 
-		allPosts.posts = rows;
+		allPosts = rows;
 
-		jsonAllPosts = JSON.stringify(allPosts);
-
-        callback(null, jsonAllPosts);
+		Informatika = JSON.stringify(allPosts);
+		callback(Informatika);
 	});
+
 };
 
 // MIDDLEWARES
@@ -230,15 +236,15 @@ router.post('/api/ts', function(req, res){
 	res.send('success');
 });
 
-router.get('/api/ts/check', function(req, res){
+router.get('/api/ts/check', function(req, res) {
 	var user_id = req.session.user_id;
 
-	TracerStudy.check(user_id, function(err, result){
+	TracerStudy.check(user_id, function(err, result) {
 		res.send(result);
 	});
 });
 
-router.get('/api/ts/percentage', function(req, res){
+router.get('/api/ts/percentage', function(req, res) {
 	var allPercentage = [{
         name: 'Informatika',
         data: [null,null,null,null,null,null,null,null,null,90,95,90,80,76,82,66,70,88,78,90,95,90,80,76,82,66,70,88]
@@ -253,7 +259,11 @@ router.get('/api/ts/percentage', function(req, res){
         data: [98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89]
     }];
 
-	res.json(allPercentage);
+    TracerStudy.getAllWorkPercentage( function (result) {
+		res.json(result);
+    });
+
+	// res.json(allPercentage);
 });
 
 router.get('/', function(req, res){
