@@ -43,8 +43,13 @@ body {
 .jumbotron .box-login,
 .jumbotron .box-register {
 	margin: 0 auto;
-	max-width: 350px;
 	text-align: center;
+}
+.jumbotron .box-login {
+	max-width: 350px;
+}
+.jumbotron .box-register {
+	max-width: 800px;
 }
 .box__title,
 .box__subtitle {

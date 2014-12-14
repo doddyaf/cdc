@@ -67,9 +67,9 @@ TracerStudy.Statistics.init = function(container_id_first, container_id_second) 
 
     var currentYear = currentDate.getFullYear();
 
-    var lastGraduation = 2010;
+    var lastGraduation = 2014;
 
-    var yearStart = 1983;
+    var yearStart = 2005;
 
     var allYears = [];
 

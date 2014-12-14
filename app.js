@@ -9,6 +9,8 @@ var express = require('express');
 var session = require('express-session'); // for storing session
 var bodyParser = require('body-parser'); // for reading POSTed form data into `req.body`
 var cookieParser = require('cookie-parser'); // the session is stored in a cookie, so we use this to parse it
+var fs = require('fs');
+var crypto = require('crypto');
 var Q = require('Q');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -33,10 +35,10 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(methodOverride());
 app.use(multer({
-  dest: './uploads/',
-  rename: function (fieldname, filename) {
-    return filename.replace(/\W+/g, '-').toLowerCase() + Date.now();
-  }
+	dest: './uploads/',
+	rename: function (fieldname, filename) {
+		return filename.replace(/\W+/g, '-').toLowerCase() + Date.now();
+	}
 }));
 
 app.use(cookieParser()); // must use cookieParser before expressSession
@@ -125,20 +127,14 @@ User.authenticate = function (req, res, user_email, user_password) {
 	});
 };
 
-User.register = function (req, res, user_email, user_password) {
-	var User = {
-		"email": user_email,
-		"password": user_password,
-	};
+User.register = function (req, res, userData) {
 	// @TODO
-	var query = connection.query('INSERT INTO user SET ?', User, function(err, result) {
+	var query = connection.query('INSERT INTO user SET ?', userData, function(err, result) {
 		if (err) throw err;
 
-		console.log(rows.length);
+		console.log("Result : " + result.insertId);
 
-		if (rows.length == 1) {
-			req.session.user_id = rows[0].id;
-		}
+		req.session.user_id = result.insertId;
 
 		res.redirect('/');
 	});
@@ -170,10 +166,43 @@ TracerStudy.insert = function (answer) {
 	});
 };
 
-TracerStudy.getWorkPercentageByProgram = function(programId, callback) {
-	var allPercentage = [];
+TracerStudy.getAllWorkPercentage = function(callback) {
+	var allData = [];
 
-	var allClasses = [1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010];
+	var allPrograms = ["Informatika", "Teknik Sipil", "Teknik Kimia", "Teknik Arsitektur", "Perancangan Wilayah dan Kota", "Teknik Elektro", "Teknik Mesin", "Teknik Industri Pertanian", "Teknik Industri", "Mekatronika", "Otomotif", "Manajemen"];
+
+	var index = 1;
+
+	allPrograms.forEach(function(theProgram) {
+		var deferred = Q.defer();
+
+		function finishedQuery(result) {
+			console.log("Result : " + result);
+			deferred.resolve(result);
+		}
+
+		console.log("Index : " + index);
+
+		TracerStudy.getWorkPercentageByProgram(index, finishedQuery);
+
+		allData.push(deferred.promise);
+
+		index++;
+	});
+	
+	return Q.all(allData).then(function () { return callback(allData); });
+};
+
+TracerStudy.getWorkPercentageByProgram = function(programId, callback) {
+	var allPrograms = ["Informatika","Teknik Sipil", "Teknik Kimia", "Teknik Arsitektur", "Perancangan Wilayah dan Kota", "Teknik Elektro", "Teknik Mesin", "Teknik Industri Pertanian", "Teknik Industri", "Mekatronika", "Otomotif", "Manajemen"];
+
+	var allPercentage = {};
+
+	allPercentage.name = allPrograms[programId - 1];
+
+	allPercentage.data = [];
+
+	var allClasses = [2005,2006,2007,2008,2009,2010,2011,2012,2013,2014];
 
 	allClasses.forEach(function(theClass) {
 		var deferred = Q.defer();
@@ -184,17 +213,18 @@ TracerStudy.getWorkPercentageByProgram = function(programId, callback) {
 			allPosts = rows;
 
 			var Program = {};
+			
+			var percentage = rows[0].percentage;
 
+			Program.id = programId;
 			Program.name = rows[0].name;
-			percentage = rows[0].percentage;
+			Program.classOf = theClass;
+			Program.percentage = percentage;
 
-			console.log('Percetage : ' + percentage);
-
-			// Informatika
 			var programJSON = JSON.stringify(Program);
 
-			// addToAllPercentage(Program);
-			// callback(programJSON);
+			console.log('Program : ' + programJSON);
+
 			deferred.resolve(percentage);
 		}
 
@@ -204,12 +234,10 @@ TracerStudy.getWorkPercentageByProgram = function(programId, callback) {
 
 		connection.query(queryGetPercentage, finishedQuery);
 
-		allPercentage.push(deferred.promise);
+		allPercentage.data.push(deferred.promise);
 	});
-
-	var response = Q.all(allPercentage);
-
-	callback(response);
+	
+	return Q.all(allPercentage.data).then(function () { return callback(allPercentage); });
 };
 
 TracerStudy.getWorkPercentageByProgramAndClass = function(programId, classOf, callback) {
@@ -219,18 +247,12 @@ TracerStudy.getWorkPercentageByProgramAndClass = function(programId, classOf, ca
 	function finishedQuery(err, rows, fields) {
 		if (err) throw err;
 
-		allPosts = rows;
-
 		var Program = {};
 
 		Program.name = rows[0].name;
 		Program.data = rows[0].percentage;
 
-		// Informatika
-		var programJSON = JSON.stringify(Program);
-
-		// addToAllPercentage(Program);
-		callback(programJSON);
+		callback(Program);
 	}
 
 	function addToAllPercentage(values) {
@@ -242,61 +264,10 @@ TracerStudy.getWorkPercentageByProgramAndClass = function(programId, classOf, ca
 	connection.query(queryGetPercentage, finishedQuery);
 };
 
-TracerStudy.getAllPercentage = function() {
-
-};
-
-TracerStudy.getAllWorkPercentage = function(callback) {
-	var allPercentage = [];
-
-	var Program = {};
-
-	Program.name = "Teknik Mesin";
-
-	Program.value = [90, null, 80];
-
-	allPercentage.push(Program);
-
-	var Informatika = "";
-
-	var queryGetPercentage = "SELECT COUNT(user_detail.user_id) AS total, user_detail.class_of FROM user_detail, answer WHERE answer.status_id = '1' AND user_detail.user_id = answer.user_id GROUP BY user_detail.class_of";
-
-	var queryInformatika = "SELECT COUNT(answer.user_id) AS total, user.class_of FROM answer LEFT JOIN user ON user.id = answer.user_id WHERE answer.status_id = '1'";
-
-	function finishedQuery(err, rows, fields) {
-		if (err) throw err;
-
-		allPosts = rows;
-
-		// Informatika
-		var informatikaQueryResults = JSON.stringify(allPosts);
-
-		var Program = {};
-
-		Program.name = "Informatika";
-
-		Program.data = [null, 90, null, 80];
-
-		// callback(Informatika);
-		addToAllPercentage(Program);
-	}
-
-	function addToAllPercentage(values) {
-		allPercentage.push(values);
-
-		callback(allPercentage);
-	}
-
-	connection.query(queryInformatika, finishedQuery);
-};
-
-// MIDDLEWARES
-// ==============================================
-
-// route middleware that will happen on every request
-router.use(function(req, res, next) {
+// Check Session for every request
+function checkSession(req, res, next) {
 	// for development, always set session user id to 1
-	req.session.user_id = 1;
+	// req.session.user_id = 1;
 
 	// log each request to the console
 	console.log(req.method, req.url);
@@ -320,12 +291,18 @@ router.use(function(req, res, next) {
 	}
 	// continue doing what we were doing and go to the route
 	// next();
-});
+}
+
+// MIDDLEWARES
+// ==============================================
+
+// route middleware that will happen on every request
+router.use(checkSession);
 
 // ROUTES
 // ==============================================
 
-// RESTful API
+// REST API
 router.get('/api/cdc/', function(req, res){
 	CDC.getAllPosts(function(err, result){
 		res.send(result);
@@ -361,7 +338,7 @@ router.get('/api/ts/check', function(req, res) {
 });
 
 router.get('/api/ts/percentage', function(req, res) {
-	var allPercentage = [{
+	var exampleAllPercentage = [{
 		name: 'Informatika',
 		data: [null,null,null,null,null,null,null,null,null,90,95,90,80,76,82,66,70,88,78,90,95,90,80,76,82,66,70,88]
 	}, {
@@ -375,11 +352,11 @@ router.get('/api/ts/percentage', function(req, res) {
 		data: [98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89]
 	}];
 
-	function responseResult (result) { res.json(allPercentage); }
+	function responseResult (result) {
+		res.json(result);
+	}
 
 	TracerStudy.getAllWorkPercentage(responseResult);
-
-	// res.json(allPercentage);
 });
 
 router.get('/api/ts/percentage/:programId', function(req, res) {
@@ -454,10 +431,23 @@ router.get('/register', function(req, res) {
 
 router.post('/register', function(req, res){
 	console.log(req.body.user_email + req.body.user_password);
-	var user_email = req.body.user_email,
-		user_password = req.body.user_password;
 
-	User.register(req, res, user_email, user_password);
+	var userData = {};
+
+	var hashedPassword = crypto.createHash('md5').update(req.body.user_password).digest('hex');
+
+	userData.email = req.body.user_email;
+	userData.password = hashedPassword;
+	userData.first_name = req.body.user_first_name;
+	userData.last_name = req.body.user_last_name;
+	userData.program_id = req.body.user_program_id;
+	userData.class_of = req.body.user_class_of;
+	userData.dob = "";
+	userData.phone = "";
+	userData.address = "";
+	userData.type = "user";
+
+	User.register(req, res, userData);
 });
 
 router.get('/logout', function(req, res) {
