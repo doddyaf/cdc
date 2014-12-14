@@ -83,7 +83,6 @@ TracerStudy.Statistics.init = function(container_id_first, container_id_second) 
     var allPercentage;
 
     $.get('http://localhost:3000/api/ts/percentage', function(data) {
-        allPercentage = data;
 
         $('#' + container_id_first).highcharts({
             title: {
@@ -119,7 +118,7 @@ TracerStudy.Statistics.init = function(container_id_first, container_id_second) 
                 verticalAlign: 'middle',
                 borderWidth: 0
             },
-            series: allPercentage
+            series: data
         });
     });
 };

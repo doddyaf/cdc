@@ -1,3 +1,7 @@
+/**
+* CDC Institut Teknologi Indonesia
+*/
+
 // BASE SETUP
 // ==============================================
 
@@ -5,6 +9,12 @@ var express = require('express');
 var session = require('express-session'); // for storing session
 var bodyParser = require('body-parser'); // for reading POSTed form data into `req.body`
 var cookieParser = require('cookie-parser'); // the session is stored in a cookie, so we use this to parse it
+var Q = require('Q');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var methodOverride = require('method-override');
+var multer = require('multer');
+var errorHandler = require('errorhandler');
 
 var app = express();
 var router = express.Router();
@@ -13,14 +23,23 @@ var io = require('socket.io')(http);
 
 var path = require('path');
 
-// CONFIGURATION
+// ENVIRONMENT CONFIGURATION
 // ==============================================
 
-// Serving static files in public folder
-app.use(express.static(__dirname + '/public'));
+app.set('port', process.env.PORT || 3000);
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'jade');
+app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(logger('dev'));
+app.use(methodOverride());
+app.use(multer({
+  dest: './uploads/',
+  rename: function (fieldname, filename) {
+    return filename.replace(/\W+/g, '-').toLowerCase() + Date.now();
+  }
+}));
 
-// must use cookieParser before expressSession
-app.use(cookieParser());
+app.use(cookieParser()); // must use cookieParser before expressSession
 
 // Sessions
 app.use(session({
@@ -29,19 +48,15 @@ app.use(session({
 	saveUninitialized: true
 }));
 
-// For parsing posted form data
-// app.use(bodyParser());
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bodies
 
-// app.use(express.json());
-// app.use(express.urlencoded());
+app.use(express.static(path.join(__dirname, 'public'))); // Serving static files in public folder
 
 app.set('title', 'Career Development Center - ITI');
 
 // Custom Settings Configuration
 var config = {
-	homeUrl: 'http://localhost:3000',
 	db: {
 		host: 'localhost',
 		user: 'root',
@@ -88,7 +103,7 @@ CDC.getAllPosts = function (callback) {
 
 		jsonAllPosts = JSON.stringify(allPosts);
 
-        callback(null, jsonAllPosts);
+		callback(null, jsonAllPosts);
 	});
 };
 
@@ -111,9 +126,12 @@ User.authenticate = function (req, res, user_email, user_password) {
 };
 
 User.register = function (req, res, user_email, user_password) {
-	var queryRegister = "INSERT ;";
-
-	connection.query(queryRegister, function(err, rows, fields) {
+	var User = {
+		"email": user_email,
+		"password": user_password,
+	};
+	// @TODO
+	var query = connection.query('INSERT INTO user SET ?', User, function(err, result) {
 		if (err) throw err;
 
 		console.log(rows.length);
@@ -142,7 +160,7 @@ TracerStudy.check = function (user_id, callback) {
 
 		console.log(rows);
 
-        callback(null, isUserHadFillTheForm);
+		callback(null, isUserHadFillTheForm);
 	});
 };
 
@@ -152,26 +170,124 @@ TracerStudy.insert = function (answer) {
 	});
 };
 
+TracerStudy.getWorkPercentageByProgram = function(programId, callback) {
+	var allPercentage = [];
+
+	var allClasses = [1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010];
+
+	allClasses.forEach(function(theClass) {
+		var deferred = Q.defer();
+
+		function finishedQuery(err, rows, fields) {
+			if (err) throw err;
+
+			allPosts = rows;
+
+			var Program = {};
+
+			Program.name = rows[0].name;
+			percentage = rows[0].percentage;
+
+			console.log('Percetage : ' + percentage);
+
+			// Informatika
+			var programJSON = JSON.stringify(Program);
+
+			// addToAllPercentage(Program);
+			// callback(programJSON);
+			deferred.resolve(percentage);
+		}
+
+		console.log('The Class : ' + theClass);
+
+		var queryGetPercentage = "SELECT COUNT(answer.user_id) AS has_worked, ( COUNT(answer.user_id) / (SELECT COUNT(answer.user_id) FROM answer LEFT JOIN user ON user.id = answer.user_id WHERE user.program_id = '" + programId + "' AND user.class_of = '" + theClass + "' ) ) * 100 as percentage, user.class_of, program.name FROM answer LEFT JOIN user ON user.id = answer.user_id LEFT JOIN program ON program.id = user.program_id WHERE answer.status_id = '1' AND user.program_id = '" + programId + "' AND user.class_of = '" + theClass + "'";
+
+		connection.query(queryGetPercentage, finishedQuery);
+
+		allPercentage.push(deferred.promise);
+	});
+
+	var response = Q.all(allPercentage);
+
+	callback(response);
+};
+
+TracerStudy.getWorkPercentageByProgramAndClass = function(programId, classOf, callback) {
+
+	var queryGetPercentage = "SELECT COUNT(answer.user_id) AS has_worked, ( COUNT(answer.user_id) / (SELECT COUNT(answer.user_id) FROM answer LEFT JOIN user ON user.id = answer.user_id WHERE user.program_id = '" + programId + "' AND user.class_of = '" + classOf + "' ) ) * 100 as percentage, user.class_of, program.name FROM answer LEFT JOIN user ON user.id = answer.user_id LEFT JOIN program ON program.id = user.program_id WHERE answer.status_id = '1' AND user.program_id = '" + programId + "' AND user.class_of = '" + classOf + "'";
+
+	function finishedQuery(err, rows, fields) {
+		if (err) throw err;
+
+		allPosts = rows;
+
+		var Program = {};
+
+		Program.name = rows[0].name;
+		Program.data = rows[0].percentage;
+
+		// Informatika
+		var programJSON = JSON.stringify(Program);
+
+		// addToAllPercentage(Program);
+		callback(programJSON);
+	}
+
+	function addToAllPercentage(values) {
+		allPercentage.push(values);
+
+		callback(allPercentage);
+	}
+
+	connection.query(queryGetPercentage, finishedQuery);
+};
+
+TracerStudy.getAllPercentage = function() {
+
+};
+
 TracerStudy.getAllWorkPercentage = function(callback) {
-	var allPosts = {};
+	var allPercentage = [];
+
+	var Program = {};
+
+	Program.name = "Teknik Mesin";
+
+	Program.value = [90, null, 80];
+
+	allPercentage.push(Program);
 
 	var Informatika = "";
 
 	var queryGetPercentage = "SELECT COUNT(user_detail.user_id) AS total, user_detail.class_of FROM user_detail, answer WHERE answer.status_id = '1' AND user_detail.user_id = answer.user_id GROUP BY user_detail.class_of";
 
-	var queryInformatika = "SELECT COUNT(answer.user_id) AS total, user.class_of FROM answer, user WHERE answer.status_id = '1' AND user.program_id = '1' GROUP BY user.class_of";
+	var queryInformatika = "SELECT COUNT(answer.user_id) AS total, user.class_of FROM answer LEFT JOIN user ON user.id = answer.user_id WHERE answer.status_id = '1'";
 
-	var queryGetAllPosts = 'SELECT post.*, user.first_name, user.last_name, post_category.name AS category_name FROM post, user, post_category WHERE user.id = user_id AND post_category.id = post_category_id ORDER BY post.id DESC';
-
-	connection.query(queryInformatika, function(err, rows, fields) {
+	function finishedQuery(err, rows, fields) {
 		if (err) throw err;
 
 		allPosts = rows;
 
-		Informatika = JSON.stringify(allPosts);
-		callback(Informatika);
-	});
+		// Informatika
+		var informatikaQueryResults = JSON.stringify(allPosts);
 
+		var Program = {};
+
+		Program.name = "Informatika";
+
+		Program.data = [null, 90, null, 80];
+
+		// callback(Informatika);
+		addToAllPercentage(Program);
+	}
+
+	function addToAllPercentage(values) {
+		allPercentage.push(values);
+
+		callback(allPercentage);
+	}
+
+	connection.query(queryInformatika, finishedQuery);
 };
 
 // MIDDLEWARES
@@ -246,24 +362,41 @@ router.get('/api/ts/check', function(req, res) {
 
 router.get('/api/ts/percentage', function(req, res) {
 	var allPercentage = [{
-        name: 'Informatika',
-        data: [null,null,null,null,null,null,null,null,null,90,95,90,80,76,82,66,70,88,78,90,95,90,80,76,82,66,70,88]
-    }, {
-        name: 'Teknik Kimia',
-        data: [90,89,83,72,86,62,71,84,79,76,90,89,83,72,86,62,71,84,79,76,90,89,83,72,86,62,71,84]
-    }, {
-        name: 'Teknik Industri',
-        data: [null,null,86,74,83,61,73,87,74,99,86,74,83,61,73,87,74,99,100,80,86,74,83,61,73,87,74,99]
-    }, {
-        name: 'Teknik Mesin',
-        data: [98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89]
-    }];
+		name: 'Informatika',
+		data: [null,null,null,null,null,null,null,null,null,90,95,90,80,76,82,66,70,88,78,90,95,90,80,76,82,66,70,88]
+	}, {
+		name: 'Teknik Kimia',
+		data: [90,89,83,72,86,62,71,84,79,76,90,89,83,72,86,62,71,84,79,76,90,89,83,72,86,62,71,84]
+	}, {
+		name: 'Teknik Industri',
+		data: [null,null,86,74,83,61,73,87,74,99,86,74,83,61,73,87,74,99,100,80,86,74,83,61,73,87,74,99]
+	}, {
+		name: 'Teknik Mesin',
+		data: [98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89]
+	}];
 
-    TracerStudy.getAllWorkPercentage( function (result) {
-		res.json(result);
-    });
+	function responseResult (result) { res.json(allPercentage); }
+
+	TracerStudy.getAllWorkPercentage(responseResult);
 
 	// res.json(allPercentage);
+});
+
+router.get('/api/ts/percentage/:programId', function(req, res) {
+	var programId = req.params.programId;
+
+	function responseResult (result) { res.json(result); }
+
+	TracerStudy.getWorkPercentageByProgram(programId, responseResult);
+});
+
+router.get('/api/ts/percentage/:programId/:classOf', function(req, res) {
+	var programId = req.params.programId;
+	var classOf = req.params.classOf;
+
+	function responseResult (result) { res.json(result); }
+
+	TracerStudy.getWorkPercentageByProgramAndClass(programId, classOf, responseResult);
 });
 
 router.get('/', function(req, res){
@@ -335,6 +468,11 @@ router.get('/logout', function(req, res) {
 
 app.use('/', router);
 
+// error handling middleware should be loaded after the loading the routes
+if ('development' == app.get('env')) {
+	app.use(errorHandler());
+}
+
 // Socket IO
 // ==============================================
 
@@ -354,6 +492,11 @@ io.on('connection', function(socket){
 // START THE SERVER
 // ==============================================
 
-http.listen(3000, function(){
-	console.log('listening on *:3000');
+var server = app.listen(app.get('port'), function () {
+
+  var host = server.address().address;
+  var port = server.address().port;
+
+  console.log('Example app listening at http://%s:%s', host, port);
+
 });
