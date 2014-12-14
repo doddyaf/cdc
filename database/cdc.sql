@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 08, 2014 at 11:49 PM
+-- Generation Time: Dec 14, 2014 at 04:45 AM
 -- Server version: 5.5.27
 -- PHP Version: 5.4.7
 
@@ -61,15 +61,71 @@ CREATE TABLE IF NOT EXISTS `answer` (
   `masukan` text NOT NULL,
   `saran` text NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+  KEY `user_id` (`user_id`),
+  KEY `status_id` (`status_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `answer`
 --
 
 INSERT INTO `answer` (`id`, `user_id`, `lama_menunggu`, `lama_bekerja`, `gaji_id`, `kecocokan_id`, `status_id`, `pekerjaan`, `alamat_pekerjaan`, `manfaat`, `masukan`, `saran`) VALUES
-(1, 1, 1, 1, 2, 1, 1, 'programmer', 'aaaaassssss', 'Ya', 'bbbbbbb', 'ccccccccccddcddcdddd');
+(1, 1, 1, 1, 2, 1, 1, 'programmer', 'aaaaassssss', 'Ya', 'bbbbbbb', 'ccccccccccddcddcdddd'),
+(2, 2, 1, 1, 2, 1, 1, 'programmer', 'aaaaassssss', 'Ya', 'bbbbbbb', 'ccccccccccddcddcdddd'),
+(3, 3, 1, 1, 2, 1, 1, 'programmer', 'aaaaassssss', 'Ya', 'bbbbbbb', 'ccccccccccddcddcdddd'),
+(4, 4, 1, 1, 2, 1, 1, 'programmer', 'aaaaassssss', 'Ya', 'bbbbbbb', 'ccccccccccddcddcdddd'),
+(5, 5, 1, 1, 2, 1, 1, 'programmer', 'aaaaassssss', 'Ya', 'bbbbbbb', 'ccccccccccddcddcdddd');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `class`
+--
+
+CREATE TABLE IF NOT EXISTS `class` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `year` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=34 ;
+
+--
+-- Dumping data for table `class`
+--
+
+INSERT INTO `class` (`id`, `year`) VALUES
+(1, 1983),
+(2, 1984),
+(3, 1985),
+(4, 1985),
+(5, 1986),
+(6, 1987),
+(7, 1988),
+(8, 1989),
+(9, 1990),
+(10, 1991),
+(11, 1992),
+(12, 1993),
+(13, 1994),
+(14, 1995),
+(15, 1996),
+(16, 1997),
+(17, 1998),
+(18, 1999),
+(19, 2000),
+(20, 2001),
+(21, 2002),
+(22, 2003),
+(23, 2004),
+(24, 2005),
+(25, 2006),
+(26, 2007),
+(27, 2008),
+(28, 2009),
+(29, 2010),
+(30, 2011),
+(31, 2012),
+(32, 2013),
+(33, 2014);
 
 -- --------------------------------------------------------
 
@@ -190,7 +246,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `address` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `program_id` (`program_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `user`
@@ -198,32 +254,10 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `first_name`, `last_name`, `email`, `password`, `dob`, `type`, `program_id`, `class_of`, `phone`, `address`) VALUES
 (1, 'Doddy', 'Agung Faiskara', 'doddyaf@gmail.com', '699a8bda35b1e87d852cfc3fa211b9c5', '12-12-1992', 'admin', 1, 2010, '0833333', 'Pondok Benda'),
-(2, 'Fazlur', 'Rahman', 'f.rahman.id@gmail.com', 'e91229bfe8420a803d7db002a2dc1cb7', '24-12-1992', 'user', 1, 2010, '0833322222', 'Golden Vienna');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user_detail`
---
-
-CREATE TABLE IF NOT EXISTS `user_detail` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `program_id` int(11) NOT NULL,
-  `class_of` varchar(4) NOT NULL,
-  `phone` varchar(20) NOT NULL,
-  `address` text NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `program_id` (`program_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `user_detail`
---
-
-INSERT INTO `user_detail` (`id`, `user_id`, `program_id`, `class_of`, `phone`, `address`) VALUES
-(1, 1, 1, '2010', '62831313131', 'asdfsfdsf');
+(2, 'Fazlur', 'Rahman', 'f.rahman.id@gmail.com', 'e91229bfe8420a803d7db002a2dc1cb7', '24-12-1992', 'user', 1, 2010, '0833322222', 'Golden Vienna'),
+(3, 'Muhammad', 'Taufik', 'taufik@gmail.com', '76868b011b66684d4a91d4ef7e1a2651', '01-01-1992', 'user', 2, 2010, '0833322222', 'Alamatnya'),
+(4, 'Alumni', '2', 'alumni2@gmail.com', '76868b011b66684d4a91d4ef7e1a2651', '01-01-1992', 'user', 2, 2009, '0833322222', 'Alamatnya'),
+(5, 'Info 09', '1', 'alumni3@gmail.com', '76868b011b66684d4a91d4ef7e1a2651', '01-01-1992', 'user', 1, 2009, '0833322222', 'Alamatnya');
 
 --
 -- Constraints for dumped tables
@@ -252,13 +286,6 @@ ALTER TABLE `post`
 --
 ALTER TABLE `user`
   ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`program_id`) REFERENCES `program` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `user_detail`
---
-ALTER TABLE `user_detail`
-  ADD CONSTRAINT `user_detail_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `user_detail_ibfk_2` FOREIGN KEY (`program_id`) REFERENCES `program` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
