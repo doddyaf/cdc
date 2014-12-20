@@ -93,9 +93,9 @@
 		<!-- Handlebars Templates -->
 		<script type="text/x-handlebars-template" id="cdc-post-template">
 			{{#each posts}}
-		    <div class="box post">
+		    <div class="box post" id="{{id}}">
 				<div class="post__user">
-					<img src="/images/{{user_image}}" class="post__user__picture" alt="PP"> <span class="post__user__name">{{first_name}} {{last_name}}</span>
+					<img src="/images/{{user_image}}" class="post__user__picture hidden" alt="PP"> <a href="/user/{{user_id}}" class="post__user__name">{{first_name}} {{last_name}}</a>
 				</div>
 				<div class="post__content">{{content}}</div>
 				<div class="post__category"><span class="">Category : </span>{{category_name}}</div>
@@ -104,12 +104,12 @@
 		</script>
 
 		<script type="text/x-handlebars-template" id="cdc-post-item-template">
-		    <div class="box post">
+		    <div class="box post" id="{{id}}">
 				<div class="post__user">
-					<img src="/images/{{user_image}}" class="post__user__picture" alt="PP"> <span class="post__user__name">{{first_name}} {{last_name}}</span>
+					<img src="/images/{{user_image}}" class="post__user__picture hidden" alt="PP"> <a href="/user/{{user.id}}" class="post__user__name">{{user.first_name}} {{user.last_name}}</a>
 				</div>
 				<div class="post__content">{{content}}</div>
-				<div class="post__category">{{category_name}}</div>
+				<div class="post__category"><span class="">Category : </span>{{category_name}}</div>
 			</div>
 		</script>
 		
@@ -128,19 +128,20 @@
 				var cdcPostItemTemplate = Handlebars.compile(sourceCdcPostItem);
 
 				// Ambil Semua Postingan CDC
-				$.get('http://localhost:3000/api/cdc/', function(data) {
+				var siteURL = window.location.origin;
+				console.log(siteURL);
+
+				$.get(siteURL + '/api/cdc/', function(data) {
 					var postsJSON = $.parseJSON(data);
 
 					var htmlCdcPost = cdcPostTemplate(postsJSON);
 
 					$('#posts').prepend(htmlCdcPost);
-					console.log(data);
 				});
 
 				// Fungsi pada saat cdc form di-submit
 				$('#cdc-form').submit( function() {
 					var cdcPost = {};
-					cdcPost.user_id = 1;
 					cdcPost.content = $('#cdc-form-content').val();
 					cdcPost.post_category_id = $('#cdc-form-category').val();
 
@@ -155,22 +156,6 @@
 
 				// Real-Time CDC Post
 				socket.on('cdc post', function(msg) {
-					// var category;
-					
-					// if ( msg.post_category_id == 1) {
-					// 	category = 'Walk Interview';
-					// }
-					// else if ( msg.post_category_id == 2) {
-					// 	category = 'Job Fair';
-					// }
-
-					// var cdcPostItem = '<div class="box box--post"><div class="box--post__user"><img src="" alt="Profile Picture"></div><div class="box--post__content">'+ msg.content +'</div><div class="box--post__category">'+ category +'</div></div>';
-
-					var first_name = "Doddy";
-					var last_name = "Agung";
-
-					msg.first_name = first_name;
-					msg.last_name = last_name;
 
 					if (msg.post_category_id == 1) {
 						msg.category_name = "Walk Interview";

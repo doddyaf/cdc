@@ -1,6 +1,8 @@
 /*
 * TracerStudy namespace, make sure include jQuery and Highchart.js before this file
 */
+var siteURL = window.location.origin;
+
 var TracerStudy = {};
 
 TracerStudy.Form = {};
@@ -20,7 +22,7 @@ TracerStudy.Form.init = function() {
     });
 
 	// Check if user is already fill the form
-	$.get('http://localhost:3000/api/ts/check', function(data, textStatus, xhr) {
+	$.get(siteURL + '/api/ts/check', function(data, textStatus, xhr) {
 		var isUserHadFillTheForm = data;
 		
 		$('#loader-container').addClass('hidden');
@@ -44,7 +46,7 @@ TracerStudy.Form.init = function() {
 		$('#button-submit').addClass('disabled');
 		document.getElementById('button-submit').disabled = true;
 
-		$.post('http://localhost:3000/api/ts', $('#tracer-study-form').serialize(), function(data, textStatus, xhr) {
+		$.post(siteURL + '/api/ts', $('#tracer-study-form').serialize(), function(data, textStatus, xhr) {
 			console.log(data);
 
 			if (data == 'success') {
@@ -82,7 +84,7 @@ TracerStudy.Statistics.init = function(container_id_first, container_id_second) 
 
     var allPercentage;
 
-    $.get('http://localhost:3000/api/ts/percentage', function(data) {
+    $.get(siteURL + '/api/ts/percentage', function(data) {
 
         $('#' + container_id_first).highcharts({
             title: {

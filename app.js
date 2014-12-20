@@ -29,6 +29,7 @@ var path = require('path');
 // ==============================================
 
 app.set('port', process.env.PORT || 3000);
+app.set('env', 'development');
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
 app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -44,11 +45,17 @@ app.use(multer({
 app.use(cookieParser()); // must use cookieParser before expressSession
 
 // Sessions
-app.use(session({
+var sessionMiddleware = session({
 	secret: 'doddyagung',
 	resave: true,
 	saveUninitialized: true
-}));
+});
+
+io.use(function(socket, next) {
+    sessionMiddleware(socket.request, socket.request.res, next);
+});
+
+app.use(sessionMiddleware);
 
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bodies
@@ -85,9 +92,10 @@ connection.connect();
 
 var CDC = {};
 
-CDC.insertPost = function (post) {
+CDC.insertPost = function (post, callback) {
 	var query = connection.query('INSERT INTO post SET ?', post, function(err, result) {
 		if (err) throw err;
+		callback(result);
 	});
 };
 
@@ -120,7 +128,12 @@ User.authenticate = function (req, res, user_email, user_password) {
 		console.log(rows.length);
 
 		if (rows.length == 1) {
-			req.session.user_id = rows[0].id;
+			
+			var currentUser = rows[0];
+
+			console.log(currentUser.first_name + 'is logged in');
+
+			req.session.user = currentUser;
 		}
 
 		res.redirect('/');
@@ -134,7 +147,9 @@ User.register = function (req, res, userData) {
 
 		console.log("Result : " + result.insertId);
 
-		req.session.user_id = result.insertId;
+		userData.id = result.insertId;
+
+		req.session.user = userData;
 
 		res.redirect('/');
 	});
@@ -274,7 +289,7 @@ function checkSession(req, res, next) {
 
 	if (req.url != '/login') {
 		// if user go to page except login THEN check if user authenticated
-		if ( req.url == '/register' || req.session.user_id) {
+		if ( req.url == '/register' || req.session.user) {
 			return next();
 		}
 		// IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM TO LOGIN PAGE
@@ -282,7 +297,7 @@ function checkSession(req, res, next) {
 	}
 	else if (req.url == '/login') {
 		// If user go to login page and if user is authenticated then redirect them to home page
-		if (req.session.user_id) {
+		if (req.session.user) {
 			res.redirect('/');
 		}
 		else {
@@ -312,7 +327,7 @@ router.get('/api/cdc/', function(req, res){
 router.post('/api/ts', function(req, res){
 	var answer = {}; // object
 
-	answer.user_id			= req.session.user_id;
+	answer.user_id			= req.session.user.id;
 	answer.lama_menunggu	= req.body.lama_menunggu;
 	answer.lama_bekerja		= req.body.lama_bekerja;
 	answer.gaji_id			= req.body.gaji;
@@ -451,8 +466,7 @@ router.post('/register', function(req, res){
 });
 
 router.get('/logout', function(req, res) {
-	req.session.user_id = null;
-	// Logout function
+	req.session.user = null;
 	res.redirect('/login');
 });
 
@@ -467,26 +481,29 @@ if ('development' == app.get('env')) {
 // ==============================================
 
 io.on('connection', function(socket){
-	socket.on('chat message', function(msg){
-		io.emit('chat message', msg);
-	});
-});
+	var currentUser = socket.request.session.user;
 
-io.on('connection', function(socket){
 	socket.on('cdc post', function(msg){
-		io.emit('cdc post', msg);
-		CDC.insertPost(msg);
+		msg.user_id = currentUser.id;
+
+		function responseResult(result) {
+			msg.id = result.insertId;
+			msg.user = currentUser;
+			io.emit('cdc post', msg);
+		}
+
+		CDC.insertPost(msg, responseResult);
 	});
 });
 
 // START THE SERVER
 // ==============================================
 
-var server = app.listen(app.get('port'), function () {
+var server = http.listen(app.get('port'), function () {
 
   var host = server.address().address;
   var port = server.address().port;
 
-  console.log('Example app listening at http://%s:%s', host, port);
+  console.log('CDC ITI listening at http://%s:%s', host, port);
 
 });
