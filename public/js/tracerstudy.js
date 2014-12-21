@@ -1,5 +1,5 @@
 /*
-* TracerStudy namespace, make sure include jQuery and Highchart.js before this file
+* TracerStudy Namespace, make sure to include jQuery and Highchart.js before this file
 */
 var siteURL = window.location.origin;
 
@@ -8,50 +8,56 @@ var TracerStudy = {};
 TracerStudy.Form = {};
 
 TracerStudy.Form.init = function() {
+    $loaderContainer = $('#loader-container');
+    $informationContainer = $('#information-container');
+    $formContainer = $('#form-container');
+    $tracerStudyForm = $('#tracer-study-form');
+    $inputStatus = $('#input-status');
+    $inputGroupWork = $('#input-group-work');
+    $buttonSubmit = $('#button-submit');
 
-    $('#input-status').change(function(event) {
-        var value = $(this).val();
-        var inputGroupWork = $('#input-group-work');
+    // Check if user is already fill the form
+    $.get(siteURL + '/api/ts/check', function(data, textStatus, xhr) {
+        var isUserHadFillTheForm = data;
         
-        if (value == 1) {
-            inputGroupWork.removeClass('hidden');
+        $loaderContainer.addClass('hidden');
+
+        if (isUserHadFillTheForm) {
+            $informationContainer.removeClass('hidden');
+
+            $buttonSubmit.addClass('disabled');
+            document.getElementById('button-submit').disabled = true;
         }
         else {
-            inputGroupWork.addClass('hidden');
+            $formContainer.removeClass('hidden');
         }
     });
 
-	// Check if user is already fill the form
-	$.get(siteURL + '/api/ts/check', function(data, textStatus, xhr) {
-		var isUserHadFillTheForm = data;
-		
-		$('#loader-container').addClass('hidden');
-
-		if (isUserHadFillTheForm) {
-			$('#information-container').removeClass('hidden');
-
-			$('#button-submit').addClass('disabled');
-			document.getElementById('button-submit').disabled = true;
-		}
-		else {
-			$('#form-container').removeClass('hidden');
-		}
-	});
+    $inputStatus.change(function(event) {
+        var value = $(this).val();
+        
+        if (value == 1) {
+            $inputGroupWork.removeClass('hidden');
+        }
+        else {
+            $inputGroupWork.addClass('hidden');
+        }
+    });
 
 	// Handling Form Submit
-	$('#tracer-study-form').on('submit', function(event) {
+	$tracerStudyForm.on('submit', function(event) {
 		event.preventDefault();
 
-		$('#button-submit').val('Sending..');
-		$('#button-submit').addClass('disabled');
+		$buttonSubmit.html('Sending..');
+		$buttonSubmit.addClass('disabled');
 		document.getElementById('button-submit').disabled = true;
 
-		$.post(siteURL + '/api/ts', $('#tracer-study-form').serialize(), function(data, textStatus, xhr) {
+		$.post(siteURL + '/api/ts', $tracerStudyForm.serialize(), function(data, textStatus, xhr) {
 			console.log(data);
 
 			if (data == 'success') {
-				$('#form-container').addClass('hidden');
-				$('#information-container').removeClass('hidden');
+				$formContainer.addClass('hidden');
+				$informationContainer.removeClass('hidden');
 			}
 		});
 	});

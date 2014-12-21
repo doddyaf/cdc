@@ -1,3 +1,3 @@
-# CDC ITI
+# Career Development Center - Institut Teknologi Indonesia
 
-Final Project
+Engineering Student Final Project

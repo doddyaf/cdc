@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Career Development Center - ITI</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link rel="stylesheet" href="/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="/css/style.css">
+		
+		<script src="/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+	</head>
+	<body>
+		<!--[if lt IE 7]>
+			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+		<![endif]-->
+	<nav class="navbar navbar-default navbar-primary navbar-fixed-top" role="navigation">
+	  	<div class="container">
+			<div class="navbar-header">
+			  	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+			  	</button>
+			  	<a class="navbar-brand" href="index">CDC - ITI</a>
+			</div>
+			<div class="navbar-collapse collapse">
+			  	<ul class="nav navbar-nav">
+					<li><a href="/cdc">CDC</a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tracer Study <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="/ts-form">Isi Form</a></li>
+							<li><a href="/ts-statistik">Lihat Statistik</a></li>
+						</ul>
+					</li>
+					<li><a href="/gallery">Gallery</a></li>
+					<li><a href="/profile"> Profile</a></li>
+					<!-- <li><a href="/faq">FAQ</a></li> -->
+				</ul>
+			</div><!--/.navbar-collapse -->
+	  	</div>
+	</nav>
+	<main>
+		<div class="jumbotron">
+			<form class="container box-register" method="post" action="/register" role="form">
+				<h2 class="box__title">Register</h2>
+				
+				<div class="row">
+
+					<div class="col-lg-6 col-md-6">
+						<div class="form-group">
+						  	<input type="text" name="user_first_name" placeholder="First Name" class="form-control" required>
+						</div>
+						<div class="form-group">
+						  	<input type="text" name="user_last_name" placeholder="Last Name" class="form-control" required>
+						</div>
+						<div class="form-group">
+						  	<input type="text" name="user_email" placeholder="Email" class="form-control" required>
+						</div>
+						<div class="form-group">
+						  	<input type="password" name="user_password" placeholder="Password" class="form-control" required>
+						</div>
+						<div class="form-group">
+						  	<input type="password" name="user_re_password" placeholder="Re-enter your password" class="form-control" required>
+						</div>
+					</div>
+
+					<div class="col-lg-6 col-md-6">
+						<div class="form-group">
+						  	<select name="user_program_id" class="form-control" required>
+						  		<option value="1">Informatika</option>
+						  		<option value="2">Teknik Sipil</option>
+						  		<option value="3">Teknik Kimia</option>
+						  		<option value="4">Teknik Arsitektur</option>
+						  		<option value="5">Perancangan Wilayah dan Kota</option>
+						  		<option value="6">Teknik Elektro</option>
+						  		<option value="7">Teknik Mesin</option>
+						  		<option value="8">Teknik Industri Pertanian</option>
+						  		<option value="9">Teknik Industri</option>
+						  		<option value="10">Mekatronika</option>
+						  		<option value="11">Otomotif</option>
+						  		<option value="12">Manajemen</option>
+						  	</select>
+						</div>
+						<div class="form-group">
+						  	<select name="user_class_of" class="form-control" required>
+						  		<option value="0">Class Of</option>
+						  		<option value="2005">2005</option>
+						  		<option value="2006">2006</option>
+						  		<option value="2007">2007</option>
+						  		<option value="2008">2008</option>
+						  		<option value="2009">2009</option>
+						  		<option value="2010">2010</option>
+						  		<option value="2011">2011</option>
+						  		<option value="2012">2012</option>
+						  		<option value="2013">2013</option>
+						  		<option value="2014">2014</option>
+						  	</select>
+						</div>
+					</div>
+
+				</div>
+				
+				<a class="pull-left" href="login">Have an account?, login here</a>
+				<button type="submit" class="btn btn-success pull-right">Register</button>
+			</form>
+		</div>
+	</main>
+    <footer class="footer">
+        <div class="container">
+            &copy; CDC & TRACER STUDY - ITI
+        </div>
+    </footer>
+    <script src="/js/vendor/jquery-1.11.0.min.js"></script>
+    <!-- <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script> -->
+
+    <script src="/js/vendor/bootstrap.min.js"></script>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

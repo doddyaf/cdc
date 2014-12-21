@@ -13,7 +13,7 @@
 		<link rel="stylesheet" href="/css/bootstrap.min.css">
 		<link rel="stylesheet" href="/css/bootstrap-theme.min.css">
 		<link rel="stylesheet" href="/css/style.css">
-		
+
 		<script src="/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 	</head>
 	<body>
@@ -34,7 +34,7 @@
 			<div class="navbar-collapse collapse">
 			  	<ul class="nav navbar-nav">
 					<li><a href="cdc">CDC</a></li>
-					<li class="dropdown">
+					<li class="active dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tracer Study <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="ts-form">Isi Form</a></li>
@@ -43,14 +43,21 @@
 					</li>
 					<li><a href="gallery">Gallery</a></li>
 					<li><a href="profile"> Profile</a></li>
-					
-					</li>
-					<li class="active"><a href="faq">FAQ</a></li>
+					<!-- <li><a href="faq">FAQ</a></li> -->
 					<li><a href="logout">Logout</a></li>
 				</ul>
 			</div><!--/.navbar-collapse -->
 	  	</div>
 	</nav>
+	
+	<main>
+		<div class="container">
+			<div class="box box--chart">
+				<h1 class="box__title">Tracer Study Statistics</h1>
+				<div id="js-chart"></div>
+			</div>
+		</div>
+	</main>
 
     <footer class="footer">
         <div class="container">
@@ -58,11 +65,10 @@
         </div>
     </footer>
     <script src="/js/vendor/jquery-1.11.0.min.js"></script>
-    <!-- <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script> -->
-
     <script src="/js/vendor/bootstrap.min.js"></script>
-
+    <script src="/js/vendor/highcharts.js"></script>
+    <script src="/js/tracerstudy.js"></script>
+    <script src="/js/ts-statistics.js"></script>
     <script src="/js/main.js"></script>
 </body>
 </html>
-

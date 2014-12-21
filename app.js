@@ -1,6 +1,5 @@
-/**
-* CDC Institut Teknologi Indonesia
-*/
+// CDC Institut Teknologi Indonesia
+// ==============================================
 
 // BASE SETUP
 // ==============================================
@@ -30,8 +29,8 @@ var path = require('path');
 
 app.set('port', process.env.PORT || 3000);
 app.set('env', 'development');
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(methodOverride());
@@ -90,33 +89,6 @@ connection.connect();
 // CUSTOM FUNCTIONS
 // ==============================================
 
-var CDC = {};
-
-CDC.insertPost = function (post, callback) {
-	var query = connection.query('INSERT INTO post SET ?', post, function(err, result) {
-		if (err) throw err;
-		callback(result);
-	});
-};
-
-CDC.getAllPosts = function (callback) {
-	var allPosts = '';
-	
-	var queryGetAllPosts = 'SELECT post.*, user.first_name, user.last_name, post_category.name AS category_name FROM post, user, post_category WHERE user.id = user_id AND post_category.id = post_category_id ORDER BY post.id DESC';
-
-	connection.query(queryGetAllPosts, function(err, rows, fields) {
-		if (err) throw err;
-
-		allPosts = {
-			posts: rows
-		};
-
-		jsonAllPosts = JSON.stringify(allPosts);
-
-		callback(null, jsonAllPosts);
-	});
-};
-
 var User = {};
 
 User.authenticate = function (req, res, user_email, user_password) {
@@ -155,6 +127,59 @@ User.register = function (req, res, userData) {
 	});
 };
 
+User.getAllUsers = function (callback) {
+	var allUsers = '';
+	
+	var queryGetAllUsers = 'SELECT * FROM user';
+
+	connection.query(queryGetAllUsers, function(err, rows, fields) {
+		if (err) throw err;
+
+		allUsers = rows;
+
+		jsonAllUsers = JSON.stringify(allUsers);
+
+		callback(null, jsonAllUsers);
+	});
+};
+
+User.getUser = function (userId, callback) {
+	var queryGetUser = 'SELECT user.first_name, user.email, user.dob, user.last_name, user.class_of, user.phone, user.address, program.name AS program_name FROM user LEFT JOIN program ON program.id = user.program_id WHERE user.id = ?';
+
+	connection.query(queryGetUser, userId, function(err, rows, fields) {
+		if (err) throw err;
+		var user = rows[0];
+		callback(null, user);
+	});
+};
+
+var CDC = {};
+
+CDC.insertPost = function (post, callback) {
+	var query = connection.query('INSERT INTO post SET ?', post, function(err, result) {
+		if (err) throw err;
+		callback(err, result);
+	});
+};
+
+CDC.getAllPosts = function (callback) {
+	var allPosts = '';
+	
+	var queryGetAllPosts = 'SELECT post.*, user.first_name, user.last_name, post_category.name AS category_name FROM post, user, post_category WHERE user.id = user_id AND post_category.id = post_category_id ORDER BY post.id DESC';
+
+	connection.query(queryGetAllPosts, function(err, rows, fields) {
+		if (err) throw err;
+
+		allPosts = {
+			posts: rows
+		};
+
+		jsonAllPosts = JSON.stringify(allPosts);
+
+		callback(null, jsonAllPosts);
+	});
+};
+
 var TracerStudy = {};
 
 TracerStudy.check = function (user_id, callback) {
@@ -175,9 +200,10 @@ TracerStudy.check = function (user_id, callback) {
 	});
 };
 
-TracerStudy.insert = function (answer) {
+TracerStudy.insert = function (answer, callback) {
 	var query = connection.query('INSERT INTO answer SET ?', answer, function(err, result) {
 		if (err) throw err;
+		callback(err, result);
 	});
 };
 
@@ -281,11 +307,6 @@ TracerStudy.getWorkPercentageByProgramAndClass = function(programId, classOf, ca
 
 // Check Session for every request
 function checkSession(req, res, next) {
-	// for development, always set session user id to 1
-	// req.session.user_id = 1;
-
-	// log each request to the console
-	console.log(req.method, req.url);
 
 	if (req.url != '/login') {
 		// if user go to page except login THEN check if user authenticated
@@ -318,7 +339,15 @@ router.use(checkSession);
 // ==============================================
 
 // REST API
-router.get('/api/cdc/', function(req, res){
+router.get('/api/user', function(req, res){
+	function responseResult(err, result) {
+		res.send(result);
+	}
+
+	User.getAllUsers(responseResult);
+});
+
+router.get('/api/cdc', function(req, res){
 	CDC.getAllPosts(function(err, result){
 		res.send(result);
 	});
@@ -339,13 +368,15 @@ router.post('/api/ts', function(req, res){
 	answer.masukan			= req.body.masukan;
 	answer.saran			= req.body.saran;
 
-	TracerStudy.insert(answer);
+	function responseResult(err, result) {
+		res.send('success');
+	}
 
-	res.send('success');
+	TracerStudy.insert(answer, responseResult);
 });
 
 router.get('/api/ts/check', function(req, res) {
-	var user_id = req.session.user_id;
+	var user_id = req.session.user.id;
 
 	TracerStudy.check(user_id, function(err, result) {
 		res.send(result);
@@ -392,43 +423,54 @@ router.get('/api/ts/percentage/:programId/:classOf', function(req, res) {
 });
 
 router.get('/', function(req, res){
-	// res.sendfile('view/index.html');
-	res.sendFile(path.join(__dirname, '/view', 'index.html'));
+	// res.sendFile(path.join(__dirname, '/views', 'index.html'));
+	res.render('index');
+});
+
+router.get('/user/:id', function(req, res){
+	var userId = req.params.id;
+
+	function responseResult(err, result) {
+		console.log(result);
+		res.render('user', result);
+	}
+
+	User.getUser(userId, responseResult);
 });
 
 router.get('/cdc', function(req, res){
-	// res.sendfile('view/cdc.html');
-	res.sendFile(path.join(__dirname, '/view', 'cdc.html'));
+	// res.sendFile(path.join(__dirname, '/views', 'cdc.html'));
+	res.render('cdc');
 });
 
 router.get('/ts-form', function(req, res){
-	// res.sendfile('view/ts-form.html');
-	res.sendFile(path.join(__dirname, '/view', 'ts-form.html'));
+	// res.sendFile(path.join(__dirname, '/views', 'ts-form.html'));
+	res.render('ts-form');
 });
 
 router.get('/ts-statistik', function(req, res){
-	// res.sendfile('view/ts-statistik.html');
-	res.sendFile(path.join(__dirname, '/view', 'ts-statistik.html'));
+	// res.sendFile(path.join(__dirname, '/views', 'ts-statistik.html'));
+	res.render('ts-statistik');
 });
 
 router.get('/gallery', function(req, res){
-	// res.sendfile('view/gallery.html');
-	res.sendFile(path.join(__dirname, '/view', 'gallery.html'));
+	// res.sendFile(path.join(__dirname, '/views', 'gallery.html'));
+	res.render('gallery');
 });
 
 router.get('/profile', function(req, res){
-	// res.sendfile('view/profile.html');
-	res.sendFile(path.join(__dirname, '/view', 'profile.html'));
+	// res.sendFile(path.join(__dirname, '/views', 'profile.html'));
+	res.render('profile');
 });
 
 router.get('/faq', function(req, res){
-	// res.sendfile('view/faq.html');
-	res.sendFile(path.join(__dirname, '/view', 'faq.html'));
+	// res.sendFile(path.join(__dirname, '/views', 'faq.html'));
+	res.render('faq');
 });
 
-router.get('/login', function(req, res) {
-	// res.sendfile('view/login.html');
-	res.sendFile(path.join(__dirname, '/view', 'login.html'));
+router.get('/login', function(req, res){
+	// res.sendFile(path.join(__dirname, '/views', 'login.html'));
+	res.render('login');
 });
 
 router.post('/login', function(req, res){
@@ -440,8 +482,8 @@ router.post('/login', function(req, res){
 });
 
 router.get('/register', function(req, res) {
-	// res.sendfile('view/login.html');
-	res.sendFile(path.join(__dirname, '/view', 'register.html'));
+	// res.sendFile(path.join(__dirname, '/views', 'register.html'));
+	res.render('register');
 });
 
 router.post('/register', function(req, res){
@@ -486,7 +528,7 @@ io.on('connection', function(socket){
 	socket.on('cdc post', function(msg){
 		msg.user_id = currentUser.id;
 
-		function responseResult(result) {
+		function responseResult(err, result) {
 			msg.id = result.insertId;
 			msg.user = currentUser;
 			io.emit('cdc post', msg);

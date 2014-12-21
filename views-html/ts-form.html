@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Career Development Center - ITI</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link rel="stylesheet" href="/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="/css/style.css">
+
+		<script src="/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+	</head>
+	<body>
+		<!--[if lt IE 7]>
+			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+		<![endif]-->
+	<nav class="navbar navbar-primary navbar-default navbar-fixed-top" role="navigation">
+	  	<div class="container">
+			<div class="navbar-header">
+			  	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+			  	</button>
+			  	<a class="navbar-brand" href="/">CDC - ITI</a>
+			</div>
+			<div class="navbar-collapse collapse">
+			  	<ul class="nav navbar-nav">
+					<li><a href="cdc">CDC</a></li>
+					<li class="active dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tracer Study <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="ts-form">Isi Form</a></li>
+							<li><a href="ts-statistik">Lihat Statistik</a></li>
+						</ul>
+					</li>
+					<li><a href="gallery">Gallery</a></li>
+					<li><a href="profile"> Profile</a></li>
+					<!-- <li><a href="faq">FAQ</a></li> -->
+					<li><a href="logout">Logout</a></li>
+				</ul>
+			</div><!--/.navbar-collapse -->
+	  	</div>
+	</nav>
+
+	<main>
+		<div class="container" id="loader-container">
+			<img class="loader" src="/images/spinner.gif" alt="Loading..">
+		</div>
+		<div class="container hidden" id="information-container">
+			<div class="callout callout-info information">
+				Anda telah mengisi form, lihat statistik di <a href="/ts-statistik">Tracer Study Statistik</a>
+			</div>
+		</div>
+		<div class="container hidden" id="form-container">
+			<div class="box col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2 ">
+				<h1 class="box__title">Tracer Study Form</h1>
+				<form action="" method="post" id="tracer-study-form">
+					<div class="form-group">
+						<label for="input-status">Kondisi sekarang</label>
+						<select class="form-control" name="status" id="input-status" required>
+						  	<option value="1">Sudah Bekerja</option>
+						  	<option value="2">Belum bekerja</option>
+						</select>
+					</div>
+					
+					<div id="input-group-work">
+
+						<div class="form-group">
+							<label for="input-lama-menunggu">Waktu tunggu anda mendapatkan pekerjaan</label>
+							<select name="lama_menunggu" class="form-control" id="input-lama-menunggu" required>
+								<option value="1">Sudah mendapatkan pekerjaan sebelum lulus</option>
+							  	<option value="2">Dibawah 1 bulan</option>
+							  	<option value="3">1 - 2 bulan</option>
+							  	<option value="4">3 - 5 bulan</option>
+							  	<option value="4">5 bulan - 1 tahun</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label for="input-lama-bekerja">Lama bekerja (dalam tahun)</label>
+							<input type="number" name="lama_bekerja" class="form-control" id="input-lama-bekerja" value="1" required>
+						</div>
+						
+						<div class="form-group">
+							<label for="input-gaji">Kisaran Gaji</label>
+							<select name="gaji" class="form-control" id="input-gaji" required>
+								<option value="1"> < 1 juta</option>
+							  	<option value="2">1 juta - 3 juta</option>
+							  	<option value="3">3 juta - 5 juta</option>
+							  	<option value="4"> > 5 juta</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label>Kecocokan dengan jurusan kuliah</label>
+							<div class="radio">
+								<label>
+									<input type="radio" name="kecocokan" id="input-kecocokan-1" value="1" checked required> Sesuai
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="kecocokan" id="input-kecocokan-2" value="2" required> Masih ada kaitannya
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="kecocokan" id="input-kecocokan-3" value="3" required> Tidak berkaitan sama sekali
+								</label>
+							</div>
+						</div>
+						
+						
+						<div class="form-group">
+							<label for="input-pekerjaan">Pekerjaan saat ini</label>
+							<input type="text" name="pekerjaan" class="form-control" id="input-pekerjaan" required>
+						</div>
+						
+						<div class="form-group">
+							<label for="input-alamat-pekerjaan">Alamat pekerjaan</label>
+							<textarea class="form-control" name="alamat_pekerjaan" id="input-alamat-pekerjaan" required></textarea>
+						</div>
+
+					</div>
+
+					<hr>
+
+					<h2 class="box__subtitle">Masukan Bagi Institut Teknologi Indonesia</h2>
+
+					<div class="form-group">
+						<label for="input-manfaat">Apakah proses dan materi pendidikan di Institut Teknologi Indonesia bermanfaat untuk pekerjaan Anda ?</label>
+						<select class="form-control" name="manfaat" id="input-manfaat" required>
+							<option value="Ya">Ya</option>
+							<option value="Sebagian">Sebagian</option>
+							<option value="Tidak">Tidak</option>
+						</select>
+					</div>
+					
+					<div class="form-group">
+						<label for="input-masukan">Tambahan yang diperlukan bagi lulusan Institut Teknologi Indonesia ?</label>
+						<textarea class="form-control" name="masukan" id="input-masukan" required></textarea>
+					</div>
+					
+					<div class="form-group">
+						<label for="input-saran">Saran untuk Institut Teknologi Indonesia ?</label>
+						<textarea class="form-control" name="saran" id="input-saran" required></textarea>
+					</div>
+					
+					<div class="btn-toolbar">
+						<button type="submit" class="btn btn-success pull-right" id="button-submit">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</main>
+
+    <footer class="footer">
+        <div class="container">
+            &copy; CDC & TRACER STUDY - ITI
+        </div>
+    </footer>
+    
+    <script src="/js/vendor/jquery-1.11.0.min.js"></script>
+    <script src="/js/vendor/bootstrap.min.js"></script>
+    <script src="/js/tracerstudy.js"></script>
+	<script src="/js/ts-form.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

@@ -33,20 +33,18 @@
 			</div>
 			<div class="navbar-collapse collapse">
 			  	<ul class="nav navbar-nav">
-					<li><a href="cdc">CDC</a></li>
+					<li><a href="/cdc">CDC</a></li>
 					<li class="active dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tracer Study <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="ts-form">Isi Form</a></li>
-							<li><a href="ts-statistik">Lihat Statistik</a></li>
+							<li><a href="/ts-form">Isi Form</a></li>
+							<li><a href="/ts-statistik">Lihat Statistik</a></li>
 						</ul>
 					</li>
-					<li><a href="gallery">Gallery</a></li>
-					<li><a href="profile"> Profile</a></li>
-					
-					</li>
-					<li><a href="faq">FAQ</a></li>
-					<li><a href="logout">Logout</a></li>
+					<li><a href="/gallery">Gallery</a></li>
+					<li><a href="/profile"> Profile</a></li>
+					<!-- <li><a href="/faq">FAQ</a></li> -->
+					<li><a href="/logout">Logout</a></li>
 				</ul>
 			</div><!--/.navbar-collapse -->
 	  	</div>
@@ -63,7 +61,7 @@
 		</div>
 		<div class="container hidden" id="form-container">
 			<div class="box col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2 ">
-				<h1 class="box__title">Form Tracer Study</h1>
+				<h1 class="box__title">Tracer Study Form</h1>
 				<form action="" method="post" id="tracer-study-form">
 					<div class="form-group">
 						<label for="input-status">Kondisi sekarang</label>
@@ -78,7 +76,6 @@
 						<div class="form-group">
 							<label for="input-lama-menunggu">Waktu tunggu anda mendapatkan pekerjaan</label>
 							<select name="lama_menunggu" class="form-control" id="input-lama-menunggu" required>
-								<option value="0">Lama mendapatkan pekerjaan</option>
 								<option value="1">Sudah mendapatkan pekerjaan sebelum lulus</option>
 							  	<option value="2">Dibawah 1 bulan</option>
 							  	<option value="3">1 - 2 bulan</option>
@@ -93,10 +90,9 @@
 						</div>
 						
 						<div class="form-group">
-							<label for="input-gaji">Gaji</label>
+							<label for="input-gaji">Kisaran Gaji</label>
 							<select name="gaji" class="form-control" id="input-gaji" required>
-								<option value="0">Kisaran Gaji</option>
-								<option value="1">< 1 juta</option>
+								<option value="1"> < 1 juta</option>
 							  	<option value="2">1 juta - 3 juta</option>
 							  	<option value="3">3 juta - 5 juta</option>
 							  	<option value="4"> > 5 juta</option>
@@ -104,10 +100,10 @@
 						</div>
 
 						<div class="form-group">
-							<label>Kecocokan dengan jurusan kuliah :</label>
+							<label>Kecocokan dengan jurusan kuliah</label>
 							<div class="radio">
 								<label>
-									<input type="radio" name="kecocokan" id="input-kecocokan-1" value="1" required> Sesuai
+									<input type="radio" name="kecocokan" id="input-kecocokan-1" value="1" checked required> Sesuai
 								</label>
 							</div>
 							<div class="radio">
@@ -158,7 +154,9 @@
 						<textarea class="form-control" name="saran" id="input-saran" required></textarea>
 					</div>
 					
-					<button type="submit" class="btn btn-success pull-right" id="button-submit">Submit</button>
+					<div class="btn-toolbar">
+						<button type="submit" class="btn btn-success pull-right" id="button-submit">Submit</button>
+					</div>
 				</form>
 			</div>
 		</div>
