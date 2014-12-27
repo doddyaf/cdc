@@ -43,7 +43,7 @@ body {
 .jumbotron .box-login,
 .jumbotron .box-register {
 	margin: 0 auto;
-	text-align: center;
+	/*text-align: center;*/
 }
 .jumbotron .box-login {
 	max-width: 350px;
@@ -110,4 +110,7 @@ body {
 .dropdown-menu > li > a:hover {
 	background-image: none;
 	background-color: #f5f5f5;
+}
+.box-register .form-group .field-double-height {
+	min-height: 118px;
 }

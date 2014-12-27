@@ -576,11 +576,11 @@ router.post('/register', function(req, res) {
 	userData.password = hashedPassword;
 	userData.first_name = req.body.user_first_name;
 	userData.last_name = req.body.user_last_name;
+	userData.dob = req.body.user_dob;
+	userData.phone = req.body.user_phone;
+	userData.address = req.body.user_address;
 	userData.program_id = req.body.user_program_id;
 	userData.class_of = req.body.user_class_of;
-	userData.dob = "";
-	userData.phone = "";
-	userData.address = "";
 	userData.type = "user";
 
 	User.register(req, res, userData);
