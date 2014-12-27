@@ -91,7 +91,7 @@ body {
 .post__category {
 	margin-top: 7px;
 }
-textarea.cdc-form__content {
+.cdc-form__content {
 	height: 80px;
 }
 .gallery {
@@ -100,5 +100,14 @@ textarea.cdc-form__content {
 .form-group {
 	margin-bottom: 25px;
 }
-
-
+.dropdown-menu {
+	padding: 0;
+	border-radius: 0;
+}
+.dropdown-menu > li > a {
+	padding: 10px 15px;
+}
+.dropdown-menu > li > a:hover {
+	background-image: none;
+	background-color: #f5f5f5;
+}

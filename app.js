@@ -69,240 +69,279 @@ var config = {
 		host: 'localhost',
 		user: 'root',
 		password: '',
-		name: 'cdc'
+		database: 'cdc'
 	}
 };
 
 // Mysql Connection
 var mysql = require('mysql');
-var connection = mysql.createConnection(
-	{
-		host     : config.db.host,
-		user     : config.db.user,
-		password : config.db.password,
-		database : config.db.name,
-	}
-);
+var connection = mysql.createConnection( config.db );
  
 connection.connect();
 
 // CUSTOM FUNCTIONS
 // ==============================================
 
-var User = {};
+var User = {
 
-User.authenticate = function (req, res, user_email, user_password) {
-	var queryGetUser = "SELECT * FROM user WHERE email='" + user_email + "' AND password = MD5('" + user_password + "');";
+	authenticate: function (user_email, user_password, callback) {
 
-	connection.query(queryGetUser, function(err, rows, fields) {
-		if (err) throw err;
+		var queryGetUser = "SELECT * FROM user WHERE email='" + user_email + "' AND password = MD5('" + user_password + "');";
 
-		console.log(rows.length);
+		connection.query(queryGetUser, function(err, rows, fields) {
+			if (err) throw err;
 
-		if (rows.length == 1) {
-			
-			var currentUser = rows[0];
+			console.log(rows.length);
 
-			console.log(currentUser.first_name + 'is logged in');
+			if (rows.length == 1) {
+				
+				var currentUser = rows[0];
 
-			req.session.user = currentUser;
-		}
+				console.log(currentUser.first_name + ' is logged in');
 
-		res.redirect('/');
-	});
+				callback(currentUser);
+
+			}
+
+		});
+
+	},
+
+	register: function (req, res, userData) {
+
+		var query = connection.query('INSERT INTO user SET ?', userData, function(err, result) {
+			if (err) throw err;
+
+			console.log("Result : " + result.insertId);
+
+			userData.id = result.insertId;
+
+			req.session.user = userData;
+
+			res.redirect('/');
+		});
+
+	},
+
+	getAllUsers: function (callback) {
+
+		var allUsers = '';
+
+		var queryGetAllUsers = 'SELECT * FROM user';
+
+		connection.query(queryGetAllUsers, function(err, rows, fields) {
+			if (err) throw err;
+
+			allUsers = rows;
+
+			jsonAllUsers = JSON.stringify(allUsers);
+
+			callback(null, jsonAllUsers);
+		});
+
+	},
+
+	getUser: function (userId, callback) {
+
+		var queryGetUser = 'SELECT user.first_name, user.email, user.dob, user.last_name, user.class_of, user.phone, user.address, program.name AS program_name FROM user LEFT JOIN program ON program.id = user.program_id WHERE user.id = ?';
+
+		connection.query(queryGetUser, userId, function(err, rows, fields) {
+			if (err) throw err;
+			var user = rows[0];
+			callback(null, user);
+		});
+
+	}
+
 };
 
-User.register = function (req, res, userData) {
-	// @TODO
-	var query = connection.query('INSERT INTO user SET ?', userData, function(err, result) {
-		if (err) throw err;
+var CDC = {
 
-		console.log("Result : " + result.insertId);
+	insertPost: function (post, callback) {
 
-		userData.id = result.insertId;
+		var query = connection.query('INSERT INTO post SET ?', post, function(err, result) {
+			if (err) throw err;
+			callback(err, result);
+		});
 
-		req.session.user = userData;
+	},
 
-		res.redirect('/');
-	});
+	getAllPosts: function (callback) {
+
+		var allPosts = '';
+
+		var	queryGetAllPosts = 'SELECT post.*, user.first_name, user.last_name, post_category.name AS category_name FROM post, user, post_category WHERE user.id = user_id AND post_category.id = post_category_id ORDER BY post.id DESC';
+
+		connection.query(queryGetAllPosts, function(err, rows, fields) {
+			if (err) throw err;
+
+			allPosts = {
+				posts: rows
+			};
+
+			jsonAllPosts = JSON.stringify(allPosts);
+
+			callback(null, jsonAllPosts);
+		});
+
+	}
+
 };
 
-User.getAllUsers = function (callback) {
-	var allUsers = '';
-	
-	var queryGetAllUsers = 'SELECT * FROM user';
+var TracerStudy = {
 
-	connection.query(queryGetAllUsers, function(err, rows, fields) {
-		if (err) throw err;
+	check: function (user_id, callback) {
 
-		allUsers = rows;
+		var queryGetAnswer = "SELECT user_id FROM answer WHERE user_id = '" + user_id + "'";
 
-		jsonAllUsers = JSON.stringify(allUsers);
+		connection.query(queryGetAnswer, function(err, rows, fields) {
+			if (err) throw err;
 
-		callback(null, jsonAllUsers);
-	});
-};
+			var isUserHadFillTheForm = false;
 
-User.getUser = function (userId, callback) {
-	var queryGetUser = 'SELECT user.first_name, user.email, user.dob, user.last_name, user.class_of, user.phone, user.address, program.name AS program_name FROM user LEFT JOIN program ON program.id = user.program_id WHERE user.id = ?';
+			if (rows.length !== 0) {
+				isUserHadFillTheForm = true;
+			}
 
-	connection.query(queryGetUser, userId, function(err, rows, fields) {
-		if (err) throw err;
-		var user = rows[0];
-		callback(null, user);
-	});
-};
+			console.log(rows);
 
-var CDC = {};
+			callback(null, isUserHadFillTheForm);
+		});
 
-CDC.insertPost = function (post, callback) {
-	var query = connection.query('INSERT INTO post SET ?', post, function(err, result) {
-		if (err) throw err;
-		callback(err, result);
-	});
-};
+	},
 
-CDC.getAllPosts = function (callback) {
-	var allPosts = '';
-	
-	var queryGetAllPosts = 'SELECT post.*, user.first_name, user.last_name, post_category.name AS category_name FROM post, user, post_category WHERE user.id = user_id AND post_category.id = post_category_id ORDER BY post.id DESC';
+	insert: function (answer, callback) {
 
-	connection.query(queryGetAllPosts, function(err, rows, fields) {
-		if (err) throw err;
+		var query = connection.query('INSERT INTO answer SET ?', answer, function(err, result) {
+			if (err) throw err;
+			callback(err, result);
+		});
 
-		allPosts = {
-			posts: rows
+	},
+
+	getAllWorkPercentage: function(callback) {
+
+		var allData = [];
+
+		var allPrograms = ["Informatika", "Teknik Sipil", "Teknik Kimia", "Teknik Arsitektur", "Perancangan Wilayah dan Kota", "Teknik Elektro", "Teknik Mesin", "Teknik Industri Pertanian", "Teknik Industri", "Mekatronika", "Otomotif", "Manajemen"];
+		
+		var	index = 1;
+
+		allPrograms.forEach(function(theProgram) {
+			var deferred = Q.defer();
+
+			function finishedQuery(result) {
+				console.log("Result : " + result);
+				deferred.resolve(result);
+			}
+
+			console.log("Index : " + index);
+
+			TracerStudy.getWorkPercentageByProgram(index, finishedQuery);
+
+			allData.push(deferred.promise);
+
+			index++;
+		});
+		
+		return Q.all(allData).then(function () { return callback(allData); });
+
+	},
+
+	getWorkPercentageByProgram: function(programId, callback) {
+
+		var allProgramsCode = ["IF", "TS", "TK", "TA", "PWK", "TE", "TM", "TIP", "TI", "MT", "OT", "MJ"];
+
+		var allPrograms = ["Informatika","Teknik Sipil", "Teknik Kimia", "Teknik Arsitektur", "Perancangan Wilayah dan Kota", "Teknik Elektro", "Teknik Mesin", "Teknik Industri Pertanian", "Teknik Industri", "Mekatronika", "Otomotif", "Manajemen"];
+
+		var allClasses = [2005,2006,2007,2008,2009,2010,2011,2012,2013,2014];
+
+		var allPercentage = {
+
+			name: allProgramsCode[programId - 1],
+
+			data: []
+
 		};
 
-		jsonAllPosts = JSON.stringify(allPosts);
+		allClasses.forEach( function (theClass) {
+			var deferred = Q.defer();
 
-		callback(null, jsonAllPosts);
-	});
-};
+			function finishedQuery(err, rows, fields) {
+				if (err) throw err;
 
-var TracerStudy = {};
+				allPosts = rows;
 
-TracerStudy.check = function (user_id, callback) {
-	var queryGetAnswer = "SELECT user_id FROM answer WHERE user_id = '" + user_id + "'";
+				var Program = {};
+				
+				var percentage = rows[0].percentage;
 
-	connection.query(queryGetAnswer, function(err, rows, fields) {
-		if (err) throw err;
+				Program.id = programId;
+				Program.name = rows[0].name;
+				Program.classOf = theClass;
+				Program.percentage = percentage;
 
-		var isUserHadFillTheForm = false;
+				var programJSON = JSON.stringify(Program);
 
-		if (rows.length !== 0) {
-			isUserHadFillTheForm = true;
-		}
+				console.log('Program : ' + programJSON);
 
-		console.log(rows);
+				deferred.resolve(percentage);
+			}
 
-		callback(null, isUserHadFillTheForm);
-	});
-};
+			console.log('The Class : ' + theClass);
 
-TracerStudy.insert = function (answer, callback) {
-	var query = connection.query('INSERT INTO answer SET ?', answer, function(err, result) {
-		if (err) throw err;
-		callback(err, result);
-	});
-};
+			var queryGetPercentage = "SELECT COUNT(answer.user_id) AS has_worked, ( COUNT(answer.user_id) / (SELECT COUNT(answer.user_id) FROM answer LEFT JOIN user ON user.id = answer.user_id WHERE user.program_id = '" + programId + "' AND user.class_of = '" + theClass + "' ) ) * 100 as percentage, user.class_of, program.name FROM answer LEFT JOIN user ON user.id = answer.user_id LEFT JOIN program ON program.id = user.program_id WHERE answer.status_id = '1' AND user.program_id = '" + programId + "' AND user.class_of = '" + theClass + "'";
 
-TracerStudy.getAllWorkPercentage = function(callback) {
-	var allData = [];
+			connection.query(queryGetPercentage, finishedQuery);
 
-	var allPrograms = ["Informatika", "Teknik Sipil", "Teknik Kimia", "Teknik Arsitektur", "Perancangan Wilayah dan Kota", "Teknik Elektro", "Teknik Mesin", "Teknik Industri Pertanian", "Teknik Industri", "Mekatronika", "Otomotif", "Manajemen"];
+			allPercentage.data.push(deferred.promise);
+		});
+		
+		return Q.all(allPercentage.data).then(function () { return callback(allPercentage); });
 
-	var index = 1;
+	},
 
-	allPrograms.forEach(function(theProgram) {
-		var deferred = Q.defer();
+	getWorkPercentageByProgramAndClass: function(programId, classOf, callback) {
 
-		function finishedQuery(result) {
-			console.log("Result : " + result);
-			deferred.resolve(result);
-		}
-
-		console.log("Index : " + index);
-
-		TracerStudy.getWorkPercentageByProgram(index, finishedQuery);
-
-		allData.push(deferred.promise);
-
-		index++;
-	});
-	
-	return Q.all(allData).then(function () { return callback(allData); });
-};
-
-TracerStudy.getWorkPercentageByProgram = function(programId, callback) {
-	var allPrograms = ["Informatika","Teknik Sipil", "Teknik Kimia", "Teknik Arsitektur", "Perancangan Wilayah dan Kota", "Teknik Elektro", "Teknik Mesin", "Teknik Industri Pertanian", "Teknik Industri", "Mekatronika", "Otomotif", "Manajemen"];
-
-	var allPercentage = {};
-
-	allPercentage.name = allPrograms[programId - 1];
-
-	allPercentage.data = [];
-
-	var allClasses = [2005,2006,2007,2008,2009,2010,2011,2012,2013,2014];
-
-	allClasses.forEach(function(theClass) {
-		var deferred = Q.defer();
+		var queryGetPercentage = "SELECT COUNT(answer.user_id) AS has_worked, ( COUNT(answer.user_id) / (SELECT COUNT(answer.user_id) FROM answer LEFT JOIN user ON user.id = answer.user_id WHERE user.program_id = '" + programId + "' AND user.class_of = '" + classOf + "' ) ) * 100 as percentage, user.class_of, program.name FROM answer LEFT JOIN user ON user.id = answer.user_id LEFT JOIN program ON program.id = user.program_id WHERE answer.status_id = '1' AND user.program_id = '" + programId + "' AND user.class_of = '" + classOf + "'";
 
 		function finishedQuery(err, rows, fields) {
 			if (err) throw err;
 
-			allPosts = rows;
-
 			var Program = {};
-			
-			var percentage = rows[0].percentage;
 
-			Program.id = programId;
 			Program.name = rows[0].name;
-			Program.classOf = theClass;
-			Program.percentage = percentage;
+			Program.data = rows[0].percentage;
 
-			var programJSON = JSON.stringify(Program);
-
-			console.log('Program : ' + programJSON);
-
-			deferred.resolve(percentage);
+			callback(Program);
 		}
 
-		console.log('The Class : ' + theClass);
-
-		var queryGetPercentage = "SELECT COUNT(answer.user_id) AS has_worked, ( COUNT(answer.user_id) / (SELECT COUNT(answer.user_id) FROM answer LEFT JOIN user ON user.id = answer.user_id WHERE user.program_id = '" + programId + "' AND user.class_of = '" + theClass + "' ) ) * 100 as percentage, user.class_of, program.name FROM answer LEFT JOIN user ON user.id = answer.user_id LEFT JOIN program ON program.id = user.program_id WHERE answer.status_id = '1' AND user.program_id = '" + programId + "' AND user.class_of = '" + theClass + "'";
+		function addToAllPercentage(values) {
+			allPercentage.push(values);
+			callback(allPercentage);
+		}
 
 		connection.query(queryGetPercentage, finishedQuery);
 
-		allPercentage.data.push(deferred.promise);
-	});
-	
-	return Q.all(allPercentage.data).then(function () { return callback(allPercentage); });
+	}
 };
 
-TracerStudy.getWorkPercentageByProgramAndClass = function(programId, classOf, callback) {
+var Dashboard = {
 
-	var queryGetPercentage = "SELECT COUNT(answer.user_id) AS has_worked, ( COUNT(answer.user_id) / (SELECT COUNT(answer.user_id) FROM answer LEFT JOIN user ON user.id = answer.user_id WHERE user.program_id = '" + programId + "' AND user.class_of = '" + classOf + "' ) ) * 100 as percentage, user.class_of, program.name FROM answer LEFT JOIN user ON user.id = answer.user_id LEFT JOIN program ON program.id = user.program_id WHERE answer.status_id = '1' AND user.program_id = '" + programId + "' AND user.class_of = '" + classOf + "'";
+	getAllInformation: function (callback) {
 
-	function finishedQuery(err, rows, fields) {
-		if (err) throw err;
+		var queryGetAnswer = "SELECT ( SELECT COUNT(user.id) FROM user ) AS total_user, ( SELECT COUNT(answer.id) FROM answer ) AS total_answer";
 
-		var Program = {};
+		connection.query(queryGetAnswer, function(err, rows, fields) {
+			if (err) throw err;
 
-		Program.name = rows[0].name;
-		Program.data = rows[0].percentage;
+			console.log(rows[0]);
 
-		callback(Program);
+			callback(rows[0]);
+		});
+
 	}
 
-	function addToAllPercentage(values) {
-		allPercentage.push(values);
-
-		callback(allPercentage);
-	}
-
-	connection.query(queryGetPercentage, finishedQuery);
 };
 
 // Check Session for every request
@@ -313,11 +352,11 @@ function checkSession(req, res, next) {
 		if ( req.url == '/register' || req.session.user) {
 			return next();
 		}
-		// IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM TO LOGIN PAGE
+		// IF USER ISN'T LOGGED IN, REDIRECT THEM TO LOGIN PAGE
 		res.redirect('/login');
 	}
 	else if (req.url == '/login') {
-		// If user go to login page and if user is authenticated then redirect them to home page
+		// If user go to login page and had already authenticated, redirect the user to home page
 		if (req.session.user) {
 			res.redirect('/');
 		}
@@ -339,21 +378,21 @@ router.use(checkSession);
 // ==============================================
 
 // REST API
-router.get('/api/user', function(req, res){
-	function responseResult(err, result) {
+router.get('/api/user', function (req, res) {
+	function responseResult (err, result) {
 		res.send(result);
 	}
 
 	User.getAllUsers(responseResult);
 });
 
-router.get('/api/cdc', function(req, res){
-	CDC.getAllPosts(function(err, result){
+router.get('/api/cdc', function (req, res) {
+	CDC.getAllPosts( function (err, result) {
 		res.send(result);
 	});
 });
 
-router.post('/api/ts', function(req, res){
+router.post('/api/ts', function (req, res) {
 	var answer = {}; // object
 
 	answer.user_id			= req.session.user.id;
@@ -368,14 +407,14 @@ router.post('/api/ts', function(req, res){
 	answer.masukan			= req.body.masukan;
 	answer.saran			= req.body.saran;
 
-	function responseResult(err, result) {
+	function responseResult (err, result) {
 		res.send('success');
 	}
 
 	TracerStudy.insert(answer, responseResult);
 });
 
-router.get('/api/ts/check', function(req, res) {
+router.get('/api/ts/check', function (req, res) {
 	var user_id = req.session.user.id;
 
 	TracerStudy.check(user_id, function(err, result) {
@@ -383,7 +422,7 @@ router.get('/api/ts/check', function(req, res) {
 	});
 });
 
-router.get('/api/ts/percentage', function(req, res) {
+router.get('/api/ts/percentage', function (req, res) {
 	var exampleAllPercentage = [{
 		name: 'Informatika',
 		data: [null,null,null,null,null,null,null,null,null,90,95,90,80,76,82,66,70,88,78,90,95,90,80,76,82,66,70,88]
@@ -398,14 +437,12 @@ router.get('/api/ts/percentage', function(req, res) {
 		data: [98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89]
 	}];
 
-	function responseResult (result) {
-		res.json(result);
-	}
+	function responseResult (result) { res.json(result); }
 
 	TracerStudy.getAllWorkPercentage(responseResult);
 });
 
-router.get('/api/ts/percentage/:programId', function(req, res) {
+router.get('/api/ts/percentage/:programId', function (req, res) {
 	var programId = req.params.programId;
 
 	function responseResult (result) { res.json(result); }
@@ -413,7 +450,7 @@ router.get('/api/ts/percentage/:programId', function(req, res) {
 	TracerStudy.getWorkPercentageByProgram(programId, responseResult);
 });
 
-router.get('/api/ts/percentage/:programId/:classOf', function(req, res) {
+router.get('/api/ts/percentage/:programId/:classOf', function (req, res) {
 	var programId = req.params.programId;
 	var classOf = req.params.classOf;
 
@@ -422,12 +459,44 @@ router.get('/api/ts/percentage/:programId/:classOf', function(req, res) {
 	TracerStudy.getWorkPercentageByProgramAndClass(programId, classOf, responseResult);
 });
 
-router.get('/', function(req, res){
+// UI
+router.get('/', function(req, res) {
 	// res.sendFile(path.join(__dirname, '/views', 'index.html'));
 	res.render('index');
 });
 
-router.get('/user/:id', function(req, res){
+router.get('/dashboard', function(req, res) {
+
+	function responseResult(result) {
+		res.render('dashboard', result);
+	}
+
+	if (req.session.user.type == 'admin') {
+
+		var information = {
+			total_user: 290,
+			total_answer: 200
+		};
+
+		Dashboard.getAllInformation(responseResult);
+	}
+
+	else {
+
+		var error = {
+			message: "You don't have permissions to access this page",
+			error: {
+				status: '',
+				stack: ''
+			}
+		};
+
+		res.render('error', error);
+	}
+	
+});
+
+router.get('/user/:id', function(req, res) {
 	var userId = req.params.id;
 
 	function responseResult(err, result) {
@@ -438,47 +507,57 @@ router.get('/user/:id', function(req, res){
 	User.getUser(userId, responseResult);
 });
 
-router.get('/cdc', function(req, res){
+router.get('/cdc', function(req, res) {
 	// res.sendFile(path.join(__dirname, '/views', 'cdc.html'));
 	res.render('cdc');
 });
 
-router.get('/ts-form', function(req, res){
+router.get('/ts-form', function(req, res) {
 	// res.sendFile(path.join(__dirname, '/views', 'ts-form.html'));
 	res.render('ts-form');
 });
 
-router.get('/ts-statistik', function(req, res){
+router.get('/ts-statistik', function(req, res) {
 	// res.sendFile(path.join(__dirname, '/views', 'ts-statistik.html'));
 	res.render('ts-statistik');
 });
 
-router.get('/gallery', function(req, res){
+router.get('/gallery', function(req, res) {
 	// res.sendFile(path.join(__dirname, '/views', 'gallery.html'));
 	res.render('gallery');
 });
 
-router.get('/profile', function(req, res){
+router.get('/profile', function(req, res) {
 	// res.sendFile(path.join(__dirname, '/views', 'profile.html'));
 	res.render('profile');
 });
 
-router.get('/faq', function(req, res){
+router.get('/faq', function(req, res) {
 	// res.sendFile(path.join(__dirname, '/views', 'faq.html'));
 	res.render('faq');
 });
 
-router.get('/login', function(req, res){
+router.get('/login', function(req, res) {
 	// res.sendFile(path.join(__dirname, '/views', 'login.html'));
 	res.render('login');
 });
 
-router.post('/login', function(req, res){
-	console.log(req.body.user_email + req.body.user_password);
+router.post('/login', function(req, res) {
+
 	var user_email = req.body.user_email,
 		user_password = req.body.user_password;
 
-	User.authenticate(req, res, user_email, user_password);
+	function responseResult (user) {
+
+		if (user) {
+			req.session.user = user;
+		}
+
+		res.redirect('/');
+
+	}
+
+	User.authenticate(user_email, user_password, responseResult);
 });
 
 router.get('/register', function(req, res) {
@@ -486,7 +565,7 @@ router.get('/register', function(req, res) {
 	res.render('register');
 });
 
-router.post('/register', function(req, res){
+router.post('/register', function(req, res) {
 	console.log(req.body.user_email + req.body.user_password);
 
 	var userData = {};
@@ -522,10 +601,10 @@ if ('development' == app.get('env')) {
 // Socket IO
 // ==============================================
 
-io.on('connection', function(socket){
+io.on('connection', function (socket) {
 	var currentUser = socket.request.session.user;
 
-	socket.on('cdc post', function(msg){
+	socket.on('cdc post', function (msg) {
 		msg.user_id = currentUser.id;
 
 		function responseResult(err, result) {
