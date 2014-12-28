@@ -38,7 +38,7 @@
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tracer Study <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="/ts-form">Isi Form</a></li>
-							<li><a href="/ts-statistik">Lihat Statistik</a></li>
+							<li><a href="/ts-statistics">Lihat Statistik</a></li>
 						</ul>
 					</li>
 					<li><a href="/gallery">Gallery</a></li>
@@ -53,8 +53,43 @@
 	<main>
 		<div class="container">
 			<div class="box box--chart">
+
 				<h1 class="box__title">Tracer Study Statistics</h1>
-				<div id="js-chart"></div>
+				
+				<div class="box box--general">
+					<div class="row">
+						<div class="col-lg-4 col-md-4">
+							<b>Total responden :</b>
+							<p><span id="total-responden"></span> Alumni</p>
+						</div>
+						<div class="col-lg-4 col-md-4">
+							<b>Total responden yang telah bekerja :</b>
+							<p><span id="total-responden-work"></span> Alumni</p>
+						</div>
+						<div class="col-lg-4 col-md-4">
+							<b></b>
+							<p></p>
+						</div>
+					</div>
+				</div>
+
+				<hr>
+
+				<div class="chart-container" id="js-chart-work-percentage-container">
+					<img src="/images/spinner.gif" class="loader" id="loader-chart-percentage" alt="Loading..">	
+					<div class="chart" id="js-chart-work-percentage"></div>
+				</div>
+
+				<div class="chart-container" id="js-chart-work-total-container">
+					<img src="/images/spinner.gif" class="loader" id="loader-chart-total" alt="Loading..">
+					<div class="chart" id="js-chart-work-total"></div>
+				</div>
+
+				<div class="chart-container" id="js-chart-salary-container">
+					<img src="/images/spinner.gif" class="loader" id="loader-chart-salary" alt="Loading..">
+					<div class="chart" id="js-chart-salary"></div>
+				</div>
+
 			</div>
 		</div>
 	</main>

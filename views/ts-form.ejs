@@ -38,7 +38,7 @@
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tracer Study <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="/ts-form">Isi Form</a></li>
-							<li><a href="/ts-statistik">Lihat Statistik</a></li>
+							<li><a href="/ts-statistics">Lihat Statistik</a></li>
 						</ul>
 					</li>
 					<li><a href="/gallery">Gallery</a></li>
@@ -56,7 +56,7 @@
 		</div>
 		<div class="container hidden" id="information-container">
 			<div class="callout callout-info information">
-				Anda telah mengisi form, lihat statistik di <a href="/ts-statistik">Tracer Study Statistik</a>
+				Anda telah mengisi form, lihat statistik di <a href="/ts-statistics">Tracer Study Statistik</a>
 			</div>
 		</div>
 		<div class="container hidden" id="form-container">
@@ -80,6 +80,7 @@
 						<div class="form-group">
 							<label for="input-jenis-pekerjaan-studi">Apakah jenis pekerjaan tersebut?</label>
 							<select class="form-control" name="jenis_bekerja_studi" id="input-jenis-pekerjaan-studi" required>
+								<option value="0">-</option>
 								<option value="1">Bimbingan / Les Privat</option>
 								<option value="2">Asisten dosen / Praktikum</option>
 								<option value="3">Membantu usaha Orang Tua</option>
@@ -114,6 +115,7 @@
 						<div class="form-group">
 							<label for="input-searching-2">Darimana Anda memperoleh informasi kesempatan pekerjaan?</label>
 							<select class="form-control" name="cari_informasi" id="input-searching-2" required>
+								<option value="0">-</option>
 								<option value="1">Media CDC - ITI (Mading, Website / Milist)</option>
 								<option value="2">Bursa Kerja di Perguruan Tinggi Lain</option>
 							</select>
@@ -122,6 +124,7 @@
 						<div class="form-group">
 							<label for="input-searching-3">Apakah jenis pekerjaan yang Anda minati / harapkan ketika mencari pekerjaan?</label>
 							<select class="form-control" name="cari_jenis" id="input-searching-3" required>
+								<option value="0">-</option>
 								<option value="1">Manufaktur</option>
 								<option value="2">Industri Kimia / Petrokimia</option>
 							</select>
@@ -137,12 +140,12 @@
 						
 						<div class="form-group">
 							<label for="input-nama-perusahaan">Apakah nama perusahaan tempat anda bekerja pada saat ini?</label>
-							<input type="text" name="nama_perusahaan" class="form-control" id="input-nama-perusahaan" required>
+							<input type="text" name="nama_perusahaan" class="form-control" id="input-nama-perusahaan">
 						</div>
 
 						<div class="form-group">
 							<label for="input-lama-menunggu">Waktu tunggu anda mendapatkan pekerjaan</label>
-							<select name="lama_menunggu" class="form-control" id="input-lama-menunggu" required>
+							<select name="lama_menunggu" class="form-control" id="input-lama-menunggu">
 								<option value="0">-</option>
 								<option value="1">Sudah mendapatkan pekerjaan sebelum lulus</option>
 								<option value="2">Dibawah 1 bulan</option>
@@ -201,12 +204,12 @@
 						
 						<div class="form-group">
 							<label for="input-pekerjaan">Pekerjaan saat ini</label>
-							<input type="text" name="pekerjaan" class="form-control" id="input-pekerjaan" required>
+							<input type="text" name="pekerjaan" class="form-control" id="input-pekerjaan">
 						</div>
 						
 						<div class="form-group">
 							<label for="input-alamat-pekerjaan">Alamat pekerjaan</label>
-							<textarea class="form-control" name="alamat_pekerjaan" id="input-alamat-pekerjaan" required></textarea>
+							<textarea class="form-control" name="alamat_pekerjaan" id="input-alamat-pekerjaan"></textarea>
 						</div>
 
 					</div>

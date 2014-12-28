@@ -103,6 +103,10 @@ var User = {
 
 			}
 
+			else {
+				callback(null);
+			}
+
 		});
 
 	},
@@ -129,7 +133,7 @@ var User = {
 
 		var queryGetAllUsers = 'SELECT * FROM user';
 
-		connection.query(queryGetAllUsers, function(err, rows, fields) {
+		connection.query(queryGetAllUsers, function (err, rows, fields) {
 			if (err) throw err;
 
 			allUsers = rows;
@@ -145,7 +149,7 @@ var User = {
 
 		var queryGetUser = 'SELECT user.first_name, user.email, user.dob, user.last_name, user.class_of, user.phone, user.address, program.name AS program_name FROM user LEFT JOIN program ON program.id = user.program_id WHERE user.id = ?';
 
-		connection.query(queryGetUser, userId, function(err, rows, fields) {
+		connection.query(queryGetUser, userId, function (err, rows, fields) {
 			if (err) throw err;
 			var user = rows[0];
 			callback(null, user);
@@ -159,7 +163,7 @@ var CDC = {
 
 	insertPost: function (post, callback) {
 
-		var query = connection.query('INSERT INTO post SET ?', post, function(err, result) {
+		var query = connection.query('INSERT INTO post SET ?', post, function (err, result) {
 			if (err) throw err;
 			callback(err, result);
 		});
@@ -189,6 +193,12 @@ var CDC = {
 };
 
 var TracerStudy = {
+
+	allProgramsCode: ["IF", "TS", "TK", "TA", "PWK", "TE", "TM", "TIP", "TI", "MT", "OT", "MJ"],
+
+	allPrograms: ["Informatika","Teknik Sipil", "Teknik Kimia", "Teknik Arsitektur", "Perancangan Wilayah dan Kota", "Teknik Elektro", "Teknik Mesin", "Teknik Industri Pertanian", "Teknik Industri", "Mekatronika", "Otomotif", "Manajemen"],
+
+	allClasses: [2005,2006,2007,2008,2009,2010,2011,2012,2013,2014],
 
 	check: function (user_id, callback) {
 
@@ -223,7 +233,7 @@ var TracerStudy = {
 
 		var allData = [];
 
-		var allPrograms = ["Informatika", "Teknik Sipil", "Teknik Kimia", "Teknik Arsitektur", "Perancangan Wilayah dan Kota", "Teknik Elektro", "Teknik Mesin", "Teknik Industri Pertanian", "Teknik Industri", "Mekatronika", "Otomotif", "Manajemen"];
+		var allPrograms = TracerStudy.allPrograms;
 		
 		var	index = 1;
 
@@ -231,11 +241,9 @@ var TracerStudy = {
 			var deferred = Q.defer();
 
 			function finishedQuery(result) {
-				console.log("Result : " + result);
+				// console.log("Result : " + result);
 				deferred.resolve(result);
 			}
-
-			console.log("Index : " + index);
 
 			TracerStudy.getWorkPercentageByProgram(index, finishedQuery);
 
@@ -250,11 +258,11 @@ var TracerStudy = {
 
 	getWorkPercentageByProgram: function(programId, callback) {
 
-		var allProgramsCode = ["IF", "TS", "TK", "TA", "PWK", "TE", "TM", "TIP", "TI", "MT", "OT", "MJ"];
+		var allProgramsCode = TracerStudy.allProgramsCode;
 
-		var allPrograms = ["Informatika","Teknik Sipil", "Teknik Kimia", "Teknik Arsitektur", "Perancangan Wilayah dan Kota", "Teknik Elektro", "Teknik Mesin", "Teknik Industri Pertanian", "Teknik Industri", "Mekatronika", "Otomotif", "Manajemen"];
+		var allPrograms = TracerStudy.allPrograms;
 
-		var allClasses = [2005,2006,2007,2008,2009,2010,2011,2012,2013,2014];
+		var allClasses = TracerStudy.allClasses;
 
 		var allPercentage = {
 
@@ -283,12 +291,12 @@ var TracerStudy = {
 
 				var programJSON = JSON.stringify(Program);
 
-				console.log('Program : ' + programJSON);
+				// console.log('Program : ' + programJSON);
 
 				deferred.resolve(percentage);
 			}
 
-			console.log('The Class : ' + theClass);
+			// console.log('The Class : ' + theClass);
 
 			var queryGetPercentage = "SELECT COUNT(answer.user_id) AS has_worked, ( COUNT(answer.user_id) / (SELECT COUNT(answer.user_id) FROM answer LEFT JOIN user ON user.id = answer.user_id WHERE user.program_id = '" + programId + "' AND user.class_of = '" + theClass + "' ) ) * 100 as percentage, user.class_of, program.name FROM answer LEFT JOIN user ON user.id = answer.user_id LEFT JOIN program ON program.id = user.program_id WHERE answer.status_id = '1' AND user.program_id = '" + programId + "' AND user.class_of = '" + theClass + "'";
 
@@ -308,12 +316,12 @@ var TracerStudy = {
 		function finishedQuery(err, rows, fields) {
 			if (err) throw err;
 
-			var Program = {};
+			var program = {};
 
-			Program.name = rows[0].name;
-			Program.data = rows[0].percentage;
+			program.name = TracerStudy.allProgramsCode[ programId - 1 ];
+			program.data = rows[0].percentage;
 
-			callback(Program);
+			callback(program);
 		}
 
 		function addToAllPercentage(values) {
@@ -323,6 +331,128 @@ var TracerStudy = {
 
 		connection.query(queryGetPercentage, finishedQuery);
 
+	},
+
+	getAllWorkTotal: function(callback) {
+
+		var allData = [];
+
+		var allPrograms = TracerStudy.allPrograms;
+		
+		var	index = 1;
+
+		allPrograms.forEach(function(theProgram) {
+			var deferred = Q.defer();
+
+			function finishedQuery(result) {
+				// console.log("Result : " + result);
+				deferred.resolve(result);
+			}
+
+			// console.log("Index : " + index);
+
+			TracerStudy.getWorkTotalByProgram(index, finishedQuery);
+
+			allData.push(deferred.promise);
+
+			index++;
+		});
+		
+		return Q.all(allData).then(function () { return callback(allData); });
+
+	},
+
+	getWorkTotalByProgram: function(programId, callback) {
+
+		var allProgramsCode = TracerStudy.allProgramsCode;
+
+		var allPrograms = TracerStudy.allPrograms;
+
+		var allClasses = TracerStudy.allClasses;
+
+		var allTotal = {
+
+			name: allProgramsCode[programId - 1],
+
+			data: []
+
+		};
+
+		allClasses.forEach( function (theClass) {
+			var deferred = Q.defer();
+
+			function finishedQuery (err, rows, fields) {
+				if (err) throw err;
+
+				var Program = {};
+				
+				var total = rows[0].total;
+
+				Program.id = programId;
+				Program.name = rows[0].program_name;
+				Program.classOf = theClass;
+				Program.total = total;
+
+				var programJSON = JSON.stringify(Program);
+
+				// console.log(rows);
+
+				deferred.resolve(total);
+			}
+
+			// console.log('The Class : ' + theClass);
+
+			var queryGetTotal = "SELECT COUNT(answer.user_id) AS total, user.class_of, program.name AS program_name FROM answer LEFT JOIN user ON user.id = answer.user_id LEFT JOIN program ON program.id = user.program_id WHERE answer.status_id = '1' AND user.program_id = '" + programId + "' AND user.class_of = '" + theClass + "'";
+
+			connection.query(queryGetTotal, finishedQuery);
+
+			allTotal.data.push(deferred.promise);
+		});
+		
+		return Q.all(allTotal.data).then(function () { return callback(allTotal); });
+
+	},
+
+	getWorkTotalByProgramAndClass: function(programId, classOf, callback) {
+
+		var allProgramsCode = TracerStudy.allProgramsCode;
+
+		var allPrograms = TracerStudy.allPrograms;
+
+		var queryGetTotal = "SELECT COUNT(answer.user_id) AS total, user.class_of, program.name FROM answer LEFT JOIN user ON user.id = answer.user_id LEFT JOIN program ON program.id = user.program_id WHERE answer.status_id = '1' AND user.program_id = '" + programId + "' AND user.class_of = '" + classOf + "'";
+
+		function finishedQuery(err, rows, fields) {
+			if (err) throw err;
+
+			var program = {};
+
+			// program.name = rows[0].name;
+			program.name = allProgramsCode[ programId - 1 ];
+			program.data = rows[0].total;
+
+			callback(program);
+		}
+
+		function addToAllTotal(values) {
+			allTotal.push(values);
+			callback(allTotal);
+		}
+
+		connection.query(queryGetTotal, finishedQuery);
+
+	},
+
+	getAllSalary: function(callback) {
+
+		var queryGetTotal = "SELECT answer.gaji_id, COUNT(answer.id) AS total FROM answer WHERE answer.status_id = 1 GROUP BY answer.gaji_id";
+
+		function finishedQuery(err, rows, fields) {
+			if (err) throw err;
+			callback(rows);
+		}
+
+		connection.query(queryGetTotal, finishedQuery);
+
 	}
 };
 
@@ -330,7 +460,7 @@ var Dashboard = {
 
 	getAllInformation: function (callback) {
 
-		var queryGetAnswer = "SELECT ( SELECT COUNT(user.id) FROM user ) AS total_user, ( SELECT COUNT(answer.id) FROM answer ) AS total_answer";
+		var queryGetAnswer = "SELECT ( SELECT COUNT(user.id) FROM user ) AS total_user, ( SELECT COUNT(answer.id) FROM answer ) AS total_answer, ( SELECT COUNT(answer.id) FROM answer WHERE status_id = '1' ) AS total_answer_work";
 
 		connection.query(queryGetAnswer, function(err, rows, fields) {
 			if (err) throw err;
@@ -378,6 +508,9 @@ router.use(checkSession);
 // ==============================================
 
 // REST API
+// ----------------------------------------------
+
+// User
 router.get('/api/user', function (req, res) {
 	function responseResult (err, result) {
 		res.send(result);
@@ -386,10 +519,20 @@ router.get('/api/user', function (req, res) {
 	User.getAllUsers(responseResult);
 });
 
+// CDC
 router.get('/api/cdc', function (req, res) {
 	CDC.getAllPosts( function (err, result) {
 		res.send(result);
 	});
+});
+
+// Tracer Study
+router.get('/api/ts', function (req, res) {
+	function responseResult (result) {
+		res.json(result);
+	}
+
+	Dashboard.getAllInformation(responseResult);
 });
 
 router.post('/api/ts', function (req, res) {
@@ -422,6 +565,7 @@ router.get('/api/ts/check', function (req, res) {
 	});
 });
 
+// Tracer Study - Percentage
 router.get('/api/ts/percentage', function (req, res) {
 	var exampleAllPercentage = [{
 		name: 'Informatika',
@@ -459,7 +603,43 @@ router.get('/api/ts/percentage/:programId/:classOf', function (req, res) {
 	TracerStudy.getWorkPercentageByProgramAndClass(programId, classOf, responseResult);
 });
 
+// Tracer Study - Total
+router.get('/api/ts/total', function (req, res) {
+
+	function responseResult (result) { res.json(result); }
+
+	TracerStudy.getAllWorkTotal(responseResult);
+});
+
+router.get('/api/ts/total/:programId', function (req, res) {
+	var programId = req.params.programId;
+
+	function responseResult (result) { res.json(result); }
+
+	TracerStudy.getWorkTotalByProgram(programId, responseResult);
+});
+
+router.get('/api/ts/total/:programId/:classOf', function (req, res) {
+	var programId = req.params.programId;
+	var classOf = req.params.classOf;
+
+	function responseResult (result) { res.json(result); }
+
+	TracerStudy.getWorkTotalByProgramAndClass(programId, classOf, responseResult);
+});
+
+// Tracer Study - Salary
+router.get('/api/ts/salary', function (req, res) {
+
+	function responseResult (result) { res.json(result); }
+
+	TracerStudy.getAllSalary(responseResult);
+
+});
+
 // UI
+// ----------------------------------------------
+
 router.get('/', function(req, res) {
 	// res.sendFile(path.join(__dirname, '/views', 'index.html'));
 	res.render('index');
@@ -517,9 +697,9 @@ router.get('/ts-form', function(req, res) {
 	res.render('ts-form');
 });
 
-router.get('/ts-statistik', function(req, res) {
+router.get('/ts-statistics', function(req, res) {
 	// res.sendFile(path.join(__dirname, '/views', 'ts-statistik.html'));
-	res.render('ts-statistik');
+	res.render('ts-statistics');
 });
 
 router.get('/gallery', function(req, res) {

@@ -5,9 +5,17 @@ var siteURL = window.location.origin;
 
 var TracerStudy = {};
 
+TracerStudy.API = {
+	general:	siteURL + '/api/ts',
+	check:		siteURL + '/api/ts/check',
+	percentage: siteURL + '/api/ts/percentage',
+	total:		siteURL + '/api/ts/total',
+	salary:		siteURL + '/api/ts/salary'
+};
+
 TracerStudy.Form = {
 
-	init: function() {
+	init: function () {
 
 		$loaderContainer = $('#loader-container');
 		$informationContainer = $('#information-container');
@@ -17,22 +25,7 @@ TracerStudy.Form = {
 		$inputGroupWork = $('#input-group-work');
 		$buttonSubmit = $('#button-submit');
 
-		// Check if user is already fill the form
-		$.get(siteURL + '/api/ts/check', function (data, textStatus, xhr) {
-			var isUserHadFillTheForm = data;
-			
-			$loaderContainer.addClass('hidden');
-
-			if (isUserHadFillTheForm) {
-				$informationContainer.removeClass('hidden');
-
-				$buttonSubmit.addClass('disabled');
-				document.getElementById('button-submit').disabled = true;
-			}
-			else {
-				$formContainer.removeClass('hidden');
-			}
-		});
+		TracerStudy.Form.check();
 
 		$inputStatus.change( function (event) {
 			var value = $(this).val();
@@ -63,6 +56,27 @@ TracerStudy.Form = {
 			});
 		});
 
+	},
+
+	check: function () {
+
+		// Check if user is already fill the form
+		$.get(TracerStudy.API.check, function (data, textStatus, xhr) {
+			var isUserHadFillTheForm = data;
+			
+			$loaderContainer.addClass('hidden');
+
+			if (isUserHadFillTheForm) {
+				$informationContainer.removeClass('hidden');
+
+				$buttonSubmit.addClass('disabled');
+				document.getElementById('button-submit').disabled = true;
+			}
+			else {
+				$formContainer.removeClass('hidden');
+			}
+		});
+
 	}
 
 };
@@ -76,7 +90,7 @@ TracerStudy.Statistics = {
 	* @param container_id_first -> the id of first chart container
 	* @param container_id_second -> the id of second chart container
 	*/
-	init: function (container_id_first, container_id_second) {
+	init: function (container_id_first, container_id_second, container_id_third) {
 
 		var currentDate = new Date();
 
@@ -96,20 +110,43 @@ TracerStudy.Statistics = {
 
 		}
 
-		console.log( TracerStudy.Statistics.allYears );
+		TracerStudy.Statistics.getGeneralInformation();
 
-		this.getAllPercentage( container_id_first, TracerStudy.Statistics.allYears );
+		TracerStudy.Statistics.getAllWorkPercentage( container_id_first, TracerStudy.Statistics.allYears );
 
-		// TODO
-		// All Statistics
+		TracerStudy.Statistics.getAllWorkTotal( container_id_second, TracerStudy.Statistics.allYears );
+
+		TracerStudy.Statistics.getAllSalary( container_id_third );
 
 	},
 
-	getAllPercentage: function (percentageContainer, allYears) {
+	getGeneralInformation: function () {
 
-		$.get(siteURL + '/api/ts/percentage', function (data) {
+		$totalResponden = $('#total-responden');
 
-			$('#' + percentageContainer).highcharts({
+		$totalRespondenWork = $('#total-responden-work');
+
+		$.get(TracerStudy.API.general, function (data) {
+
+			$totalResponden.html(data.total_answer);
+
+			$totalRespondenWork.html(data.total_answer_work);
+
+		});
+
+	},
+
+	getAllWorkPercentage: function (chartContainer, allYears) {
+
+		$workPercentageLoader = $('#' + chartContainer + ' .loader');
+
+		$workPercentageChart = $('#' + chartContainer + ' .chart');
+
+		$.get(TracerStudy.API.percentage, function (data) {
+
+			$workPercentageLoader.addClass('hidden');
+
+			$workPercentageChart.highcharts({
 				title: {
 					text: 'Persentase yang telah bekerja',
 					x: -20 //center
@@ -136,6 +173,102 @@ TracerStudy.Statistics = {
 				},
 				tooltip: {
 					valueSuffix: '%'
+				},
+				legend: {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle',
+					borderWidth: 0
+				},
+				series: data
+			});
+		});
+
+	},
+
+	getAllWorkTotal: function (chartContainer, allYears) {
+
+		$workTotalLoader = $('#' + chartContainer + ' .loader');
+
+		$workTotalChart = $('#' + chartContainer + ' .chart');
+
+		$.get(TracerStudy.API.total, function (data) {
+
+			$workTotalLoader.addClass('hidden');
+
+			$workTotalChart.highcharts({
+				title: {
+					text: 'Total yang telah bekerja',
+					x: -20 //center
+				},
+				subtitle: {
+					text: 'Per angkatan dan jurusan',
+					x: -20
+				},
+				xAxis: {
+					title : {
+						text: 'Angkatan'
+					},
+					categories: allYears
+				},
+				yAxis: {
+					title: {
+						text: 'Total'
+					},
+					plotLines: [{
+						color: '#808080'
+					}]
+				},
+				tooltip: {
+					valueSuffix: ' Alumni'
+				},
+				legend: {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle',
+					borderWidth: 0
+				},
+				series: data
+			});
+		});
+
+	},
+
+	getAllSalary: function (chartContainer) {
+
+		$salaryLoader = $('#' + chartContainer + ' .loader');
+
+		$salaryChart = $('#' + chartContainer + ' .chart');
+
+		$.get(TracerStudy.API.salary, function (data) {
+
+			$salaryLoader.addClass('hidden');
+
+			$salaryChart.highcharts({
+				title: {
+					text: 'Persentase pendapatan',
+					x: -20 //center
+				},
+				subtitle: {
+					text: 'Semua Alumni ITI',
+					x: -20
+				},
+				xAxis: {
+					title : {
+						text: 'Angkatan'
+					},
+					categories: TracerStudy.Statistics.allYears
+				},
+				yAxis: {
+					title: {
+						text: 'Total'
+					},
+					plotLines: [{
+						color: '#808080'
+					}]
+				},
+				tooltip: {
+					valueSuffix: ' Alumni'
 				},
 				legend: {
 					layout: 'vertical',

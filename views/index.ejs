@@ -38,7 +38,7 @@
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tracer Study <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
 								<li><a href="/ts-form">Isi Form</a></li>
-								<li><a href="/ts-statistik">Lihat Statistik</a></li>
+								<li><a href="/ts-statistics">Lihat Statistik</a></li>
 							</ul>
 						</li>
 						<li><a href="/gallery">Gallery</a></li>
@@ -50,6 +50,11 @@
 		  	</div>
 		</nav>
 		<main>
+			<section class="section section--home">
+				<div class="container">
+					<div class="box__title">Career Development Center - Institut Teknlogi Indonesia</div>
+				</div>
+			</section>
 			<section class="section section--messages hidden">
 				<div class="container">
 					<ul id="messages"></ul>
@@ -69,16 +74,6 @@
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="/js/vendor/jquery-1.11.0.min.js"></script>
 		<script src="/js/vendor/bootstrap.min.js"></script>
-		<script>
-			var socket = io();
-			$('form').submit(function(){
-				socket.emit('chat message', $('#m').val());
-				$('#m').val('');
-				return false;
-			});
-			socket.on('chat message', function(msg){
-				$('#messages').append($('<li>').text(msg));
-			});
-		</script>
+		<script src="/js/main.js"></script>
 	</body>
 </html>
