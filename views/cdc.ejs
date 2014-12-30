@@ -51,40 +51,42 @@
 		  	</div>
 		</nav><!-- Menu Utama End -->
 		<main>
-			<div class="container">
-				<div class="box box--form">
+			<section class="section section--cdc">
+				<div class="container">
+					<div class="box box--form">
 
-					<div class="box__title">Jobs Posts</div>
+						<h1 class="box__title">Jobs Posts</h1>
 
-					<!-- CDC Form -->
-					<form action="" id="cdc-form">
-						<!-- CDC Form Content -->
-						<div class="form-group">
-						  	<textarea name="content" class="cdc-form__content form-control" id="cdc-form-content" placeholder="Post descriptions"></textarea>
-						</div>
-						<!-- CDC Form Category -->
-						<div class="form-group">
-							<select name="category" class="cdc-form__category form-control" id="cdc-form-category">
-						  		<option value="1">Walk Interview</option>
-								<option value="2">Job Fair</option>
-							</select>
-						</div>
-						<!-- CDC Form Submit Button -->
-						<input class="btn-lg btn-primary btn-block" type="submit" value="Post">
-					</form><!-- CDC Form End -->
+						<!-- CDC Form -->
+						<form action="" id="cdc-form">
+							<!-- CDC Form Content -->
+							<div class="form-group">
+							  	<textarea name="content" class="cdc-form__content form-control" id="cdc-form-content" placeholder="Post descriptions"></textarea>
+							</div>
+							<!-- CDC Form Category -->
+							<div class="form-group">
+								<select name="category" class="cdc-form__category form-control" id="cdc-form-category">
+							  		<option value="1">Walk Interview</option>
+									<option value="2">Job Fair</option>
+								</select>
+							</div>
+							<!-- CDC Form Submit Button -->
+							<input class="btn-lg btn-primary btn-block" type="submit" value="Post">
+						</form><!-- CDC Form End -->
+					</div>
+					<!-- All CDC Posts -->
+					<div class="posts-container" id="posts">
+						<!-- <div class="box post">
+							<div class="post__user">
+								<img src="/images/{{user_image}}" class="post__user__picture" alt="PP"> <span class="post__user__name">{{first_name}} {{last_name}}</span>
+							</div>
+							<div class="post__content">{{content}}</div>
+							<div class="post__category">{{category_name}}</div>
+						</div> -->
+					</div>
+					<!-- All CDC Posts End -->
 				</div>
-				<!-- All CDC Posts -->
-				<div class="posts-container" id="posts">
-					<!-- <div class="box post">
-						<div class="post__user">
-							<img src="/images/{{user_image}}" class="post__user__picture" alt="PP"> <span class="post__user__name">{{first_name}} {{last_name}}</span>
-						</div>
-						<div class="post__content">{{content}}</div>
-						<div class="post__category">{{category_name}}</div>
-					</div> -->
-				</div>
-				<!-- All CDC Posts End -->
-			</div>
+			</section>
 		</main>
 		<footer class="footer">
 	        <div class="container">
@@ -95,9 +97,9 @@
 		<!-- Handlebars Templates -->
 		<script type="text/x-handlebars-template" id="cdc-post-template">
 			{{#each posts}}
-		    <div class="box post" id="{{id}}">
+			<div class="box post" id="{{id}}">
 				<div class="post__user">
-					<img src="/images/{{user_image}}" class="post__user__picture hidden" alt="PP"> <a href="/user/{{user_id}}" class="post__user__name">{{first_name}} {{last_name}}</a>
+					<a href="/user/{{user_id}}" class="post__user__name">{{first_name}} {{last_name}}</a>
 				</div>
 				<div class="post__content">{{content}}</div>
 				<div class="post__category"><span class="">Category : </span>{{category_name}}</div>
@@ -106,9 +108,19 @@
 		</script>
 
 		<script type="text/x-handlebars-template" id="cdc-post-item-template">
-		    <div class="box post" id="{{id}}">
+			<div class="box post" id="{{id}}">
 				<div class="post__user">
-					<img src="/images/{{user_image}}" class="post__user__picture hidden" alt="PP"> <a href="/user/{{user.id}}" class="post__user__name">{{user.first_name}} {{user.last_name}}</a>
+					<a href="/user/{{user.id}}" class="post__user__name">{{user.first_name}} {{user.last_name}}</a>
+				</div>
+				<div class="post__content">{{content}}</div>
+				<div class="post__category"><span class="">Category : </span>{{category_name}}</div>
+			</div>
+		</script>
+
+		<script type="text/x-handlebars-template" id="cdc-post-with-image-item-template">
+			<div class="box post" id="{{id}}">
+				<div class="post__user">
+					<img src="/images/{{user_image}}" class="post__user__picture" alt="PP"> <a href="/user/{{user.id}}" class="post__user__name">{{user.first_name}} {{user.last_name}}</a>
 				</div>
 				<div class="post__content">{{content}}</div>
 				<div class="post__category"><span class="">Category : </span>{{category_name}}</div>

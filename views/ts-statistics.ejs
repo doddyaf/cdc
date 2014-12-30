@@ -51,47 +51,49 @@
 	</nav>
 	
 	<main>
-		<div class="container">
-			<div class="box box--chart">
+		<section class="section section--statistics">
+			<div class="container">
+				<div class="box box--chart">
 
-				<h1 class="box__title">Tracer Study Statistics</h1>
-				
-				<div class="box box--general">
-					<div class="row">
-						<div class="col-lg-4 col-md-4">
-							<b>Total responden :</b>
-							<p><span id="total-responden"></span> Alumni</p>
-						</div>
-						<div class="col-lg-4 col-md-4">
-							<b>Total responden yang telah bekerja :</b>
-							<p><span id="total-responden-work"></span> Alumni</p>
-						</div>
-						<div class="col-lg-4 col-md-4">
-							<b></b>
-							<p></p>
+					<h1 class="box__title">Tracer Study Statistics</h1>
+					
+					<div class="box box--general">
+						<div class="row">
+							<div class="col-lg-4 col-md-4">
+								<b>Total responden :</b>
+								<p><span id="total-responden"></span> Alumni</p>
+							</div>
+							<div class="col-lg-4 col-md-4">
+								<b>Total responden yang telah bekerja :</b>
+								<p><span id="total-responden-work"></span> Alumni</p>
+							</div>
+							<div class="col-lg-4 col-md-4">
+								<b></b>
+								<p></p>
+							</div>
 						</div>
 					</div>
+
+					<hr>
+
+					<div class="chart-container" id="js-chart-work-percentage-container">
+						<img src="/images/spinner.gif" class="loader" id="loader-chart-percentage" alt="Loading..">	
+						<div class="chart" id="js-chart-work-percentage"></div>
+					</div>
+
+					<div class="chart-container" id="js-chart-work-total-container">
+						<img src="/images/spinner.gif" class="loader" id="loader-chart-total" alt="Loading..">
+						<div class="chart" id="js-chart-work-total"></div>
+					</div>
+
+					<div class="chart-container" id="js-chart-salary-container">
+						<img src="/images/spinner.gif" class="loader" id="loader-chart-salary" alt="Loading..">
+						<div class="chart" id="js-chart-salary"></div>
+					</div>
+
 				</div>
-
-				<hr>
-
-				<div class="chart-container" id="js-chart-work-percentage-container">
-					<img src="/images/spinner.gif" class="loader" id="loader-chart-percentage" alt="Loading..">	
-					<div class="chart" id="js-chart-work-percentage"></div>
-				</div>
-
-				<div class="chart-container" id="js-chart-work-total-container">
-					<img src="/images/spinner.gif" class="loader" id="loader-chart-total" alt="Loading..">
-					<div class="chart" id="js-chart-work-total"></div>
-				</div>
-
-				<div class="chart-container" id="js-chart-salary-container">
-					<img src="/images/spinner.gif" class="loader" id="loader-chart-salary" alt="Loading..">
-					<div class="chart" id="js-chart-salary"></div>
-				</div>
-
 			</div>
-		</div>
+		</section>
 	</main>
 
     <footer class="footer">

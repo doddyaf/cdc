@@ -49,104 +49,106 @@
 	  	</div>
 	</nav>
 	<main>
-		<div class="jumbotron">
-			<form class="container box-register" method="post" action="/register" role="form">
-				
-				<h2 class="box__title">Register</h2>
-				
-				<div class="row">
+		<section class="section section--register">
+			<div class="container">
+				<form class="box--register" method="post" action="/register" role="form">
+					
+					<h1 class="box__title">Register</h1>
+					
+					<div class="row">
 
-					<div class="col-lg-6 col-md-6">
-						<div class="form-group">
-							<label for="">First Name</label>
-						  	<input type="text" name="user_first_name" placeholder="First Name" class="form-control" required>
+						<div class="col-lg-6 col-md-6">
+							<div class="form-group">
+								<label for="">First Name</label>
+							  	<input type="text" name="user_first_name" placeholder="First Name" class="form-control" required>
+							</div>
+							<div class="form-group">
+								<label for="">Last Name</label>
+							  	<input type="text" name="user_last_name" placeholder="Last Name" class="form-control" required>
+							</div>
+							<div class="form-group">
+								<label for="">Email Address</label>
+							  	<input type="email" name="user_email" placeholder="you@example.com" class="form-control" required>
+							</div>
+							<div class="form-group">
+								<label for="">Date of Birth</label>
+							  	<input type="date" name="user_dob" placeholder="" class="form-control" required>
+							</div>
+							<div class="form-group">
+								<label for="">Password</label>
+							  	<input type="password" name="user_password" placeholder="Your Password" class="form-control" required>
+							</div>
+							<div class="form-group">
+								<label for="">Re-enter Password</label>
+							  	<input type="password" name="user_re_password" placeholder="Re-enter your password" class="form-control" required>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="">Last Name</label>
-						  	<input type="text" name="user_last_name" placeholder="Last Name" class="form-control" required>
+
+						<div class="col-lg-6 col-md-6">
+
+							<div class="form-group">
+								<label for="">Phone Number</label>
+							  	<input type="text" name="user_phone" placeholder="+62XXXXXXX" class="form-control" required>
+							</div>
+
+							<div class="form-group">
+								<label for="">Address</label>
+							  	<textarea name="user_address" placeholder="Your Address" class="field-double-height form-control" required></textarea>
+							</div>
+
+							<div class="form-group">
+								<label for="">Program</label>
+							  	<select name="user_program_id" class="form-control" required>
+							  		<option value="1">Informatika</option>
+							  		<option value="2">Teknik Sipil</option>
+							  		<option value="3">Teknik Kimia</option>
+							  		<option value="4">Teknik Arsitektur</option>
+							  		<option value="5">Perancangan Wilayah dan Kota</option>
+							  		<option value="6">Teknik Elektro</option>
+							  		<option value="7">Teknik Mesin</option>
+							  		<option value="8">Teknik Industri Pertanian</option>
+							  		<option value="9">Teknik Industri</option>
+							  		<option value="10">Mekatronika</option>
+							  		<option value="11">Otomotif</option>
+							  		<option value="12">Manajemen</option>
+							  	</select>
+							</div>
+
+							<div class="form-group">
+								<label for="">Class Of</label>
+							  	<select name="user_class_of" class="form-control" required>
+							  		<option value="2005">2005</option>
+							  		<option value="2006">2006</option>
+							  		<option value="2007">2007</option>
+							  		<option value="2008">2008</option>
+							  		<option value="2009">2009</option>
+							  		<option value="2010">2010</option>
+							  		<option value="2011">2011</option>
+							  		<option value="2012">2012</option>
+							  		<option value="2013">2013</option>
+							  		<option value="2014">2014</option>
+							  	</select>
+							</div>
+
+							<div class="form-group">
+								<label for="">Sex</label>
+							  	<select name="gender" class="form-control" required>
+							  		<option value="1">Male</option>
+							  		<option value="2">Female</option>
+							  	</select>
+							</div>
+
 						</div>
-						<div class="form-group">
-							<label for="">Email Address</label>
-						  	<input type="email" name="user_email" placeholder="you@example.com" class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label for="">Date of Birth</label>
-						  	<input type="date" name="user_dob" placeholder="" class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label for="">Password</label>
-						  	<input type="password" name="user_password" placeholder="Your Password" class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label for="">Re-enter Password</label>
-						  	<input type="password" name="user_re_password" placeholder="Re-enter your password" class="form-control" required>
-						</div>
+
 					</div>
 
-					<div class="col-lg-6 col-md-6">
+					<button type="submit" class="btn btn-block btn-success">Register</button>
 
-						<div class="form-group">
-							<label for="">Phone Number</label>
-						  	<input type="text" name="user_phone" placeholder="+62XXXXXXX" class="form-control" required>
-						</div>
+					<div class="text-information">Have an account?, <a href="/login">Login here</a></div>
 
-						<div class="form-group">
-							<label for="">Address</label>
-						  	<textarea name="user_address" placeholder="Your Address" class="field-double-height form-control" required></textarea>
-						</div>
-
-						<div class="form-group">
-							<label for="">Program</label>
-						  	<select name="user_program_id" class="form-control" required>
-						  		<option value="1">Informatika</option>
-						  		<option value="2">Teknik Sipil</option>
-						  		<option value="3">Teknik Kimia</option>
-						  		<option value="4">Teknik Arsitektur</option>
-						  		<option value="5">Perancangan Wilayah dan Kota</option>
-						  		<option value="6">Teknik Elektro</option>
-						  		<option value="7">Teknik Mesin</option>
-						  		<option value="8">Teknik Industri Pertanian</option>
-						  		<option value="9">Teknik Industri</option>
-						  		<option value="10">Mekatronika</option>
-						  		<option value="11">Otomotif</option>
-						  		<option value="12">Manajemen</option>
-						  	</select>
-						</div>
-
-						<div class="form-group">
-							<label for="">Class Of</label>
-						  	<select name="user_class_of" class="form-control" required>
-						  		<option value="2005">2005</option>
-						  		<option value="2006">2006</option>
-						  		<option value="2007">2007</option>
-						  		<option value="2008">2008</option>
-						  		<option value="2009">2009</option>
-						  		<option value="2010">2010</option>
-						  		<option value="2011">2011</option>
-						  		<option value="2012">2012</option>
-						  		<option value="2013">2013</option>
-						  		<option value="2014">2014</option>
-						  	</select>
-						</div>
-
-						<div class="form-group">
-							<label for="">Sex</label>
-						  	<select name="gender" class="form-control" required>
-						  		<option value="1">Male</option>
-						  		<option value="2">Female</option>
-						  	</select>
-						</div>
-
-					</div>
-
-				</div>
-
-				<a class="pull-left" href="login">Have an account?, login here</a>
-
-				<button type="submit" class="btn btn-success pull-right">Register</button>
-
-			</form>
-		</div>
+				</form>
+			</div>
+		</section>
 	</main>
     <footer class="footer">
         <div class="container">

@@ -24,11 +24,36 @@ var io = require('socket.io')(http);
 
 var path = require('path');
 
+// Custom Settings Configuration
+var config = {
+	
+	db: {
+		host: 'localhost',
+		user: 'root',
+		password: '',
+		database: 'cdc'
+	},
+
+	sessionOptions: {
+		secret: 'doddyagung',
+		resave: true,
+		saveUninitialized: true
+	}
+
+};
+
+var sessionMiddleware = session( config.sessionOptions );
+
+// MySQL Connection
+var mysql = require('mysql');
+var connection = mysql.createConnection( config.db );
+
 // ENVIRONMENT CONFIGURATION
 // ==============================================
 
 app.set('port', process.env.PORT || 3000);
 app.set('env', 'development');
+// app.set('env', 'production');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -44,12 +69,6 @@ app.use(multer({
 app.use(cookieParser()); // must use cookieParser before expressSession
 
 // Sessions
-var sessionMiddleware = session({
-	secret: 'doddyagung',
-	resave: true,
-	saveUninitialized: true
-});
-
 io.use(function(socket, next) {
     sessionMiddleware(socket.request, socket.request.res, next);
 });
@@ -63,26 +82,41 @@ app.use(express.static(path.join(__dirname, 'public'))); // Serving static files
 
 app.set('title', 'Career Development Center - ITI');
 
-// Custom Settings Configuration
-var config = {
-	db: {
-		host: 'localhost',
-		user: 'root',
-		password: '',
-		database: 'cdc'
-	}
-};
-
-// Mysql Connection
-var mysql = require('mysql');
-var connection = mysql.createConnection( config.db );
- 
+// Connect to MySQL 
 connection.connect();
 
 // CUSTOM FUNCTIONS
 // ==============================================
 
 var User = {
+
+	TAG_LOGIN: 'LOGIN',
+
+	TAG_LOGOUT: 'LOGOUT',
+
+	// Check Session for every request
+	checkSession: function (req, res, next) {
+
+		if (req.url != '/login') {
+			// if user go to page except login THEN check if user authenticated
+			if ( req.url == '/register' || req.session.user) {
+				return next();
+			}
+			// IF USER ISN'T LOGGED IN, REDIRECT THEM TO LOGIN PAGE
+			res.redirect('/login');
+		}
+		else if (req.url == '/login') {
+			// If user go to login page and had already authenticated, redirect the user to home page
+			if (req.session.user) {
+				res.redirect('/');
+			}
+			else {
+				return next();
+			}
+		}
+		// continue doing what we were doing and go to the route
+		// next();
+	},
 
 	authenticate: function (user_email, user_password, callback) {
 
@@ -91,13 +125,11 @@ var User = {
 		connection.query(queryGetUser, function(err, rows, fields) {
 			if (err) throw err;
 
-			console.log(rows.length);
-
 			if (rows.length == 1) {
 				
 				var currentUser = rows[0];
 
-				console.log(currentUser.first_name + ' is logged in');
+				console.log(User.TAG_LOGIN + ' User with id : ' + currentUser.id + '( ' + currentUser.first_name + ') is logged in');
 
 				callback(currentUser);
 
@@ -460,7 +492,7 @@ var Dashboard = {
 
 	getAllInformation: function (callback) {
 
-		var queryGetAnswer = "SELECT ( SELECT COUNT(user.id) FROM user ) AS total_user, ( SELECT COUNT(answer.id) FROM answer ) AS total_answer, ( SELECT COUNT(answer.id) FROM answer WHERE status_id = '1' ) AS total_answer_work";
+		var queryGetAnswer = "SELECT ( SELECT COUNT(user.id) FROM user ) AS total_user, ( SELECT COUNT(answer.id) FROM answer ) AS total_answer, ( SELECT COUNT(answer.id) FROM answer WHERE status_id = '1' ) AS total_answer_work, ( SELECT COUNT(post.id) FROM post ) AS total_post, ( SELECT COUNT(gallery.id) FROM gallery ) AS total_gallery";
 
 		connection.query(queryGetAnswer, function(err, rows, fields) {
 			if (err) throw err;
@@ -474,35 +506,11 @@ var Dashboard = {
 
 };
 
-// Check Session for every request
-function checkSession(req, res, next) {
-
-	if (req.url != '/login') {
-		// if user go to page except login THEN check if user authenticated
-		if ( req.url == '/register' || req.session.user) {
-			return next();
-		}
-		// IF USER ISN'T LOGGED IN, REDIRECT THEM TO LOGIN PAGE
-		res.redirect('/login');
-	}
-	else if (req.url == '/login') {
-		// If user go to login page and had already authenticated, redirect the user to home page
-		if (req.session.user) {
-			res.redirect('/');
-		}
-		else {
-			return next();
-		}
-	}
-	// continue doing what we were doing and go to the route
-	// next();
-}
-
 // MIDDLEWARES
 // ==============================================
 
 // route middleware that will happen on every request
-router.use(checkSession);
+router.use(User.checkSession);
 
 // ROUTES
 // ==============================================
@@ -567,19 +575,19 @@ router.get('/api/ts/check', function (req, res) {
 
 // Tracer Study - Percentage
 router.get('/api/ts/percentage', function (req, res) {
-	var exampleAllPercentage = [{
-		name: 'Informatika',
-		data: [null,null,null,null,null,null,null,null,null,90,95,90,80,76,82,66,70,88,78,90,95,90,80,76,82,66,70,88]
-	}, {
-		name: 'Teknik Kimia',
-		data: [90,89,83,72,86,62,71,84,79,76,90,89,83,72,86,62,71,84,79,76,90,89,83,72,86,62,71,84]
-	}, {
-		name: 'Teknik Industri',
-		data: [null,null,86,74,83,61,73,87,74,99,86,74,83,61,73,87,74,99,100,80,86,74,83,61,73,87,74,99]
-	}, {
-		name: 'Teknik Mesin',
-		data: [98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89]
-	}];
+	// var exampleAllPercentage = [{
+	//	name: 'Informatika',
+	//	data: [null,null,null,null,null,null,null,null,null,90,95,90,80,76,82,66,70,88,78,90,95,90,80,76,82,66,70,88]
+	// }, {
+	//	name: 'Teknik Kimia',
+	//	data: [90,89,83,72,86,62,71,84,79,76,90,89,83,72,86,62,71,84,79,76,90,89,83,72,86,62,71,84]
+	// }, {
+	//	name: 'Teknik Industri',
+	//	data: [null,null,86,74,83,61,73,87,74,99,86,74,83,61,73,87,74,99,100,80,86,74,83,61,73,87,74,99]
+	// }, {
+	//	name: 'Teknik Mesin',
+	//	data: [98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89]
+	// }];
 
 	function responseResult (result) { res.json(result); }
 
@@ -640,24 +648,17 @@ router.get('/api/ts/salary', function (req, res) {
 // UI
 // ----------------------------------------------
 
-router.get('/', function(req, res) {
-	// res.sendFile(path.join(__dirname, '/views', 'index.html'));
-	res.render('index');
+router.get('/', function (req, res) {
+	res.render('index', req.session.user);
 });
 
-router.get('/dashboard', function(req, res) {
+router.get('/dashboard', function (req, res) {
 
 	function responseResult(result) {
 		res.render('dashboard', result);
 	}
 
 	if (req.session.user.type == 'admin') {
-
-		var information = {
-			total_user: 290,
-			total_answer: 200
-		};
-
 		Dashboard.getAllInformation(responseResult);
 	}
 
@@ -676,7 +677,7 @@ router.get('/dashboard', function(req, res) {
 	
 });
 
-router.get('/user/:id', function(req, res) {
+router.get('/user/:id', function (req, res) {
 	var userId = req.params.id;
 
 	function responseResult(err, result) {
@@ -687,42 +688,35 @@ router.get('/user/:id', function(req, res) {
 	User.getUser(userId, responseResult);
 });
 
-router.get('/cdc', function(req, res) {
-	// res.sendFile(path.join(__dirname, '/views', 'cdc.html'));
+router.get('/cdc', function (req, res) {
 	res.render('cdc');
 });
 
-router.get('/ts-form', function(req, res) {
-	// res.sendFile(path.join(__dirname, '/views', 'ts-form.html'));
+router.get('/ts-form', function (req, res) {
 	res.render('ts-form');
 });
 
-router.get('/ts-statistics', function(req, res) {
-	// res.sendFile(path.join(__dirname, '/views', 'ts-statistik.html'));
+router.get('/ts-statistics', function (req, res) {
 	res.render('ts-statistics');
 });
 
-router.get('/gallery', function(req, res) {
-	// res.sendFile(path.join(__dirname, '/views', 'gallery.html'));
+router.get('/gallery', function (req, res) {
 	res.render('gallery');
 });
 
-router.get('/profile', function(req, res) {
-	// res.sendFile(path.join(__dirname, '/views', 'profile.html'));
+router.get('/profile', function (req, res) {
 	res.render('profile');
 });
 
-router.get('/faq', function(req, res) {
-	// res.sendFile(path.join(__dirname, '/views', 'faq.html'));
+router.get('/faq', function (req, res) {
 	res.render('faq');
 });
 
-router.get('/login', function(req, res) {
-	// res.sendFile(path.join(__dirname, '/views', 'login.html'));
+router.get('/login', function (req, res) {
 	res.render('login');
 });
 
-router.post('/login', function(req, res) {
+router.post('/login', function (req, res) {
 
 	var user_email = req.body.user_email,
 		user_password = req.body.user_password;
@@ -740,12 +734,11 @@ router.post('/login', function(req, res) {
 	User.authenticate(user_email, user_password, responseResult);
 });
 
-router.get('/register', function(req, res) {
-	// res.sendFile(path.join(__dirname, '/views', 'register.html'));
+router.get('/register', function (req, res) {
 	res.render('register');
 });
 
-router.post('/register', function(req, res) {
+router.post('/register', function (req, res) {
 	console.log(req.body.user_email + req.body.user_password);
 
 	var userData = {};
@@ -766,17 +759,38 @@ router.post('/register', function(req, res) {
 	User.register(req, res, userData);
 });
 
-router.get('/logout', function(req, res) {
+router.get('/logout', function (req, res) {
+	var currentUser = req.session.user;
+
+	console.log(User.TAG_LOGOUT + ' User with id : ' + currentUser.id + '( ' + currentUser.first_name + ') is logged out');
+	
 	req.session.user = null;
 	res.redirect('/login');
 });
 
 app.use('/', router);
 
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
+
 // error handling middleware should be loaded after the loading the routes
 if ('development' == app.get('env')) {
 	app.use(errorHandler());
 }
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
+});
 
 // Socket IO
 // ==============================================

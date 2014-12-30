@@ -61,7 +61,9 @@
 			<section class="section--user">
 				<div class="box container">
 					<div class="user">
-						<div class="user__name"><%= first_name %> <%= last_name %></div>
+						<h2 class="user__name box__subtitle"><%= first_name %> <%= last_name %></h2>
+						<div class="user__label">Email :</div>
+						<div class="user__email"><%= email %></div>
 						<div class="user__label">Jurusan :</div>
 						<div class="user__program_name"><%= program_name %></div>
 						<div class="user__label">Angkatan :</div>
@@ -84,6 +86,6 @@
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="/js/vendor/jquery-1.11.0.min.js"></script>
 		<script src="/js/vendor/bootstrap.min.js"></script>
-		<script src="/js/vendor/main.js"></script>
+		<script src="/js/main.js"></script>
 	</body>
 </html>
