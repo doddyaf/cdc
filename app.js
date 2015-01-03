@@ -1,3 +1,4 @@
+// ==============================================
 // CDC Institut Teknologi Indonesia
 // ==============================================
 
@@ -488,11 +489,42 @@ var TracerStudy = {
 	}
 };
 
+var Gallery = {
+
+	insert: function (gallery, callback) {
+
+		var query = connection.query('INSERT INTO gallery SET ?', gallery, function(err, result) {
+			if (err) throw err;
+			callback(err, result);
+		});
+
+	},
+
+	getAllGallery: function (callback) {
+
+		var	queryGetAllPosts = 'SELECT * FROM gallery';
+
+		connection.query(queryGetAllPosts, function(err, rows, fields) {
+			if (err) throw err;
+
+			allGalleries = {
+				galleries: rows
+			};
+
+			jsonAllGalleries = JSON.stringify(allGalleries);
+
+			callback(null, jsonAllGalleries);
+		});
+
+	}
+
+};
+
 var Dashboard = {
 
 	getAllInformation: function (callback) {
 
-		var queryGetAnswer = "SELECT ( SELECT COUNT(user.id) FROM user ) AS total_user, ( SELECT COUNT(answer.id) FROM answer ) AS total_answer, ( SELECT COUNT(answer.id) FROM answer WHERE status_id = '1' ) AS total_answer_work, ( SELECT COUNT(post.id) FROM post ) AS total_post, ( SELECT COUNT(gallery.id) FROM gallery ) AS total_gallery";
+		var queryGetAnswer = "SELECT ( SELECT COUNT(user.id) FROM user ) AS total_user, ( SELECT COUNT(answer.id) FROM answer ) AS total_answer, ( SELECT COUNT(answer.id) FROM answer WHERE status_id = '1' ) AS total_answer_work, ( SELECT COUNT(answer.id) FROM answer WHERE status_id = '2' ) AS total_answer_not_work, ( SELECT COUNT(post.id) FROM post ) AS total_post, ( SELECT COUNT(gallery.id) FROM gallery ) AS total_gallery";
 
 		connection.query(queryGetAnswer, function(err, rows, fields) {
 			if (err) throw err;
@@ -575,19 +607,6 @@ router.get('/api/ts/check', function (req, res) {
 
 // Tracer Study - Percentage
 router.get('/api/ts/percentage', function (req, res) {
-	// var exampleAllPercentage = [{
-	//	name: 'Informatika',
-	//	data: [null,null,null,null,null,null,null,null,null,90,95,90,80,76,82,66,70,88,78,90,95,90,80,76,82,66,70,88]
-	// }, {
-	//	name: 'Teknik Kimia',
-	//	data: [90,89,83,72,86,62,71,84,79,76,90,89,83,72,86,62,71,84,79,76,90,89,83,72,86,62,71,84]
-	// }, {
-	//	name: 'Teknik Industri',
-	//	data: [null,null,86,74,83,61,73,87,74,99,86,74,83,61,73,87,74,99,100,80,86,74,83,61,73,87,74,99]
-	// }, {
-	//	name: 'Teknik Mesin',
-	//	data: [98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89,73,75,98,98,87,71,89,67,75,89]
-	// }];
 
 	function responseResult (result) { res.json(result); }
 
@@ -644,6 +663,16 @@ router.get('/api/ts/salary', function (req, res) {
 	TracerStudy.getAllSalary(responseResult);
 
 });
+
+// Gallery
+router.get('/api/gallery', function (req, res) {
+
+	function responseResult (result) { res.json(result); }
+
+	Gallery.getAllGallery(responseResult);
+
+});
+
 
 // UI
 // ----------------------------------------------

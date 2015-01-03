@@ -1,53 +1,90 @@
 var socket = io();
 
-jQuery(document).ready( function ($) {
+var CDC = {
 
-	var sourceCdcPost = $("#cdc-post-template").html();
-	var cdcPostTemplate = Handlebars.compile(sourceCdcPost);
+	API: {
 
-	var sourceCdcPostItem = $("#cdc-post-item-template").html();
-	var cdcPostItemTemplate = Handlebars.compile(sourceCdcPostItem);
+		jobPost: '/api/cdc'
 
-	// Ambil Semua Postingan CDC
-	var siteURL = window.location.origin;
-	console.log(siteURL);
+	},
 
-	$.get(siteURL + '/api/cdc/', function(data) {
-		var postsJSON = $.parseJSON(data);
+	sourceCdcPost: '',
 
-		var htmlCdcPost = cdcPostTemplate(postsJSON);
+	cdcPostTemplate: '',
 
-		$('#posts').prepend(htmlCdcPost);
-	});
+	sourceCdcPostItem: '',
 
-	// Fungsi pada saat cdc form di-submit
-	$('#cdc-form').submit( function() {
-		var cdcPost = {};
-		cdcPost.content = $('#cdc-form-content').val();
-		cdcPost.post_category_id = $('#cdc-form-category').val();
+	cdcPostItemTemplate: '',
 
-		socket.emit('cdc post', cdcPost);
+	init: function () {
 
-		// Clear all inputs
-		$('#cdc-form-content').val('');
-		$('#cdc-form-category').prop('selectedIndex', 0);
+		CDC.sourceCdcPost = $("#cdc-post-template").html();
+		CDC.cdcPostTemplate = Handlebars.compile(CDC.sourceCdcPost);
 
-		return false;
-	});
+		CDC.sourceCdcPostItem = $("#cdc-post-item-template").html();
+		CDC.cdcPostItemTemplate = Handlebars.compile(CDC.sourceCdcPostItem);
 
-	// Real-Time CDC Post
-	socket.on('cdc post', function(msg) {
+		CDC.getAllJobsPosts();
 
-		if (msg.post_category_id == 1) {
-			msg.category_name = "Walk Interview";
-		}
-		else if (msg.post_category_id == 2) {
-			msg.category_name = "Job Fair";
-		}
+		CDC.setFormListener();
 
-		var htmlCdcPost = cdcPostItemTemplate(msg);
+		CDC.setSocketListener();
 
-		$('#posts').prepend(htmlCdcPost);
-	});
-	
+	},
+
+	getAllJobsPosts: function () {
+
+		// Ambil Semua Postingan CDC
+		$.get(CDC.API.jobPost, function(data) {
+			var postsJSON = $.parseJSON(data);
+
+			var htmlCdcPost = CDC.cdcPostTemplate(postsJSON);
+
+			$('#posts').prepend(htmlCdcPost);
+		});
+
+	},
+
+	setFormListener: function () {
+
+		// Fungsi pada saat cdc form di-submit
+		$('#cdc-form').submit( function() {
+			var cdcPost = {};
+			cdcPost.content = $('#cdc-form-content').val();
+			cdcPost.post_category_id = $('#cdc-form-category').val();
+
+			socket.emit('cdc post', cdcPost);
+
+			// Clear all inputs
+			$('#cdc-form-content').val('');
+			$('#cdc-form-category').prop('selectedIndex', 0);
+
+			return false;
+		});
+
+	},
+
+	setSocketListener: function () {
+
+		// Real-Time CDC Post
+		socket.on('cdc post', function(msg) {
+
+			if (msg.post_category_id == 1) {
+				msg.category_name = "Walk Interview";
+			}
+			else if (msg.post_category_id == 2) {
+				msg.category_name = "Job Fair";
+			}
+
+			var htmlCdcPost = CDC.cdcPostItemTemplate(msg);
+
+			$('#posts').prepend(htmlCdcPost);
+		});
+
+	}
+
+};
+
+jQuery(document).ready(function($) {
+	CDC.init();
 });

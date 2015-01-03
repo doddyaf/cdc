@@ -1,16 +1,14 @@
 /*
 * TracerStudy Namespace, make sure to include jQuery and Highchart.js before this file
 */
-var siteURL = window.location.origin;
-
 var TracerStudy = {};
 
 TracerStudy.API = {
-	general:	siteURL + '/api/ts',
-	check:		siteURL + '/api/ts/check',
-	percentage: siteURL + '/api/ts/percentage',
-	total:		siteURL + '/api/ts/total',
-	salary:		siteURL + '/api/ts/salary'
+	general:	'/api/ts',
+	check:		'/api/ts/check',
+	percentage: '/api/ts/percentage',
+	total:		'/api/ts/total',
+	salary:		'/api/ts/salary'
 };
 
 TracerStudy.Form = {
@@ -27,6 +25,7 @@ TracerStudy.Form = {
 
 		TracerStudy.Form.check();
 
+		// Hide the group work question if user don't have job
 		$inputStatus.change( function (event) {
 			var value = $(this).val();
 			
@@ -126,11 +125,15 @@ TracerStudy.Statistics = {
 
 		$totalRespondenWork = $('#total-responden-work');
 
+		$totalRespondenNotWork = $('#total-responden-not-work');
+
 		$.get(TracerStudy.API.general, function (data) {
 
 			$totalResponden.html(data.total_answer);
 
 			$totalRespondenWork.html(data.total_answer_work);
+
+			$totalRespondenNotWork.html(data.total_answer_not_work);
 
 		});
 

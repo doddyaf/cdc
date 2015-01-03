@@ -53,39 +53,36 @@
 		<main>
 			<section class="section section--cdc">
 				<div class="container">
-					<div class="box box--form">
+					<div class="col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2">
+						
+						<div class="box box--form">
 
-						<h1 class="box__title">Jobs Posts</h1>
+							<h1 class="box__title">Jobs Posts</h1>
 
-						<!-- CDC Form -->
-						<form action="" id="cdc-form">
-							<!-- CDC Form Content -->
-							<div class="form-group">
-							  	<textarea name="content" class="cdc-form__content form-control" id="cdc-form-content" placeholder="Post descriptions"></textarea>
-							</div>
-							<!-- CDC Form Category -->
-							<div class="form-group">
-								<select name="category" class="cdc-form__category form-control" id="cdc-form-category">
-							  		<option value="1">Walk Interview</option>
-									<option value="2">Job Fair</option>
-								</select>
-							</div>
-							<!-- CDC Form Submit Button -->
-							<input class="btn-lg btn-primary btn-block" type="submit" value="Post">
-						</form><!-- CDC Form End -->
+							<!-- CDC Form -->
+							<form action="" id="cdc-form">
+								<!-- CDC Form Content -->
+								<div class="form-group">
+								  	<textarea name="content" class="cdc-form__content form-control" id="cdc-form-content" placeholder="Post descriptions"></textarea>
+								</div>
+								<!-- CDC Form Category -->
+								<div class="form-group">
+									<select name="category" class="cdc-form__category form-control" id="cdc-form-category">
+								  		<option value="1">Walk Interview</option>
+										<option value="2">Job Fair</option>
+									</select>
+								</div>
+								<!-- CDC Form Submit Button -->
+								<input class="btn-lg btn-primary btn-block" type="submit" value="Post">
+							</form><!-- CDC Form End -->
+						</div>
+
+						<!-- All CDC Posts -->
+						<div class="posts-container" id="posts"></div>
+						<!-- All CDC Posts End -->
+
 					</div>
-					<!-- All CDC Posts -->
-					<div class="posts-container" id="posts">
-						<!-- <div class="box post">
-							<div class="post__user">
-								<img src="/images/{{user_image}}" class="post__user__picture" alt="PP"> <span class="post__user__name">{{first_name}} {{last_name}}</span>
-							</div>
-							<div class="post__content">{{content}}</div>
-							<div class="post__category">{{category_name}}</div>
-						</div> -->
-					</div>
-					<!-- All CDC Posts End -->
-				</div>
+				</div><!-- Container End -->
 			</section>
 		</main>
 		<footer class="footer">

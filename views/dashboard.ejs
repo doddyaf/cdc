@@ -50,29 +50,31 @@
 		  	</div>
 		</nav>
 		<main>
-			<div class="container">
-				<div class="box">
-					<h1 class="box__title">CDC ITI - Dashboard</h1>
-					
-					<h2 class="box__subtitle">Informasi Pengguna</h2>
-					
-					<div class="information">
-						<div class="information__total_user">
-							Total pengguna yang terdaftar : <span id="total-user"><%= total_user %></span>
+			<section class="section section--dashboard">
+				<div class="container">
+					<div class="box">
+						<h1 class="box__title">CDC ITI - Dashboard</h1>
+						
+						<h2 class="box__subtitle">Informasi Pengguna</h2>
+						
+						<div class="information">
+							<div class="information__total_user">
+								Total pengguna yang terdaftar : <span id="total-user"><%= total_user %></span>
+							</div>
+							<div class="information__total_answer">
+								Total responden form Tracer Study : <span id="total-responden"><%= total_answer %></span>
+							</div>
+							<div class="information__total_post">
+								Total Jobs Posts : <span id="total-post"><%= total_post %></span>
+							</div>
+							<div class="information__total_gallery">
+								Total Gallery : <span id="total-gallery"><%= total_gallery %></span>
+							</div>
 						</div>
-						<div class="information__total_answer">
-							Total responden form Tracer Study : <span id="total-responden"><%= total_answer %></span>
-						</div>
-						<div class="information__total_post">
-							Total Jobs Posts : <span id="total-post"><%= total_post %></span>
-						</div>
-						<div class="information__total_gallery">
-							Total Gallery : <span id="total-gallery"><%= total_gallery %></span>
-						</div>
+						
 					</div>
-					
 				</div>
-			</div>
+			</section>
 		</main>
 		<footer class="footer">
 	        <div class="container">
