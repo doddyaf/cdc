@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 04, 2015 at 01:36 PM
+-- Generation Time: Jan 04, 2015 at 02:58 PM
 -- Server version: 5.5.27
 -- PHP Version: 5.4.7
 
@@ -151,10 +151,19 @@ CREATE TABLE IF NOT EXISTS `gallery` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `image` text NOT NULL,
-  `deskripsi` text NOT NULL,
+  `description` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `gallery`
+--
+
+INSERT INTO `gallery` (`id`, `user_id`, `image`, `description`) VALUES
+(1, 1, 'untitled1420377488959.jpg', 'Contoh'),
+(2, 1, '601-forever-alone-laughing1420379095663.jpg', 'a'),
+(3, 1, 'baju-goku-1420379263598.jpg', 'b');
 
 -- --------------------------------------------------------
 
