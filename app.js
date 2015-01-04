@@ -71,7 +71,7 @@ app.use(cookieParser()); // must use cookieParser before expressSession
 
 // Sessions
 io.use(function(socket, next) {
-    sessionMiddleware(socket.request, socket.request.res, next);
+	sessionMiddleware(socket.request, socket.request.res, next);
 });
 
 app.use(sessionMiddleware);
@@ -233,6 +233,10 @@ var TracerStudy = {
 
 	allClasses: [2005,2006,2007,2008,2009,2010,2011,2012,2013,2014],
 
+	fieldsOfWork: ['Manufaktur', 'Industri Kimia', 'Industri Makanan', 'Industri Tekstil', 'Perbankan', 'Keuangan', 'Jasa', 'Konsultan Teknik', 'Marketing', 'Pendidikan', 'Lainnya'],
+
+	relations: ['Sesuai', 'Masih ada kaitannya', 'Tidak ada kaitannya'],
+
 	check: function (user_id, callback) {
 
 		var queryGetAnswer = "SELECT user_id FROM answer WHERE user_id = '" + user_id + "'";
@@ -259,6 +263,55 @@ var TracerStudy = {
 			if (err) throw err;
 			callback(err, result);
 		});
+
+	},
+
+	getAllRespondenTotal: function(callback) {
+
+		var allData = [];
+
+		var allPrograms = TracerStudy.allPrograms;
+
+		var allProgramsCode = TracerStudy.allProgramsCode;
+		
+		var	index = 1;
+
+		allPrograms.forEach(function(theProgram) {
+			var deferred = Q.defer();
+
+			function finishedQuery(result) {
+				deferred.resolve(result);
+			}
+
+			TracerStudy.getRespondenTotalByProgram(index, finishedQuery);
+
+			allData.push(deferred.promise);
+
+			index++;
+		});
+		
+		return Q.all(allData).then(function () { return callback(allData); });
+
+	},
+
+	getRespondenTotalByProgram: function(programId, callback) {
+
+		var allProgramsCode = TracerStudy.allProgramsCode;
+
+		function finishedQuery(err, rows, fields) {
+			if (err) throw err;
+
+			var responden = {
+				name: allProgramsCode[programId - 1],
+				data: [ rows[0].total_responden ]
+			};
+
+			callback(responden);
+		}
+
+		var queryGetPercentage = "SELECT COUNT(answer.user_id) AS total_responden FROM answer LEFT JOIN user ON user.id = answer.user_id WHERE user.program_id = '" + programId + "'";
+
+		connection.query(queryGetPercentage, finishedQuery);
 
 	},
 
@@ -475,18 +528,295 @@ var TracerStudy = {
 
 	},
 
-	getAllSalary: function(callback) {
+	getAllSalaryPercentage: function(callback) {
 
 		var queryGetTotal = "SELECT answer.gaji_id, COUNT(answer.id) AS total FROM answer WHERE answer.status_id = 1 GROUP BY answer.gaji_id";
 
 		function finishedQuery(err, rows, fields) {
 			if (err) throw err;
-			callback(rows);
+
+			var totalAlumni = 0;
+
+			for (var j in rows) {
+				totalAlumni += rows[j].total;
+			}
+
+			var allDataGaji = [];
+
+			for (var i in rows) {
+				var gaji = rows[i];
+
+				var dataGaji = {};
+
+				switch ( gaji.gaji_id ) {
+					case 1:
+						dataGaji.name = '500rb - 1 juta';
+						break;
+					case 2:
+						dataGaji.name = '1 juta - 2 juta';
+						break;
+					case 3:
+						dataGaji.name = '2 juta - 3 juta';
+						break;
+					case 4:
+						dataGaji.name = '3 juta - 5 juta';
+						break;
+					case 5:
+						dataGaji.name = 'Diatas 5 juta';
+						break;
+				}
+
+				var persentase = ( gaji.total / totalAlumni ) * 100;
+
+				dataGaji.y = persentase;
+
+				allDataGaji.push(dataGaji);
+			}
+
+			callback(allDataGaji);
 		}
 
 		connection.query(queryGetTotal, finishedQuery);
 
-	}
+	},
+
+	getAllSalaryTotal: function(callback) {
+
+		var queryGetTotal = "SELECT answer.gaji_id, COUNT(answer.id) AS total FROM answer WHERE answer.status_id = 1 GROUP BY answer.gaji_id";
+
+		function finishedQuery(err, rows, fields) {
+			if (err) throw err;
+
+			var totalAlumni = 0;
+
+			for (var j in rows) {
+				totalAlumni += rows[j].total;
+			}
+
+			var allDataGaji = [];
+
+			for (var i in rows) {
+				var gaji = rows[i];
+
+				var dataGaji = {};
+
+				switch ( gaji.gaji_id ) {
+					case 1:
+						dataGaji.name = '500rb - 1 juta';
+						break;
+					case 2:
+						dataGaji.name = '1 juta - 2 juta';
+						break;
+					case 3:
+						dataGaji.name = '2 juta - 3 juta';
+						break;
+					case 4:
+						dataGaji.name = '3 juta - 5 juta';
+						break;
+					case 5:
+						dataGaji.name = 'Diatas 5 juta';
+						break;
+				}
+
+				dataGaji.data = [gaji.total];
+
+				allDataGaji.push(dataGaji);
+			}
+
+			callback(allDataGaji);
+		}
+
+		connection.query(queryGetTotal, finishedQuery);
+
+	},
+
+	getAllFieldOfWorkPercentage: function(callback) {
+
+		var allData = [];
+
+		var fieldsOfWork = TracerStudy.fieldsOfWork;
+		
+		var	index = 1;
+
+		fieldsOfWork.forEach(function(theWork) {
+			var deferred = Q.defer();
+
+			function finishedQuery(result) {
+				deferred.resolve(result);
+			}
+
+			TracerStudy.getFieldOfWorkPercentageById(index, finishedQuery);
+
+			allData.push(deferred.promise);
+
+			index++;
+		});
+		
+		return Q.all(allData).then(function () { return callback(allData); });
+
+	},
+
+	getFieldOfWorkPercentageById: function(fowId, callback) {
+
+		var fieldsOfWork = TracerStudy.fieldsOfWork;
+
+		function finishedQuery(err, rows, fields) {
+			if (err) throw err;
+
+			var fow = {
+				name: fieldsOfWork[fowId - 1],
+				y: rows[0].total
+			};
+
+			callback(fow);
+		}
+
+		var query = "SELECT COUNT(answer.id) AS total FROM answer WHERE answer.perusahaan_bidang_id = '" + fowId + "'";
+
+		connection.query(query, finishedQuery);
+
+	},
+
+	getAllFieldOfWorkTotal: function(callback) {
+
+		var allData = [];
+
+		var fieldsOfWork = TracerStudy.fieldsOfWork;
+		
+		var	index = 1;
+
+		fieldsOfWork.forEach(function(theWork) {
+			var deferred = Q.defer();
+
+			function finishedQuery(result) {
+				deferred.resolve(result);
+			}
+
+			TracerStudy.getFieldOfWorkTotalById(index, finishedQuery);
+
+			allData.push(deferred.promise);
+
+			index++;
+		});
+		
+		return Q.all(allData).then(function () { return callback(allData); });
+
+	},
+
+	getFieldOfWorkTotalById: function(fowId, callback) {
+
+		var fieldsOfWork = TracerStudy.fieldsOfWork;
+
+		function finishedQuery(err, rows, fields) {
+			if (err) throw err;
+
+			var fow = {
+				name: fieldsOfWork[fowId - 1],
+				data: [ rows[0].total ]
+			};
+
+			callback(fow);
+		}
+
+		var query = "SELECT COUNT(answer.id) AS total FROM answer WHERE answer.perusahaan_bidang_id = '" + fowId + "'";
+
+		connection.query(query, finishedQuery);
+
+	},
+
+	getAllRelationPercentage: function(callback) {
+
+		var allData = [];
+
+		var relations = TracerStudy.relations;
+		
+		var	index = 1;
+
+		relations.forEach(function(theWork) {
+			var deferred = Q.defer();
+
+			function finishedQuery(result) {
+				deferred.resolve(result);
+			}
+
+			TracerStudy.getRelationPercentageById(index, finishedQuery);
+
+			allData.push(deferred.promise);
+
+			index++;
+		});
+		
+		return Q.all(allData).then(function () { return callback(allData); });
+
+	},
+
+	getRelationPercentageById: function(relationId, callback) {
+
+		var relations = TracerStudy.relations;
+
+		function finishedQuery(err, rows, fields) {
+			if (err) throw err;
+
+			var fow = {
+				name: relations[relationId - 1],
+				y: rows[0].total
+			};
+
+			callback(fow);
+		}
+
+		var query = "SELECT COUNT(answer.id) AS total FROM answer WHERE answer.kecocokan_id = '" + relationId + "'";
+
+		connection.query(query, finishedQuery);
+
+	},
+
+	getAllRelationTotal: function(callback) {
+
+		var allData = [];
+
+		var relations = TracerStudy.relations;
+		
+		var	index = 1;
+
+		relations.forEach(function(theWork) {
+			var deferred = Q.defer();
+
+			function finishedQuery(result) {
+				deferred.resolve(result);
+			}
+
+			TracerStudy.getRelationTotalById(index, finishedQuery);
+
+			allData.push(deferred.promise);
+
+			index++;
+		});
+		
+		return Q.all(allData).then(function () { return callback(allData); });
+
+	},
+
+	getRelationTotalById: function(relationId, callback) {
+
+		var relations = TracerStudy.relations;
+
+		function finishedQuery(err, rows, fields) {
+			if (err) throw err;
+
+			var relation = {
+				name: relations[relationId - 1],
+				data: [ rows[0].total ]
+			};
+
+			callback(relation);
+		}
+
+		var query = "SELECT COUNT(answer.id) AS total FROM answer WHERE answer.kecocokan_id = '" + relationId + "'";
+
+		connection.query(query, finishedQuery);
+
+	},
 };
 
 var Gallery = {
@@ -576,17 +906,26 @@ router.get('/api/ts', function (req, res) {
 router.post('/api/ts', function (req, res) {
 	var answer = {}; // object
 
-	answer.user_id			= req.session.user.id;
-	answer.lama_menunggu	= req.body.lama_menunggu;
-	answer.lama_bekerja		= req.body.lama_bekerja;
-	answer.gaji_id			= req.body.gaji;
-	answer.kecocokan_id		= req.body.kecocokan;
-	answer.status_id		= req.body.status;
-	answer.pekerjaan		= req.body.pekerjaan;
-	answer.alamat_pekerjaan	= req.body.alamat_pekerjaan;
-	answer.manfaat			= req.body.manfaat;
-	answer.masukan			= req.body.masukan;
-	answer.saran			= req.body.saran;
+	answer.user_id						= req.session.user.id;
+	answer.bekerja_studi				= req.body.bekerja_studi;
+	answer.jenis_bekerja_studi_id		= req.body.jenis_bekerja_studi;
+	answer.status_id					= req.body.status;
+	answer.cari_aktif					= req.body.cari_aktif;
+	answer.cari_informasi_id			= req.body.cari_informasi;
+	answer.cari_jenis_id				= req.body.cari_jenis;
+	answer.nama_perusahaan				= req.body.nama_perusahaan;
+	answer.lama_menunggu				= req.body.lama_menunggu;
+	answer.lama_bekerja					= req.body.lama_bekerja;
+	answer.perusahaan_pribadi			= req.body.perusahaan_pribadi;
+	answer.perusahaan_kepemilikan_id	= req.body.perusahaan_kepemilikan;
+	answer.perusahaan_bidang_id			= req.body.perusahaan_bidang;
+	answer.gaji_id						= req.body.gaji;
+	answer.kecocokan_id					= req.body.kecocokan;
+	answer.pekerjaan					= req.body.pekerjaan;
+	answer.alamat_pekerjaan				= req.body.alamat_pekerjaan;
+	answer.manfaat						= req.body.manfaat;
+	answer.masukan						= req.body.masukan;
+	answer.saran						= req.body.saran;
 
 	function responseResult (err, result) {
 		res.send('success');
@@ -603,15 +942,31 @@ router.get('/api/ts/check', function (req, res) {
 	});
 });
 
-// Tracer Study - Percentage
-router.get('/api/ts/percentage', function (req, res) {
+// Tracer Study - Responden Total
+router.get('/api/ts/responden/total', function (req, res) {
+
+	function responseResult (result) { res.json(result); }
+
+	TracerStudy.getAllRespondenTotal(responseResult);
+});
+
+router.get('/api/ts/responden/total/:programId', function (req, res) {
+	var programId = req.params.programId;
+
+	function responseResult (result) { res.json(result); }
+
+	TracerStudy.getRespondenTotalByProgram(programId, responseResult);
+});
+
+// Tracer Study - Work Percentage
+router.get('/api/ts/work/percentage', function (req, res) {
 
 	function responseResult (result) { res.json(result); }
 
 	TracerStudy.getAllWorkPercentage(responseResult);
 });
 
-router.get('/api/ts/percentage/:programId', function (req, res) {
+router.get('/api/ts/work/percentage/:programId', function (req, res) {
 	var programId = req.params.programId;
 
 	function responseResult (result) { res.json(result); }
@@ -619,7 +974,7 @@ router.get('/api/ts/percentage/:programId', function (req, res) {
 	TracerStudy.getWorkPercentageByProgram(programId, responseResult);
 });
 
-router.get('/api/ts/percentage/:programId/:classOf', function (req, res) {
+router.get('/api/ts/work/percentage/:programId/:classOf', function (req, res) {
 	var programId = req.params.programId;
 	var classOf = req.params.classOf;
 
@@ -628,15 +983,15 @@ router.get('/api/ts/percentage/:programId/:classOf', function (req, res) {
 	TracerStudy.getWorkPercentageByProgramAndClass(programId, classOf, responseResult);
 });
 
-// Tracer Study - Total
-router.get('/api/ts/total', function (req, res) {
+// Tracer Study - Work Total
+router.get('/api/ts/work/total', function (req, res) {
 
 	function responseResult (result) { res.json(result); }
 
 	TracerStudy.getAllWorkTotal(responseResult);
 });
 
-router.get('/api/ts/total/:programId', function (req, res) {
+router.get('/api/ts/work/total/:programId', function (req, res) {
 	var programId = req.params.programId;
 
 	function responseResult (result) { res.json(result); }
@@ -644,7 +999,7 @@ router.get('/api/ts/total/:programId', function (req, res) {
 	TracerStudy.getWorkTotalByProgram(programId, responseResult);
 });
 
-router.get('/api/ts/total/:programId/:classOf', function (req, res) {
+router.get('/api/ts/work/total/:programId/:classOf', function (req, res) {
 	var programId = req.params.programId;
 	var classOf = req.params.classOf;
 
@@ -653,12 +1008,57 @@ router.get('/api/ts/total/:programId/:classOf', function (req, res) {
 	TracerStudy.getWorkTotalByProgramAndClass(programId, classOf, responseResult);
 });
 
-// Tracer Study - Salary
-router.get('/api/ts/salary', function (req, res) {
+// Tracer Study - Salary Percentage
+router.get('/api/ts/salary/percentage', function (req, res) {
 
 	function responseResult (result) { res.json(result); }
 
-	TracerStudy.getAllSalary(responseResult);
+	TracerStudy.getAllSalaryPercentage(responseResult);
+
+});
+
+// Tracer Study - Salary Total
+router.get('/api/ts/salary/total', function (req, res) {
+
+	function responseResult (result) { res.json(result); }
+
+	TracerStudy.getAllSalaryTotal(responseResult);
+
+});
+
+// Tracer Study - Field of Work Percentage
+router.get('/api/ts/fow/percentage', function (req, res) {
+
+	function responseResult (result) { res.json(result); }
+
+	TracerStudy.getAllFieldOfWorkPercentage(responseResult);
+
+});
+
+// Tracer Study - Field of Work Total
+router.get('/api/ts/fow/total', function (req, res) {
+
+	function responseResult (result) { res.json(result); }
+
+	TracerStudy.getAllFieldOfWorkTotal(responseResult);
+
+});
+
+// Tracer Study - Relation between work and study Percentage
+router.get('/api/ts/relation/percentage', function (req, res) {
+
+	function responseResult (result) { res.json(result); }
+
+	TracerStudy.getAllRelationPercentage(responseResult);
+
+});
+
+// Tracer Study - Relation between work and study Total
+router.get('/api/ts/relation/total', function (req, res) {
+
+	function responseResult (result) { res.json(result); }
+
+	TracerStudy.getAllRelationTotal(responseResult);
 
 });
 
@@ -799,9 +1199,9 @@ app.use('/', router);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+	var err = new Error('Not Found');
+	err.status = 404;
+	next(err);
 });
 
 // error handling middleware should be loaded after the loading the routes
@@ -812,11 +1212,11 @@ if ('development' == app.get('env')) {
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
+	res.status(err.status || 500);
+	res.render('error', {
+		message: err.message,
+		error: {}
+	});
 });
 
 // Socket IO

@@ -126,6 +126,12 @@
 											<option value="0">-</option>
 											<option value="1">Media CDC - ITI (Mading, Website / Milist)</option>
 											<option value="2">Bursa Kerja di Perguruan Tinggi Lain</option>
+											<option value="3">Iklan di Media</option>
+											<option value="4">Keluarga / teman / kenalan</option>
+											<option value="5">Pendekatan ke perusahaan</option>
+											<option value="6">Perusahaan melakukan pendekatan</option>
+											<option value="7">Internet</option>
+											<option value="8">Lainnya</option>
 										</select>
 									</div>
 
@@ -135,6 +141,15 @@
 											<option value="0">-</option>
 											<option value="1">Manufaktur</option>
 											<option value="2">Industri Kimia / Petrokimia</option>
+											<option value="3">Industri Makanan</option>
+											<option value="4">Industri Tekstil</option>
+											<option value="5">Perbankan</option>
+											<option value="6">Keuangan</option>
+											<option value="7">Jasa</option>
+											<option value="8">Konsultan Teknik</option>
+											<option value="9">Marketing</option>
+											<option value="10">Pendidikan</option>
+											<option value="11">Lainnya</option>
 										</select>
 									</div>
 
@@ -177,6 +192,36 @@
 											<option value="2">Tidak</option>
 										</select>
 									</div>
+
+									<div class="form-group">
+										<label for="input-perusahaan-kepemilikan">Siapakah kategori kepemilikan persusahaan tersebut diatas?</label>
+										<select name="perusahaan_kepemilikan" class="form-control" id="input-perusahaan-kepemilikan" required>
+											<option value="0">-</option>
+											<option value="1">Pemerintahan / BUMN</option>
+											<option value="2">Industri Swasta Nasional</option>
+											<option value="3">Industri Multinasional</option>
+											<option value="4">Non Profit</option>
+											<option value="5">Lainnya</option>
+										</select>
+									</div>
+
+									<div class="form-group">
+										<label for="input-perusahaan-bidang">Apakah bidang utama perusahaan tersebut diatas?</label>
+										<select name="perusahaan_bidang" class="form-control" id="input-perusahaan-bidang" required>
+											<option value="0">-</option>
+											<option value="1">Manufaktur</option>
+											<option value="2">Industri Kimia / Petrokimia</option>
+											<option value="3">Industri Makanan</option>
+											<option value="4">Industri Tekstil</option>
+											<option value="5">Perbankan</option>
+											<option value="6">Keuangan</option>
+											<option value="7">Jasa</option>
+											<option value="8">Konsultan Teknik</option>
+											<option value="9">Marketing</option>
+											<option value="10">Pendidikan</option>
+											<option value="11">Lainnya</option>
+										</select>
+									</div>
 									
 									<div class="form-group">
 										<label for="input-gaji">Berapakah rata-rata pendapatan anda untuk setiap bulannya?</label>
@@ -185,33 +230,24 @@
 											<option value="1">500rb - 1 juta</option>
 											<option value="2">1 juta - 2 juta</option>
 											<option value="3">2 juta - 3 juta</option>
-											<option value="4">3 juta - 4 juta</option>
+											<option value="4">3 juta - 5 juta</option>
 											<option value="5">Lebih dari 5 juta</option>
 										</select>
 									</div>
 
 									<div class="form-group">
-										<label>Kecocokan dengan jurusan kuliah</label>
-										<div class="radio">
-											<label>
-												<input type="radio" name="kecocokan" id="input-kecocokan-1" value="1" checked required> Sesuai
-											</label>
-										</div>
-										<div class="radio">
-											<label>
-												<input type="radio" name="kecocokan" id="input-kecocokan-2" value="2" required> Masih ada kaitannya
-											</label>
-										</div>
-										<div class="radio">
-											<label>
-												<input type="radio" name="kecocokan" id="input-kecocokan-3" value="3" required> Tidak berkaitan sama sekali
-											</label>
-										</div>
+										<label for="input-kecocokan">Kecocokan dengan jurusan kuliah</label>
+										<select name="kecocokan" class="form-control" id="input-kecocokan" required>
+											<option value="0">-</option>
+											<option value="1">Sesuai</option>
+											<option value="2">Masih ada kaitannya</option>
+											<option value="3">Tidak berkaitan sama sekali</option>
+										</select>
 									</div>
 									
 									
 									<div class="form-group">
-										<label for="input-pekerjaan">Pekerjaan saat ini</label>
+										<label for="input-pekerjaan">Jabatan anda saat ini</label>
 										<input type="text" name="pekerjaan" class="form-control" id="input-pekerjaan">
 									</div>
 									
@@ -229,7 +265,7 @@
 									<h2 class="box__subtitle">Masukan Bagi Institut Teknologi Indonesia</h2>
 
 									<div class="form-group">
-										<label for="input-manfaat">Apakah proses dan materi pendidikan di Institut Teknologi Indonesia bermanfaat untuk pekerjaan Anda ?</label>
+										<label for="input-manfaat">Apakah proses dan materi pendidikan Institut Teknologi Indonesia bermanfaat untuk pekerjaan Anda ?</label>
 										<select class="form-control" name="manfaat" id="input-manfaat" required>
 											<option value="Ya">Ya</option>
 											<option value="Sebagian">Sebagian</option>

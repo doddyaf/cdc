@@ -6,9 +6,26 @@ var TracerStudy = {};
 TracerStudy.API = {
 	general:	'/api/ts',
 	check:		'/api/ts/check',
-	percentage: '/api/ts/percentage',
-	total:		'/api/ts/total',
-	salary:		'/api/ts/salary'
+	work: {
+		percentage: '/api/ts/work/percentage',
+		total: '/api/ts/work/total'
+	},
+	salary: {
+		percentage: '/api/ts/salary/percentage',
+		total: '/api/ts/salary/total'
+	},
+	responden: {
+		percentage: '/api/ts/responden/percentage',
+		total: '/api/ts/responden/total'
+	},
+	fow: {
+		percentage: '/api/ts/fow/percentage',
+		total: '/api/ts/fow/total'
+	},
+	relation: {
+		percentage: '/api/ts/relation/percentage',
+		total: '/api/ts/relation/total'
+	}
 };
 
 TracerStudy.Form = {
@@ -45,7 +62,7 @@ TracerStudy.Form = {
 			$buttonSubmit.addClass('disabled');
 			document.getElementById('button-submit').disabled = true;
 
-			$.post(siteURL + '/api/ts', $tracerStudyForm.serialize(), function (data, textStatus, xhr) {
+			$.post(TracerStudy.API.general, $tracerStudyForm.serialize(), function (data, textStatus, xhr) {
 				console.log(data);
 
 				if (data == 'success') {
@@ -84,12 +101,18 @@ TracerStudy.Statistics = {
 
 	allYears: [],
 
+	allProgramsCode: ["IF", "TS", "TK", "TA", "PWK", "TE", "TM", "TIP", "TI", "MT", "OT", "MJ"],
+
+	allPrograms: ["Informatika","Teknik Sipil", "Teknik Kimia", "Teknik Arsitektur", "Perancangan Wilayah dan Kota", "Teknik Elektro", "Teknik Mesin", "Teknik Industri Pertanian", "Teknik Industri", "Mekatronika", "Otomotif", "Manajemen"],
+
+	allSalaryCategories: ['500rb-1jt', '1-2jt', '2-3jt', '3-5jt', 'Diatas 5jt'],
+
 	/*
 	* Initialize Tracer Study statistics
 	* @param container_id_first -> the id of first chart container
 	* @param container_id_second -> the id of second chart container
 	*/
-	init: function (container_id_first, container_id_second, container_id_third) {
+	init: function (chartContainers) {
 
 		var currentDate = new Date();
 
@@ -111,11 +134,23 @@ TracerStudy.Statistics = {
 
 		TracerStudy.Statistics.getGeneralInformation();
 
-		TracerStudy.Statistics.getAllWorkPercentage( container_id_first, TracerStudy.Statistics.allYears );
+		TracerStudy.Statistics.getAllRespondenTotal( chartContainers.responden.total );
 
-		TracerStudy.Statistics.getAllWorkTotal( container_id_second, TracerStudy.Statistics.allYears );
+		TracerStudy.Statistics.getAllWorkPercentage( chartContainers.work.percentage, TracerStudy.Statistics.allYears );
 
-		TracerStudy.Statistics.getAllSalary( container_id_third );
+		TracerStudy.Statistics.getAllWorkTotal( chartContainers.work.total, TracerStudy.Statistics.allYears );
+
+		TracerStudy.Statistics.getAllSalaryPercentage( chartContainers.salary.percentage );
+
+		TracerStudy.Statistics.getAllSalaryTotal( chartContainers.salary.total );
+
+		TracerStudy.Statistics.getAllFieldOfWorkPercentage( chartContainers.fow.percentage );
+
+		TracerStudy.Statistics.getAllFieldOfWorkTotal( chartContainers.fow.total );
+
+		TracerStudy.Statistics.getAllRelationPercentage( chartContainers.relation.percentage );
+
+		TracerStudy.Statistics.getAllRelationTotal( chartContainers.relation.total );
 
 	},
 
@@ -139,23 +174,82 @@ TracerStudy.Statistics = {
 
 	},
 
+	getAllRespondenTotal: function (chartContainer) {
+
+		$respondenTotalLoader = $('#' + chartContainer + ' .loader');
+
+		$respondenTotalChart = $('#' + chartContainer + ' .chart');
+
+		$.get(TracerStudy.API.responden.total, function (data) {
+
+			$respondenTotalLoader.addClass('hidden');
+
+			$respondenTotalChart.highcharts({
+				chart: {
+					type: 'column',
+					margin: 75,
+					options3d: {
+						enabled: true,
+						alpha: 15,
+						beta: 15,
+						depth: 50,
+						viewDistance: 25
+					}
+				},
+				title: {
+					text: 'Jumlah Responden'
+				},
+				subtitle: {
+					text: 'Per program studi',
+				},
+				xAxis: {
+					title : {
+						text: 'Program Studi'
+					}
+				},
+				yAxis: {
+					title: {
+						text: 'Jumlah'
+					}
+				},
+				tooltip: {
+					headerFormat: 'Responden<br>',
+					valueSuffix: ' Alumni'
+				},
+				legend: {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle',
+					borderWidth: 0
+				},
+				plotOptions: {
+					column: {
+						depth: 25
+					}
+				},
+				series: data
+			});
+		});
+
+	},
+
 	getAllWorkPercentage: function (chartContainer, allYears) {
 
 		$workPercentageLoader = $('#' + chartContainer + ' .loader');
 
 		$workPercentageChart = $('#' + chartContainer + ' .chart');
 
-		$.get(TracerStudy.API.percentage, function (data) {
+		$.get(TracerStudy.API.work.percentage, function (data) {
 
 			$workPercentageLoader.addClass('hidden');
 
 			$workPercentageChart.highcharts({
 				title: {
-					text: 'Persentase yang telah bekerja',
+					text: 'Responden yang telah bekerja (Persentase)',
 					x: -20 //center
 				},
 				subtitle: {
-					text: 'Per angkatan dan jurusan',
+					text: 'Per angkatan dan program studi',
 					x: -20
 				},
 				xAxis: {
@@ -175,7 +269,8 @@ TracerStudy.Statistics = {
 					}]
 				},
 				tooltip: {
-					valueSuffix: '%'
+					valueSuffix: '%',
+					headerFormat: '<span style="font-size: 13px">{point.key}</span><br/>'
 				},
 				legend: {
 					layout: 'vertical',
@@ -195,17 +290,17 @@ TracerStudy.Statistics = {
 
 		$workTotalChart = $('#' + chartContainer + ' .chart');
 
-		$.get(TracerStudy.API.total, function (data) {
+		$.get(TracerStudy.API.work.total, function (data) {
 
 			$workTotalLoader.addClass('hidden');
 
 			$workTotalChart.highcharts({
 				title: {
-					text: 'Total yang telah bekerja',
+					text: 'Responden yang telah bekerja (Jumlah)',
 					x: -20 //center
 				},
 				subtitle: {
-					text: 'Per angkatan dan jurusan',
+					text: 'Per angkatan dan program studi',
 					x: -20
 				},
 				xAxis: {
@@ -216,14 +311,15 @@ TracerStudy.Statistics = {
 				},
 				yAxis: {
 					title: {
-						text: 'Total'
+						text: 'Jumlah'
 					},
 					plotLines: [{
 						color: '#808080'
 					}]
 				},
 				tooltip: {
-					valueSuffix: ' Alumni'
+					valueSuffix: ' Alumni',
+					headerFormat: '<span style="font-size: 13px">{point.key}</span><br/>'
 				},
 				legend: {
 					layout: 'vertical',
@@ -237,41 +333,42 @@ TracerStudy.Statistics = {
 
 	},
 
-	getAllSalary: function (chartContainer) {
+	getAllSalaryPercentage: function (chartContainer) {
 
-		$salaryLoader = $('#' + chartContainer + ' .loader');
+		$salaryPercentageLoader = $('#' + chartContainer + ' .loader');
 
-		$salaryChart = $('#' + chartContainer + ' .chart');
+		$salaryPercentageChart = $('#' + chartContainer + ' .chart');
 
-		$.get(TracerStudy.API.salary, function (data) {
+		$.get(TracerStudy.API.salary.percentage, function (data) {
 
-			$salaryLoader.addClass('hidden');
+			$salaryPercentageLoader.addClass('hidden');
 
-			$salaryChart.highcharts({
+			$salaryPercentageChart.highcharts({
+				chart: {
+					plotBackgroundColor: null,
+					plotBorderWidth: null,
+					plotShadow: false
+				},
 				title: {
-					text: 'Persentase pendapatan',
-					x: -20 //center
+					text: 'Pendapatan Bulanan (dalam persentase)'
 				},
 				subtitle: {
-					text: 'Semua Alumni ITI',
+					text: 'Semua responden',
 					x: -20
 				},
-				xAxis: {
-					title : {
-						text: 'Angkatan'
-					},
-					categories: TracerStudy.Statistics.allYears
-				},
-				yAxis: {
-					title: {
-						text: 'Total'
-					},
-					plotLines: [{
-						color: '#808080'
-					}]
-				},
 				tooltip: {
-					valueSuffix: ' Alumni'
+					headerFormat: '<span style="font-size: 15px">{point.key}</span><br/>',
+					pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				},
+				plotOptions: {
+					pie: {
+						allowPointSelect: true,
+						cursor: 'pointer',
+						dataLabels: {
+							enabled: false
+						},
+						showInLegend: true
+					}
 				},
 				legend: {
 					layout: 'vertical',
@@ -279,10 +376,261 @@ TracerStudy.Statistics = {
 					verticalAlign: 'middle',
 					borderWidth: 0
 				},
+				series: [{
+					type: 'pie',
+					name: 'Persentase',
+					data: data
+				}]
+			});
+		});
+	},
+
+	getAllSalaryTotal: function (chartContainer) {
+
+		$salaryTotalLoader = $('#' + chartContainer + ' .loader');
+
+		$salaryTotalChart = $('#' + chartContainer + ' .chart');
+
+		$.get(TracerStudy.API.salary.total, function (data) {
+
+			$salaryTotalLoader.addClass('hidden');
+
+			$salaryTotalChart.highcharts({
+				chart: {
+					type: 'column',
+					margin: 75,
+					options3d: {
+						enabled: true,
+						alpha: 15,
+						beta: 15,
+						depth: 50,
+						viewDistance: 25
+					}
+				},
+				title: {
+					text: 'Pendapatan Bulanan (dalam jumlah)'
+				},
+				subtitle: {
+					text: 'Semua responden',
+				},
+				yAxis: {
+					title: {
+						text: 'Jumlah'
+					}
+				},
+				tooltip: {
+					headerFormat: 'Pendapatan<br>',
+					valueSuffix: ' Alumni'
+				},
+				plotOptions: {
+					column: {
+						depth: 25
+					}
+				},
 				series: data
 			});
 		});
 
-	}
+	},
+
+	getAllFieldOfWorkPercentage: function (chartContainer) {
+
+		$fowPercentageLoader = $('#' + chartContainer + ' .loader');
+
+		$fowPercentageChart = $('#' + chartContainer + ' .chart');
+
+		$.get(TracerStudy.API.fow.percentage, function (data) {
+
+			$fowPercentageLoader.addClass('hidden');
+
+			$fowPercentageChart.highcharts({
+				chart: {
+					plotBackgroundColor: null,
+					plotBorderWidth: null,
+					plotShadow: false
+				},
+				title: {
+					text: 'Bidang Pekerjaan Tempat Kerja (dalam persentase)'
+				},
+				subtitle: {
+					text: 'Semua responden',
+					x: -20
+				},
+				tooltip: {
+					headerFormat: '<span style="font-size: 15px">{point.key}</span><br/>',
+					pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				},
+				plotOptions: {
+					pie: {
+						allowPointSelect: true,
+						cursor: 'pointer',
+						dataLabels: {
+							enabled: false
+						},
+						showInLegend: true
+					}
+				},
+				legend: {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle',
+					borderWidth: 0
+				},
+				series: [{
+					type: 'pie',
+					name: 'Persentase',
+					data: data
+				}]
+			});
+		});
+	},
+
+	getAllFieldOfWorkTotal: function (chartContainer) {
+
+		$fowTotalLoader = $('#' + chartContainer + ' .loader');
+
+		$fowTotalChart = $('#' + chartContainer + ' .chart');
+
+		$.get(TracerStudy.API.fow.total, function (data) {
+
+			$fowTotalLoader.addClass('hidden');
+
+			$fowTotalChart.highcharts({
+				chart: {
+					type: 'column',
+					margin: 75,
+					options3d: {
+						enabled: true,
+						alpha: 15,
+						beta: 15,
+						depth: 50,
+						viewDistance: 25
+					}
+				},
+				title: {
+					text: 'Bidang Pekerjaan Tempat Kerja (dalam jumlah)'
+				},
+				subtitle: {
+					text: 'Semua responden',
+				},
+				yAxis: {
+					title: {
+						text: 'Jumlah'
+					}
+				},
+				tooltip: {
+					headerFormat: 'Bidang Pekerjaan<br>',
+					valueSuffix: ' Alumni'
+				},
+				plotOptions: {
+					column: {
+						depth: 25
+					}
+				},
+				series: data
+			});
+
+		});
+	},
+
+	getAllRelationPercentage: function (chartContainer) {
+
+		$relationPercentageLoader = $('#' + chartContainer + ' .loader');
+
+		$relationPercentageChart = $('#' + chartContainer + ' .chart');
+
+		$.get(TracerStudy.API.relation.percentage, function (data) {
+
+			$relationPercentageLoader.addClass('hidden');
+
+			$relationPercentageChart.highcharts({
+				chart: {
+					plotBackgroundColor: null,
+					plotBorderWidth: null,
+					plotShadow: false
+				},
+				title: {
+					text: 'Hubungan antara Bidang Studi dengan Pekerjaan (dalam persentase)'
+				},
+				subtitle: {
+					text: 'Semua responden',
+					x: -20
+				},
+				tooltip: {
+					headerFormat: '<span style="font-size: 15px">{point.key}</span><br/>',
+					pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				},
+				plotOptions: {
+					pie: {
+						allowPointSelect: true,
+						cursor: 'pointer',
+						dataLabels: {
+							enabled: false
+						},
+						showInLegend: true
+					}
+				},
+				legend: {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle',
+					borderWidth: 0
+				},
+				series: [{
+					type: 'pie',
+					name: 'Persentase',
+					data: data
+				}]
+			});
+		});
+	},
+
+	getAllRelationTotal: function (chartContainer) {
+
+		$relationTotalLoader = $('#' + chartContainer + ' .loader');
+
+		$relationTotalChart = $('#' + chartContainer + ' .chart');
+
+		$.get(TracerStudy.API.relation.total, function (data) {
+
+			$relationTotalLoader.addClass('hidden');
+
+			$relationTotalChart.highcharts({
+				chart: {
+					type: 'column',
+					margin: 75,
+					options3d: {
+						enabled: true,
+						alpha: 15,
+						beta: 15,
+						depth: 50,
+						viewDistance: 25
+					}
+				},
+				title: {
+					text: 'Hubungan antara Bidang Studi dengan Pekerjaan (dalam jumlah)'
+				},
+				subtitle: {
+					text: 'Per program studi',
+				},
+				yAxis: {
+					title: {
+						text: 'Jumlah'
+					}
+				},
+				tooltip: {
+					headerFormat: 'Kecocokan<br>',
+					valueSuffix: ' Alumni'
+				},
+				plotOptions: {
+					column: {
+						depth: 25
+					}
+				},
+				series: data
+			});
+		});
+
+	},
 
 };

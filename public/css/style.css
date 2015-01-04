@@ -53,6 +53,11 @@ body {
 .post {
 	margin-top: 15px;
 }
+.post:hover {
+	-webkit-box-shadow: 0 0 15px -5px #ccc;
+	-moz-box-shadow: 0 0 15px -5px #ccc;
+	box-shadow: 0 0 15px -5px #ccc;
+}
 .section {
 	padding: 20px 0;
 }
