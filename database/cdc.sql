@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 28, 2014 at 11:15 AM
+-- Generation Time: Jan 04, 2015 at 01:36 PM
 -- Server version: 5.5.27
 -- PHP Version: 5.4.7
 
@@ -60,6 +60,8 @@ CREATE TABLE IF NOT EXISTS `answer` (
   `lama_menunggu` int(11) NOT NULL,
   `lama_bekerja` double NOT NULL,
   `perusahaan_pribadi` tinyint(1) NOT NULL,
+  `perusahaan_kepemilikan_id` int(11) NOT NULL,
+  `perusahaan_bidang_id` int(11) NOT NULL,
   `gaji_id` int(11) NOT NULL,
   `kecocokan_id` int(11) NOT NULL,
   `pekerjaan` text NOT NULL,
@@ -70,21 +72,23 @@ CREATE TABLE IF NOT EXISTS `answer` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `status_id` (`status_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `answer`
 --
 
-INSERT INTO `answer` (`id`, `user_id`, `bekerja_studi`, `jenis_bekerja_studi_id`, `status_id`, `cari_aktif`, `cari_informasi_id`, `cari_jenis_id`, `nama_perusahaan`, `lama_menunggu`, `lama_bekerja`, `perusahaan_pribadi`, `gaji_id`, `kecocokan_id`, `pekerjaan`, `alamat_pekerjaan`, `manfaat`, `masukan`, `saran`) VALUES
-(1, 1, 0, 0, 1, 0, 0, 0, '', 1, 1, 0, 4, 1, 'Programmer', 'Gading Serpong', 'Ya', 'Tidak ada', 'tidak ada'),
-(2, 3, 0, 0, 2, 0, 0, 0, '', 0, 0, 0, 0, 1, '', '', 'Ya', 'Tidak ada', 'sarannya'),
-(3, 4, 0, 0, 1, 0, 0, 0, '', 2, 1, 0, 2, 3, 'Pekerjaan', 'Alamat Pekerjaan', 'Ya', 'Tidak ada', 'Tidak ada'),
-(4, 5, 0, 0, 1, 0, 0, 0, '', 4, 2, 0, 5, 1, 'Pekerjaan Saat Ini', 'Alamat', 'Ya', 'Tambahannya', 'Sarannya'),
-(5, 6, 0, 0, 1, 0, 0, 0, '', 5, 1, 0, 1, 3, 'Pekerjaan Saya', 'Alamat pekerjaan saya', 'Ya', 'Tambahannya', 'Sarannya'),
-(6, 7, 0, 0, 1, 0, 0, 0, '', 1, 2, 0, 3, 1, 'Pekerjaan', 'Alamatnya', 'Ya', 'Tambahannya', 'Sarannya'),
-(7, 8, 0, 0, 1, 0, 0, 0, '', 2, 1, 0, 4, 1, 'Pekerjaan', 'Alamat', 'Ya', 'Tambahan', 'Sara'),
-(8, 2, 0, 0, 1, 0, 0, 0, '', 1, 1, 0, 4, 1, 'Programmer', 'Serpong', 'Ya', 'Tambahan', 'Saran');
+INSERT INTO `answer` (`id`, `user_id`, `bekerja_studi`, `jenis_bekerja_studi_id`, `status_id`, `cari_aktif`, `cari_informasi_id`, `cari_jenis_id`, `nama_perusahaan`, `lama_menunggu`, `lama_bekerja`, `perusahaan_pribadi`, `perusahaan_kepemilikan_id`, `perusahaan_bidang_id`, `gaji_id`, `kecocokan_id`, `pekerjaan`, `alamat_pekerjaan`, `manfaat`, `masukan`, `saran`) VALUES
+(1, 1, 0, 0, 1, 0, 0, 0, '', 1, 1, 0, 0, 11, 4, 1, 'Programmer', 'Gading Serpong', 'Ya', 'Tidak ada', 'tidak ada'),
+(2, 3, 0, 0, 2, 0, 0, 0, '', 0, 0, 0, 0, 11, 0, 0, '', '', 'Ya', 'Tidak ada', 'sarannya'),
+(3, 4, 0, 0, 1, 0, 0, 0, '', 2, 1, 0, 0, 6, 2, 3, 'Pekerjaan', 'Alamat Pekerjaan', 'Ya', 'Tidak ada', 'Tidak ada'),
+(4, 5, 0, 0, 1, 0, 0, 0, '', 4, 2, 0, 0, 10, 5, 1, 'Pekerjaan Saat Ini', 'Alamat', 'Ya', 'Tambahannya', 'Sarannya'),
+(5, 6, 0, 0, 1, 0, 0, 0, '', 5, 1, 0, 0, 7, 1, 3, 'Pekerjaan Saya', 'Alamat pekerjaan saya', 'Ya', 'Tambahannya', 'Sarannya'),
+(6, 7, 0, 0, 1, 0, 0, 0, '', 1, 2, 0, 0, 3, 3, 1, 'Pekerjaan', 'Alamatnya', 'Ya', 'Tambahannya', 'Sarannya'),
+(7, 8, 0, 0, 1, 0, 0, 0, '', 2, 1, 0, 0, 11, 4, 1, 'Pekerjaan', 'Alamat', 'Ya', 'Tambahan', 'Sara'),
+(8, 2, 0, 0, 1, 0, 0, 0, '', 1, 1, 0, 0, 1, 4, 1, 'Programmer', 'Serpong', 'Ya', 'Tambahan', 'Saran'),
+(9, 9, 0, 0, 1, 0, 0, 0, '', 2, 1, 0, 0, 1, 3, 2, 'Pekerjaan', 'Alamat Pekerjaan', 'Ya', 'Tambahannya', 'Sarannya'),
+(10, 11, 1, 1, 1, 1, 7, 8, 'Maju Jaya', 3, 2, 2, 2, 8, 3, 1, 'Supervisor', 'Alamat', 'Ya', 'tambahan', 'saran');
 
 -- --------------------------------------------------------
 
@@ -166,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `post` (
   `post_category_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `post`
@@ -175,7 +179,12 @@ CREATE TABLE IF NOT EXISTS `post` (
 INSERT INTO `post` (`id`, `user_id`, `content`, `image`, `post_category_id`) VALUES
 (1, 1, 'a', '', 1),
 (2, 2, 'Aa', '', 1),
-(3, 5, 'Ada job fair nih', '', 2);
+(3, 5, 'Ada job fair nih', '', 2),
+(4, 3, 'aaa', '', 1),
+(5, 3, 'tes', '', 1),
+(6, 3, 'tes2', '', 2),
+(7, 1, 'Tes', '', 1),
+(8, 1, '!@#', '', 1);
 
 -- --------------------------------------------------------
 
@@ -248,7 +257,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `address` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `program_id` (`program_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `user`
@@ -262,7 +271,10 @@ INSERT INTO `user` (`id`, `first_name`, `last_name`, `email`, `password`, `dob`,
 (5, 'Alumni', 'TE 05', 'alumni-te-05@gmail.com', '202cb962ac59075b964b07152d234b70', '1990-01-01', 'user', 6, 2005, '+628121212121', 'Jl. Kosan No. 69'),
 (6, 'Alumni', 'TM 06', 'alumni-tm-06@gmail.com', '202cb962ac59075b964b07152d234b70', '1990-12-01', 'user', 7, 2006, '+628121212121', 'Jl. Kosan No. 69'),
 (7, 'Alumni', 'TS 09', 'alumni-ts-09@gmail.com', '202cb962ac59075b964b07152d234b70', '1990-01-01', 'user', 2, 2009, '+628121212121', 'Jl. Kosan No. 69'),
-(8, 'Zickri', 'Maulida', 'zickri@gmail.com', '202cb962ac59075b964b07152d234b70', '1993-12-12', 'user', 1, 2010, '+628121212121', 'Jl. Kosan No. 69');
+(8, 'Zickri', 'Maulida', 'zickri@gmail.com', '202cb962ac59075b964b07152d234b70', '1993-12-12', 'user', 1, 2010, '+628121212121', 'Jl. Kosan No. 69'),
+(9, 'Alumni', 'IF 09', 'alumni-if-09@gmail.com', '202cb962ac59075b964b07152d234b70', '1991-02-21', 'user', 1, 2009, '+628121212121', 'Jl. Kosan No. 69'),
+(10, 'Alumni', 'TIP 09', 'alumni-tip-09@gmail.com', '202cb962ac59075b964b07152d234b70', '1990-12-12', 'user', 8, 2009, '+628121212121', 'Jl. Kosan No. 69'),
+(11, 'Alumni', 'TI 07', 'alumni-ti-07@gmail.com', '202cb962ac59075b964b07152d234b70', '1989-01-01', 'user', 9, 2007, '+628121212121', 'Jl. Kosan No. 69');
 
 --
 -- Constraints for dumped tables
