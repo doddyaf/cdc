@@ -130,7 +130,7 @@ var User = {
 				
 				var currentUser = rows[0];
 
-				console.log(User.TAG_LOGIN + ' User with id : ' + currentUser.id + '( ' + currentUser.first_name + ') is logged in');
+				console.log(User.TAG_LOGIN + ' User with id : ' + currentUser.id + ' (' + currentUser.first_name + ') is logged in');
 
 				callback(currentUser);
 
@@ -529,8 +529,6 @@ var Dashboard = {
 		connection.query(queryGetAnswer, function(err, rows, fields) {
 			if (err) throw err;
 
-			console.log(rows[0]);
-
 			callback(rows[0]);
 		});
 
@@ -791,7 +789,7 @@ router.post('/register', function (req, res) {
 router.get('/logout', function (req, res) {
 	var currentUser = req.session.user;
 
-	console.log(User.TAG_LOGOUT + ' User with id : ' + currentUser.id + '( ' + currentUser.first_name + ') is logged out');
+	console.log(User.TAG_LOGOUT + ' User with id : ' + currentUser.id + ' (' + currentUser.first_name + ') is logged out');
 	
 	req.session.user = null;
 	res.redirect('/login');
