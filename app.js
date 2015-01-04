@@ -61,9 +61,9 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(methodOverride());
 app.use(multer({
-	dest: './uploads/',
+	dest: './public/uploads/',
 	rename: function (fieldname, filename) {
-		return filename.replace(/\W+/g, '-').toLowerCase() + Date.now();
+		return filename.replace(/\W+/g, '-').toLowerCase() + '-' + Date.now();
 	}
 }));
 
@@ -80,6 +80,8 @@ app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // to support URL-encoded bodies
 
 app.use(express.static(path.join(__dirname, 'public'))); // Serving static files in public folder
+
+app.use(express.static(path.join(__dirname, 'uploads'))); // Serving static files in uploads folder
 
 app.set('title', 'Career Development Center - ITI');
 
@@ -841,9 +843,7 @@ var Gallery = {
 				galleries: rows
 			};
 
-			jsonAllGalleries = JSON.stringify(allGalleries);
-
-			callback(null, jsonAllGalleries);
+			callback(allGalleries);
 		});
 
 	}
@@ -1068,6 +1068,23 @@ router.get('/api/gallery', function (req, res) {
 	function responseResult (result) { res.json(result); }
 
 	Gallery.getAllGallery(responseResult);
+
+});
+
+router.post('/api/gallery', function (req, res) {
+
+	var gallery = {
+		user_id: req.session.user.id,
+		image: req.files.image.name,
+		description: req.body.description
+	};
+
+	function responseResult (result) {
+		console.log(result);
+		res.redirect('/dashboard');
+	}
+
+	Gallery.insert(gallery, responseResult);
 
 });
 

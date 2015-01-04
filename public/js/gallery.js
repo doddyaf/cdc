@@ -1,12 +1,14 @@
-var siteURL = window.location.origin;
-
 var Gallery = {
 
 	API: {
 
-		getGalleriesURL: siteURL + '/api/gallery'
+		gallery: '/api/gallery'
 
 	},
+
+	templateSource: '',
+
+	template: '',
 
 	init: function () {
 
@@ -16,9 +18,14 @@ var Gallery = {
 
 	getAllGalleries: function () {
 
-		$.get(Gallery.API.getGalleriesURL, function(data) {
-			
-			console.log(data);
+		Gallery.templateSource = $("#gallery-template").html();
+		Gallery.template = Handlebars.compile(Gallery.templateSource);
+
+		$.get(Gallery.API.gallery, function(data) {
+
+			var htmlGalleries = Gallery.template(data);
+
+			$('#gallery-container').prepend(htmlGalleries);
 
 		});
 
