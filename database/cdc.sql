@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.12
+-- version 4.0.4.1
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 04, 2015 at 02:58 PM
--- Server version: 5.5.27
--- PHP Version: 5.4.7
+-- Generation Time: Jan 11, 2015 at 05:17 AM
+-- Server version: 5.5.32
+-- PHP Version: 5.4.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `cdc`
 --
+CREATE DATABASE IF NOT EXISTS `cdc` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `cdc`;
 
 -- --------------------------------------------------------
 
@@ -154,16 +156,26 @@ CREATE TABLE IF NOT EXISTS `gallery` (
   `description` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
 
 --
 -- Dumping data for table `gallery`
 --
 
 INSERT INTO `gallery` (`id`, `user_id`, `image`, `description`) VALUES
-(1, 1, 'untitled1420377488959.jpg', 'Contoh'),
-(2, 1, '601-forever-alone-laughing1420379095663.jpg', 'a'),
-(3, 1, 'baju-goku-1420379263598.jpg', 'b');
+(4, 1, 'rektor-iti-dr-ir-isnuwardianto-1420380320845.jpg', 'REKTOR ITI'),
+(5, 1, 'ketua-dewan-pembina-ypti-prof-dr-ing-b-j-habibie-1420945884260.png', 'Ketua Dewan Pembina YPTI . Prof . Dr. Ing. B.J . Habibie'),
+(6, 1, 'wakil-rektor-akademik-iti-1420945920160.jpg', 'Ketua harian dewan pembina YPTI . Ir. H. Aburizal Bakrie'),
+(7, 1, 'ketua-harian-dewan-pembina-ypti-ir-h-aburizal-bakrie-1420945950584.png', 'Ketua harian dewan pembina YPTI . Ir. H. Aburizal Bakrie'),
+(8, 1, 'ketua-pii-ir-erlangga-hartanto-1420946013404.png', 'Ketua PII . Ir. Erlangga Hartanto'),
+(9, 1, 'teknik-informatika-1420946034631.jpg', 'Teknik Informatika'),
+(10, 1, 'teknik-elektro-1420946073361.jpg', 'Teknik Elektro'),
+(11, 1, 'teknik-arsitek-1420946084920.jpg', 'Teknik Arsitek'),
+(12, 1, 'teknik-kimia-1420946097081.jpg', 'Teknik Kimia'),
+(13, 1, 'teknik-mesin-1420946108520.jpg', 'Teknik Mesin'),
+(14, 1, 'teknik-sipil-1420946120649.jpg', 'Teknik Sipil'),
+(15, 1, 'otomotif-1420946135577.jpg', 'Otomotif'),
+(16, 1, 'lingkungan-kampus-1420946145880.jpg', 'Lingkungan Kampus');
 
 -- --------------------------------------------------------
 
@@ -179,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `post` (
   `post_category_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `post`
@@ -193,7 +205,9 @@ INSERT INTO `post` (`id`, `user_id`, `content`, `image`, `post_category_id`) VAL
 (5, 3, 'tes', '', 1),
 (6, 3, 'tes2', '', 2),
 (7, 1, 'Tes', '', 1),
-(8, 1, '!@#', '', 1);
+(8, 1, '!@#', '', 1),
+(9, 12, 'PT NUSA BANGSA \n\nRequiretment\nProgrammer java \nminimal S1 teknik informatika\nsallary < 3 juta\n\ncontact person : 12345678', '', 1),
+(10, 12, '- LOWONGAN KANTOR PROMOTOR MUSIC INTERNATIONAL -\n\nSedang membuka lowongan nih. Trilogylive merupakan promotor konser international yang sudah membawa Boyz II Men , Keane , David Cook dan masih banyak lagi , lowongannya :\n\n1. Staff IT Programmer\n2. Web design \n\ncontact person : 94857403', '', 2);
 
 -- --------------------------------------------------------
 
@@ -266,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `address` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `program_id` (`program_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 --
 -- Dumping data for table `user`
@@ -283,7 +297,8 @@ INSERT INTO `user` (`id`, `first_name`, `last_name`, `email`, `password`, `dob`,
 (8, 'Zickri', 'Maulida', 'zickri@gmail.com', '202cb962ac59075b964b07152d234b70', '1993-12-12', 'user', 1, 2010, '+628121212121', 'Jl. Kosan No. 69'),
 (9, 'Alumni', 'IF 09', 'alumni-if-09@gmail.com', '202cb962ac59075b964b07152d234b70', '1991-02-21', 'user', 1, 2009, '+628121212121', 'Jl. Kosan No. 69'),
 (10, 'Alumni', 'TIP 09', 'alumni-tip-09@gmail.com', '202cb962ac59075b964b07152d234b70', '1990-12-12', 'user', 8, 2009, '+628121212121', 'Jl. Kosan No. 69'),
-(11, 'Alumni', 'TI 07', 'alumni-ti-07@gmail.com', '202cb962ac59075b964b07152d234b70', '1989-01-01', 'user', 9, 2007, '+628121212121', 'Jl. Kosan No. 69');
+(11, 'Alumni', 'TI 07', 'alumni-ti-07@gmail.com', '202cb962ac59075b964b07152d234b70', '1989-01-01', 'user', 9, 2007, '+628121212121', 'Jl. Kosan No. 69'),
+(12, 'alumni', 'if', 'alumni_if@gmail.com', '202cb962ac59075b964b07152d234b70', '2015-01-08', 'user', 1, 2010, '34343', 'pamulang');
 
 --
 -- Constraints for dumped tables
