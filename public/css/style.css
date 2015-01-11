@@ -1,19 +1,16 @@
-
-
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
 body {
 	padding-top: 50px;
 	background: rgb(247, 247, 247);
+	font-family: 'Open Sans', sans-serif;
 }
-.chat-form { background: #000; padding: 3px; bottom: 0; width: 100%; }
-.chat-form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-.chat-form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-#messages { list-style-type: none; margin: 0; padding: 0; }
-#messages li { padding: 5px 10px; }
-#messages li:nth-child(odd) { background: #eee; }
 .form-control:focus {
 	box-shadow: none;
 }
@@ -63,26 +60,40 @@ body {
 }
 .box__title,
 .box__subtitle {
-	color: #03A9F4;
+	/*color: #03A9F4;*/
+	color: #0E5C83;
 }
 .box__title {
 	margin-top: 0;
 	margin-bottom: 20px;
 	padding-bottom: 15px;
 	text-align: center;
-	font-size: 2.5em;
+	/*font-size: 2.5em;*/
 	font-weight: bold;
-	font-family: 'Open Sans';
+	/*font-family: 'Open Sans';*/
 	border-bottom: 1px solid #d5d5d5;
 }
 .navbar-primary {
-	background: #ffffff;
+	background: #0E5C83;
 	border-color: #e7e7e7;
 }
+.navbar-brand,
+.navbar-nav>li>a {
+	color: #fff;
+	text-shadow: none;
+}
+.navbar-nav>li>a:hover,
+.navbar-nav>li>a:focus {
+	color: #0E5C83;
+	background-color: #fff;
+}
 .navbar-primary .navbar-nav > .active > a {
-	color: #03A9F4;
+	color: #0E5C83;
 	background-image: none;
-	background-color: #f3f3f3;
+	background-color: #fff;
+}
+.navbar-toggle .icon-bar {
+	background-color: #fff;
 }
 .footer {
 	margin-top: 25px;
@@ -93,9 +104,8 @@ body {
 }
 .post__user__name {
 	display: inline-block;
-	font-size: 16px;
+	font-size: larger;
 	font-weight: bold;
-	color: #333;
 }
 .post__user__picture {
 	width: 25px;
@@ -104,12 +114,20 @@ body {
 }
 .post__content,
 .post__category {
-	margin-top: 7px;
+	margin-top: 10px;
+}
+.post__category {
+	padding-top: 10px;
+	border-top: 1px solid #cecece;
 }
 .cdc-form__content {
 	height: 80px;
 }
 .gallery {
+	display: inline-block;
+	position: relative;
+	width: 100%;
+	height: auto;
 	margin-top: 25px;
 }
 .form-group {
@@ -121,10 +139,12 @@ body {
 }
 .dropdown-menu > li > a {
 	padding: 10px 15px;
+	color: #fff;
+	background: #0E5C83;
 }
 .dropdown-menu > li > a:hover {
 	background-image: none;
-	background-color: #f5f5f5;
+	background-color: #fff;
 }
 .box--register .form-group .field-double-height {
 	min-height: 118px;
@@ -141,6 +161,13 @@ body {
 }
 .text-information {
 	margin-top: 15px;
+}
+.col-thumbnail {
+	display: inline-block;
+	height: auto;
+}
+.gallery {
+	min-height: 1000px;
 }
 /* xs */
 @media (max-width: 767px) {

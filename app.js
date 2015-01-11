@@ -1145,7 +1145,11 @@ router.get('/ts-statistics', function (req, res) {
 });
 
 router.get('/gallery', function (req, res) {
-	res.render('gallery');
+	// res.render('gallery');
+
+	function responseResult (result) { res.render('gallery', result); }
+
+	Gallery.getAllGallery(responseResult);
 });
 
 router.get('/profile', function (req, res) {

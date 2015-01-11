@@ -18,6 +18,12 @@ var CDC = {
 
 	init: function () {
 
+		Handlebars.registerHelper('breaklines', function(text) {
+			text = Handlebars.Utils.escapeExpression(text);
+			text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+			return new Handlebars.SafeString(text);
+		});
+
 		CDC.sourceCdcPost = $("#cdc-post-template").html();
 		CDC.cdcPostTemplate = Handlebars.compile(CDC.sourceCdcPost);
 
@@ -48,7 +54,9 @@ var CDC = {
 	setFormListener: function () {
 
 		// Fungsi pada saat cdc form di-submit
-		$('#cdc-form').submit( function() {
+		$('#cdc-form').submit( function (event) {
+			event.preventDefault();
+
 			var cdcPost = {};
 			cdcPost.content = $('#cdc-form-content').val();
 			cdcPost.post_category_id = $('#cdc-form-category').val();
@@ -68,6 +76,7 @@ var CDC = {
 
 		// Real-Time CDC Post
 		socket.on('cdc post', function(msg) {
+			console.log(msg);
 
 			if (msg.post_category_id == 1) {
 				msg.category_name = "Walk Interview";

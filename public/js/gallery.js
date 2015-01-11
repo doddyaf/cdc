@@ -12,23 +12,42 @@ var Gallery = {
 
 	init: function () {
 
-		Gallery.getAllGalleries();
+		$galleryTemplate = $("#gallery-template");
+		$galleryContainer = $('#gallery-container');
+
+		// Gallery.initGalleryGrid();
+
+		// Gallery.getAllGalleries();
 
 	},
 
 	getAllGalleries: function () {
 
-		Gallery.templateSource = $("#gallery-template").html();
+		Gallery.templateSource = $galleryTemplate.html();
 		Gallery.template = Handlebars.compile(Gallery.templateSource);
 
 		$.get(Gallery.API.gallery, function(data) {
 
 			var htmlGalleries = Gallery.template(data);
 
-			$('#gallery-container').prepend(htmlGalleries);
+			$galleryContainer.prepend(htmlGalleries).promise().done(function() {
+				
+				$galleryContainer.packery({
+					layoutMode: 'packery',
+					itemSelector: '.col-thumbnail'
+				});
+
+			});
 
 		});
 
+	},
+
+	initGalleryGrid: function () {
+		$galleryContainer.packery({
+			layoutMode: 'packery',
+			itemSelector: '.col-thumbnail'
+		});
 	}
 
 };
