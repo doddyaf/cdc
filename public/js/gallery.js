@@ -15,6 +15,8 @@ var Gallery = {
 		$galleryTemplate = $("#gallery-template");
 		$galleryContainer = $('#gallery-container');
 
+		
+
 		// Gallery.initGalleryGrid();
 
 		// Gallery.getAllGalleries();

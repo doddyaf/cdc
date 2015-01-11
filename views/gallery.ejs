@@ -12,6 +12,7 @@
 
 		<link rel="stylesheet" href="/css/bootstrap.min.css">
 		<link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="/css/lightbox.css">
 		<link rel="stylesheet" href="/css/style.css">
 		
 		<script src="/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
@@ -58,7 +59,7 @@
 					<div class="gallery" id="gallery-container">
 						<% for(var i=0; i<galleries.length; i++) {%>
 							<div class="col-thumbnail col-lg-3 col-md-4 col-sm-6">
-								<a href="#" class="thumbnail">
+								<a href="/uploads/<%= galleries[i].image %>" class="thumbnail" data-lightbox="gallery" data-title="<%= galleries[i].description %>">
 									<img src="/uploads/<%= galleries[i].image %>" alt="<%= galleries[i].description %>" title="<%= galleries[i].description %>">
 								</a>
 							</div>
@@ -78,7 +79,7 @@
 	<script type="text/x-handlebars-template" id="gallery-template">
 		{{#each galleries}}
 		<div class="col-thumbnail col-lg-3 col-md-4 col-sm-6">
-			<a href="#" class="thumbnail">
+			<a href="/uploads/{{ image }}" class="thumbnail" data-lightbox="gallery" data-title="{{ description }}">
 				<img src="/uploads/{{ image }}" alt="{{ description }}" title="{{ description }}">
 			</a>
 		</div>
@@ -90,6 +91,7 @@
 	<script src="/js/vendor/bootstrap.min.js"></script>
 	<script src="/js/vendor/handlebars-v2.0.0.js"></script>
 	<script src="/js/vendor/packery.pkgd.min.js"></script>
+	<script src="/js/vendor/lightbox.min.js"></script>
 	<script src="/js/gallery.js"></script>
 	<script src="/js/main.js"></script>
 </body>
