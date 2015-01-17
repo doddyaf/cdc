@@ -8,7 +8,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>Career Development Center - ITI</title>
 		<meta name="description" content="">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
 		<link rel="stylesheet" href="/css/bootstrap.min.css">
 		<link rel="stylesheet" href="/css/bootstrap-theme.min.css">
@@ -21,18 +21,18 @@
 			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 		<![endif]-->
 	<nav class="navbar navbar-primary navbar-fixed-top" role="navigation">
-	  	<div class="container">
+		<div class="container">
 			<div class="navbar-header">
-			  	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
-			  	</button>
-			  	<a class="navbar-brand" href="/">CDC - ITI</a>
+				</button>
+				<a class="navbar-brand" href="/">CDC - ITI</a>
 			</div>
 			<div class="navbar-collapse collapse">
-			  	<ul class="nav navbar-nav">
+				<ul class="nav navbar-nav">
 					<li><a href="/cdc">CDC</a></li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tracer Study <span class="caret"></span></a>
@@ -47,27 +47,76 @@
 					<li><a href="/logout">Logout</a></li>
 				</ul>
 			</div><!--/.navbar-collapse -->
-	  	</div>
+		</div>
 	</nav>
 	
 	<main>
 		<section class="section section--profile">
 			<div class="container">
 				<h1 class="box__title">Profile</h1>
+				<div class="box__content">
+					<p>
+						Career Development Center Institut Teknologi Indonesia atau disingkat CDC ITI merupakan salah satu divisi yang berada di bawah Direktorat Lembaga Pengembangan dan Kesejahteraan Mahasiswa (LPKM) Institut Teknologi Indonesia yang dibentuk pada bulan Desember 2007
+					</p>
+					<p>
+						Salah satu peran sebuah perguruan tinggi adalah menghasilkan lulusan yang mempunyai kompetensi memadai yang mencakup skill, knowledge dan attitude sehingga para lulusannya dapat diserap industri dan merupakan tanggung jawab ITI untuk dapat menghasilkan lulusan seperti tersebut di atas dengan ciri khas memiliki skill entrepreneur berbasis teknologi yang kemudian dapat disalurkan ke industri-industri yang membutuhkannya atau bahkan menciptakan sendiri peluang-peluang usaha
+					</p>
+					<p>
+						Salah satu cara untuk menggali informasi berkaitan dengan transisi dari kuliah ke pekerjaan adalah dengan melaksanakan suatu studi yang disebut sebagai Tracer Study yang dimaksud dengan studi mengenai lulusan lembaga penyelenggara pendidikan tinggi.
+					</p>
+					<p>
+						Tracer Study dapat menyediakan informasi untuk kepentingan evaluasi hasil pendidikan tinggi dan selanjutnya dapat digunakan untuk penyempurnaan dan penjaminan kualitas lembaga pendidikan tinggi yang bersangkutan. Disamping itu Tracer Study juga menyediakan informasi berharga mengenai hubungan antara pendidikan tinggi dan dunia kerja professional, menilai relevansi pendidikan tinggi, informasi bagi para pemangku kepentingan, dan kelengkapan persyaratan bagi akreditasi pendidikan tinggi
+					</p>
+
+					<h2 class="box__subtitle">Visi dan Misi CDC dan Tracer Study - ITI</h2>
+					<p>
+						Menjadi Pusat Pengembangan Sumberdaya Kewirausahaan Berbasis Teknologi yang Kompeten dan Berkualitas Bagi Lulusan ITI
+					</p>
+
+					<h2 class="box__subtitle">Contact Us</h2>
+					<div class="row">
+						<div class="col-lg-4 col-md-4">
+							<p>Sekretariat CDC - ITI</p>
+							<p>Gedung CDC - ITI</p>
+							<p>Jl. Raya Puspiptek Serpong</p>
+							<p>Institut Teknologi Indonesia</p>
+							<p>Telp (021) 7560545</p>
+							<p>Fax (021) 7560542</p>
+							<p>Website : www.iti.ac.id</p>
+							<p>HARI KERJA - SENIN S/D JUMAT</p>
+							<p>JAM KERJA - 08.00 S/D 16.00</p>
+						</div>
+						<div class="col-lg-8 col-md-8">
+							<div class="map" id="map-iti"></div>
+						</div>
+					</div>
+
+				</div>
 			</div>
 		</section>
 	</main>
 
-    <footer class="footer">
-        <div class="container">
-            &copy; CDC &amp; TRACER STUDY - ITI
-        </div>
-    </footer>
-    <script src="/js/vendor/jquery-1.11.0.min.js"></script>
-    <!-- <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script> -->
-
-    <script src="/js/vendor/bootstrap.min.js"></script>
-
-    <script src="/js/main.js"></script>
+	<footer class="footer">
+		<div class="container">
+			&copy; CDC &amp; TRACER STUDY - ITI
+		</div>
+	</footer>
+	<script src="/js/vendor/jquery-1.11.0.min.js"></script>
+	<!-- <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script> -->
+	<script src="/js/vendor/bootstrap.min.js"></script>
+	<script src="/js/main.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAk9FlkK8LpyL6qU_tRs7Y8im6KJuCr79k">
+	</script>
+	<script>
+		function initialize() {
+			var mapOptions = {
+				center: { lat: -6.343876, lng: 106.675567 },
+				zoom: 16,
+				scrollwheel: false
+			};
+			var map = new google.maps.Map( document.getElementById('map-iti'), mapOptions );
+		}
+		google.maps.event.addDomListener(window, 'load', initialize);
+	</script>
 </body>
 </html>
