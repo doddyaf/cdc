@@ -13,7 +13,7 @@ var fs = require('fs');
 var crypto = require('crypto');
 var Q = require('Q');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+var morgan = require('morgan');
 var methodOverride = require('method-override');
 var multer = require('multer');
 var errorHandler = require('errorhandler');
@@ -49,16 +49,21 @@ var sessionMiddleware = session( config.sessionOptions );
 var mysql = require('mysql');
 var connection = mysql.createConnection( config.db );
 
+// create a write stream (in append mode)
+var accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a'});
+
 // ENVIRONMENT CONFIGURATION
 // ==============================================
 
 app.set('port', process.env.PORT || 3000);
 app.set('env', 'development');
-// app.set('env', 'production');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
+
+// setup the logger
+app.use(morgan('combined', {stream: accessLogStream}));
+
 app.use(methodOverride());
 app.use(multer({
 	dest: './public/uploads/',
