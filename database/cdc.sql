@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.4.1
+-- version 4.1.12
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 11, 2015 at 05:17 AM
--- Server version: 5.5.32
--- PHP Version: 5.4.19
+-- Generation Time: Jan 18, 2015 at 01:39 PM
+-- Server version: 5.5.27
+-- PHP Version: 5.4.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `cdc`
 --
-CREATE DATABASE IF NOT EXISTS `cdc` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `cdc`;
 
 -- --------------------------------------------------------
 
@@ -74,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `answer` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `status_id` (`status_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
 
 --
 -- Dumping data for table `answer`
@@ -82,7 +80,6 @@ CREATE TABLE IF NOT EXISTS `answer` (
 
 INSERT INTO `answer` (`id`, `user_id`, `bekerja_studi`, `jenis_bekerja_studi_id`, `status_id`, `cari_aktif`, `cari_informasi_id`, `cari_jenis_id`, `nama_perusahaan`, `lama_menunggu`, `lama_bekerja`, `perusahaan_pribadi`, `perusahaan_kepemilikan_id`, `perusahaan_bidang_id`, `gaji_id`, `kecocokan_id`, `pekerjaan`, `alamat_pekerjaan`, `manfaat`, `masukan`, `saran`) VALUES
 (1, 1, 0, 0, 1, 0, 0, 0, '', 1, 1, 0, 0, 11, 4, 1, 'Programmer', 'Gading Serpong', 'Ya', 'Tidak ada', 'tidak ada'),
-(2, 3, 0, 0, 2, 0, 0, 0, '', 0, 0, 0, 0, 11, 0, 0, '', '', 'Ya', 'Tidak ada', 'sarannya'),
 (3, 4, 0, 0, 1, 0, 0, 0, '', 2, 1, 0, 0, 6, 2, 3, 'Pekerjaan', 'Alamat Pekerjaan', 'Ya', 'Tidak ada', 'Tidak ada'),
 (4, 5, 0, 0, 1, 0, 0, 0, '', 4, 2, 0, 0, 10, 5, 1, 'Pekerjaan Saat Ini', 'Alamat', 'Ya', 'Tambahannya', 'Sarannya'),
 (5, 6, 0, 0, 1, 0, 0, 0, '', 5, 1, 0, 0, 7, 1, 3, 'Pekerjaan Saya', 'Alamat pekerjaan saya', 'Ya', 'Tambahannya', 'Sarannya'),
@@ -90,7 +87,15 @@ INSERT INTO `answer` (`id`, `user_id`, `bekerja_studi`, `jenis_bekerja_studi_id`
 (7, 8, 0, 0, 1, 0, 0, 0, '', 2, 1, 0, 0, 11, 4, 1, 'Pekerjaan', 'Alamat', 'Ya', 'Tambahan', 'Sara'),
 (8, 2, 0, 0, 1, 0, 0, 0, '', 1, 1, 0, 0, 1, 4, 1, 'Programmer', 'Serpong', 'Ya', 'Tambahan', 'Saran'),
 (9, 9, 0, 0, 1, 0, 0, 0, '', 2, 1, 0, 0, 1, 3, 2, 'Pekerjaan', 'Alamat Pekerjaan', 'Ya', 'Tambahannya', 'Sarannya'),
-(10, 11, 1, 1, 1, 1, 7, 8, 'Maju Jaya', 3, 2, 2, 2, 8, 3, 1, 'Supervisor', 'Alamat', 'Ya', 'tambahan', 'saran');
+(10, 11, 1, 1, 1, 1, 7, 8, 'Maju Jaya', 3, 2, 2, 2, 8, 3, 1, 'Supervisor', 'Alamat', 'Ya', 'tambahan', 'saran'),
+(11, 3, 1, 4, 1, 1, 1, 11, 'Nama Perusahaan', 1, 1, 2, 2, 11, 3, 2, 'Programmer', 'Alamat Perusahaan', 'Ya', 'Tambahan', 'Saran'),
+(13, 10, 1, 1, 1, 1, 2, 1, 'Nama Perusahaan', 1, 1, 1, 1, 1, 1, 1, 'Jabtan', 'Alamat', 'Ya', 'Tambahan', 'Saran'),
+(14, 14, 2, 0, 2, 1, 8, 10, '', 0, 0, 0, 0, 0, 0, 0, '', '', 'Ya', 'bla bla', 'bla bla'),
+(15, 15, 1, 3, 2, 1, 3, 3, '', 0, 0, 0, 0, 0, 0, 0, '', '', 'Ya', 'bla ', 'bla bla'),
+(16, 16, 1, 2, 1, 1, 5, 5, 'pt nusa dua', 2, 1, 1, 0, 0, 2, 2, 'owner', 'bsd', 'Ya', 'bla ', 'bla'),
+(17, 17, 1, 1, 1, 1, 4, 7, 'cv bahtera', 2, 3, 1, 4, 9, 3, 3, 'marketing', 'bsd nusa loka', 'Ya', 'bla bla', 'bla bla'),
+(18, 18, 2, 0, 2, 2, 0, 0, '', 0, 0, 0, 0, 0, 0, 0, '', '', 'Ya', 'bla ', 'bla'),
+(19, 19, 1, 1, 1, 1, 1, 8, 'cv lokasari', 3, 2, 2, 1, 8, 2, 1, 'konsultan', 'granada bsd', 'Ya', 'bla ', 'bla');
 
 -- --------------------------------------------------------
 
@@ -191,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `post` (
   `post_category_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
 
 --
 -- Dumping data for table `post`
@@ -207,7 +212,9 @@ INSERT INTO `post` (`id`, `user_id`, `content`, `image`, `post_category_id`) VAL
 (7, 1, 'Tes', '', 1),
 (8, 1, '!@#', '', 1),
 (9, 12, 'PT NUSA BANGSA \n\nRequiretment\nProgrammer java \nminimal S1 teknik informatika\nsallary < 3 juta\n\ncontact person : 12345678', '', 1),
-(10, 12, '- LOWONGAN KANTOR PROMOTOR MUSIC INTERNATIONAL -\n\nSedang membuka lowongan nih. Trilogylive merupakan promotor konser international yang sudah membawa Boyz II Men , Keane , David Cook dan masih banyak lagi , lowongannya :\n\n1. Staff IT Programmer\n2. Web design \n\ncontact person : 94857403', '', 2);
+(10, 12, '- LOWONGAN KANTOR PROMOTOR MUSIC INTERNATIONAL -\n\nSedang membuka lowongan nih. Trilogylive merupakan promotor konser international yang sudah membawa Boyz II Men , Keane , David Cook dan masih banyak lagi , lowongannya :\n\n1. Staff IT Programmer\n2. Web design \n\ncontact person : 94857403', '', 2),
+(11, 1, 'Lowongan PT Unilever\nbla bla bla', '', 2),
+(15, 1, 'Lowongan Kerja\n\nMembuka Lowongan', '', 1);
 
 -- --------------------------------------------------------
 
@@ -280,7 +287,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `address` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `program_id` (`program_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
 
 --
 -- Dumping data for table `user`
@@ -298,7 +305,14 @@ INSERT INTO `user` (`id`, `first_name`, `last_name`, `email`, `password`, `dob`,
 (9, 'Alumni', 'IF 09', 'alumni-if-09@gmail.com', '202cb962ac59075b964b07152d234b70', '1991-02-21', 'user', 1, 2009, '+628121212121', 'Jl. Kosan No. 69'),
 (10, 'Alumni', 'TIP 09', 'alumni-tip-09@gmail.com', '202cb962ac59075b964b07152d234b70', '1990-12-12', 'user', 8, 2009, '+628121212121', 'Jl. Kosan No. 69'),
 (11, 'Alumni', 'TI 07', 'alumni-ti-07@gmail.com', '202cb962ac59075b964b07152d234b70', '1989-01-01', 'user', 9, 2007, '+628121212121', 'Jl. Kosan No. 69'),
-(12, 'alumni', 'if', 'alumni_if@gmail.com', '202cb962ac59075b964b07152d234b70', '2015-01-08', 'user', 1, 2010, '34343', 'pamulang');
+(12, 'alumni', 'if', 'alumni_if@gmail.com', '202cb962ac59075b964b07152d234b70', '2015-01-08', 'user', 1, 2010, '34343', 'pamulang'),
+(13, 'Jokowi', 'Widodo', 'hokowidodo@gmail.com', '7d00ff54a263fe80825b9297804a982c', '2015-01-17', 'user', 1, 2005, '0987654321', 'Cikeas'),
+(14, 'alumni_tk@gmail.com', 'alumni_tk', 'alumni_tk@gmail.com', '202cb962ac59075b964b07152d234b70', '1987-01-02', 'user', 3, 2005, '0217456895', 'pamulang 2'),
+(15, 'alumni', 'pwk', 'alumni_pwk@gmail.com', '202cb962ac59075b964b07152d234b70', '1985-02-14', 'user', 5, 2009, '08567483764', 'pamulang 1'),
+(16, 'alumni', 'arsitek', 'alumni_arsitek@gmail.com', '202cb962ac59075b964b07152d234b70', '1989-02-05', 'user', 4, 2008, '021374893', 'pamulang 2'),
+(17, 'alumni', 'mesin', 'alumni_mesin@gmail.com', '202cb962ac59075b964b07152d234b70', '1985-12-11', 'user', 7, 2007, '02732312', 'pamulang 3'),
+(18, 'alumni', 'mesin', 'alumni_mesin1@gmail.com', '202cb962ac59075b964b07152d234b70', '1989-12-08', 'user', 7, 2006, '02139485940', 'nusa indah'),
+(19, 'alumni', 'mekatronika', 'alumni_mekatronika1@gmail.com', '202cb962ac59075b964b07152d234b70', '1990-02-08', 'user', 10, 2010, '0213948402', 'permata pamulang');
 
 --
 -- Constraints for dumped tables
