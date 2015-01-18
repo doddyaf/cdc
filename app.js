@@ -268,6 +268,11 @@ var TracerStudy = {
 
 		var query = connection.query('INSERT INTO answer SET ?', answer, function(err, result) {
 			if (err) throw err;
+
+			var msg = 'new ts post';
+
+			io.emit('ts post', msg);
+
 			callback(err, result);
 		});
 
@@ -1130,7 +1135,6 @@ router.get('/user/:id', function (req, res) {
 	var userId = req.params.id;
 
 	function responseResult(err, result) {
-		console.log(result);
 		res.render('user', result);
 	}
 
@@ -1262,6 +1266,8 @@ io.on('connection', function (socket) {
 
 		CDC.insertPost(msg, responseResult);
 	});
+
+	
 });
 
 // START THE SERVER

@@ -1,6 +1,8 @@
 /*
 * TracerStudy Namespace, make sure to include jQuery and Highchart.js before this file
 */
+var socket = io();
+
 var TracerStudy = {};
 
 TracerStudy.API = {
@@ -107,6 +109,24 @@ TracerStudy.Statistics = {
 
 	allSalaryCategories: ['500rb-1jt', '1-2jt', '2-3jt', '3-5jt', 'Diatas 5jt'],
 
+	respondenTotalChart: '',
+
+	workPercentageChart: '',
+
+	workTotalChart: '',
+
+	salaryPercentageChart: '',
+
+	salaryTotalChart: '',
+
+	fowPercentageChart: '',
+
+	fowTotalChart: '',
+
+	relationPercentageChart: '',
+
+	relationTotalChart: '',
+
 	/*
 	* Initialize Tracer Study statistics
 	* @param container_id_first -> the id of first chart container
@@ -132,6 +152,8 @@ TracerStudy.Statistics = {
 
 		}
 
+		TracerStudy.Statistics.findAllSelectors();
+
 		TracerStudy.Statistics.getGeneralInformation();
 
 		TracerStudy.Statistics.getAllRespondenTotal( chartContainers.responden.total );
@@ -152,15 +174,31 @@ TracerStudy.Statistics = {
 
 		TracerStudy.Statistics.getAllRelationTotal( chartContainers.relation.total );
 
+		TracerStudy.Statistics.setSocketListener();
+
+	},
+
+	findAllSelectors: function () {
+
+		$totalResponden = $('#total-responden');
+		$totalRespondenWork = $('#total-responden-work');
+		$totalRespondenNotWork = $('#total-responden-not-work');
+
+	},
+
+	setSocketListener: function () {
+
+		// Real-Time TS Chart
+		socket.on('ts post', function(msg) {
+			console.log(msg);
+
+			TracerStudy.Statistics.refresh();
+
+		});
+
 	},
 
 	getGeneralInformation: function () {
-
-		$totalResponden = $('#total-responden');
-
-		$totalRespondenWork = $('#total-responden-work');
-
-		$totalRespondenNotWork = $('#total-responden-not-work');
 
 		$.get(TracerStudy.API.general, function (data) {
 
@@ -229,6 +267,9 @@ TracerStudy.Statistics = {
 				},
 				series: data
 			});
+
+			TracerStudy.Statistics.respondenTotalChart = $respondenTotalChart.highcharts();
+
 		});
 
 	},
@@ -280,6 +321,9 @@ TracerStudy.Statistics = {
 				},
 				series: data
 			});
+
+			TracerStudy.Statistics.workPercentageChart = $workPercentageChart.highcharts();
+
 		});
 
 	},
@@ -329,6 +373,9 @@ TracerStudy.Statistics = {
 				},
 				series: data
 			});
+
+			TracerStudy.Statistics.workTotalChart = $workTotalChart.highcharts();
+
 		});
 
 	},
@@ -382,6 +429,9 @@ TracerStudy.Statistics = {
 					data: data
 				}]
 			});
+
+			TracerStudy.Statistics.salaryPercentageChart = $salaryPercentageChart.highcharts();
+
 		});
 	},
 
@@ -429,6 +479,9 @@ TracerStudy.Statistics = {
 				},
 				series: data
 			});
+
+			TracerStudy.Statistics.salaryTotalChart = $salaryTotalChart.highcharts();
+
 		});
 
 	},
@@ -482,6 +535,9 @@ TracerStudy.Statistics = {
 					data: data
 				}]
 			});
+
+			TracerStudy.Statistics.fowPercentageChart = $fowPercentageChart.highcharts();
+
 		});
 	},
 
@@ -529,6 +585,8 @@ TracerStudy.Statistics = {
 				},
 				series: data
 			});
+
+			TracerStudy.Statistics.fowTotalChart = $fowTotalChart.highcharts();
 
 		});
 	},
@@ -582,6 +640,9 @@ TracerStudy.Statistics = {
 					data: data
 				}]
 			});
+
+			TracerStudy.Statistics.relationPercentageChart = $relationPercentageChart.highcharts();
+
 		});
 	},
 
@@ -629,8 +690,160 @@ TracerStudy.Statistics = {
 				},
 				series: data
 			});
+
+			TracerStudy.Statistics.relationTotalChart = $relationTotalChart.highcharts();
+
 		});
 
 	},
+
+	refresh: function () {
+
+		TracerStudy.Statistics.getGeneralInformation();
+		TracerStudy.Statistics.updateRespondenTotal();
+		TracerStudy.Statistics.updateWorkPercentage();
+		TracerStudy.Statistics.updateWorkTotal();
+		TracerStudy.Statistics.updateSalaryPercentage();
+		TracerStudy.Statistics.updateSalaryTotal();
+		TracerStudy.Statistics.updateFieldOfWorkPercentage();
+		TracerStudy.Statistics.updateFieldOfWorkTotal();
+		TracerStudy.Statistics.updateRelationPercentage();
+		TracerStudy.Statistics.updateRelationTotal();
+
+	},
+
+	updateRespondenTotal: function () {
+
+		$.get(TracerStudy.API.responden.total, function (data) {
+
+			var newSeries = data;
+
+			var s = 0;
+
+			for (var i in newSeries) {
+				TracerStudy.Statistics.respondenTotalChart.series[s].setData(newSeries[i].data);
+				TracerStudy.Statistics.respondenTotalChart.series[s].pointStart = newSeries[i].pointStart;
+				s++;
+			}
+
+		});
+
+	},
+
+	updateWorkPercentage: function () {
+
+		$.get(TracerStudy.API.work.percentage, function (data) {
+
+			var newSeries = data;
+
+			var s = 0;
+
+			for (var i in newSeries) {
+				TracerStudy.Statistics.workPercentageChart.series[s].setData(newSeries[i].data);
+				TracerStudy.Statistics.workPercentageChart.series[s].pointStart = newSeries[i].pointStart;
+				s++;
+			}
+
+		});
+
+	},
+
+	updateWorkTotal: function () {
+
+		$.get(TracerStudy.API.work.total, function (data) {
+
+			var newSeries = data;
+
+			var s = 0;
+
+			for (var i in newSeries) {
+				TracerStudy.Statistics.workTotalChart.series[s].setData(newSeries[i].data);
+				TracerStudy.Statistics.workTotalChart.series[s].pointStart = newSeries[i].pointStart;
+				s++;
+			}
+
+		});
+
+	},
+
+	updateSalaryPercentage: function () {
+
+		$.get(TracerStudy.API.salary.percentage, function (data) {
+
+			TracerStudy.Statistics.salaryPercentageChart.series[0].setData(data);
+
+		});
+	},
+
+	updateSalaryTotal: function () {
+
+		$.get(TracerStudy.API.salary.total, function (data) {
+
+			var newSeries = data;
+
+			var s = 0;
+
+			for (var i in newSeries) {
+				TracerStudy.Statistics.salaryTotalChart.series[s].setData(newSeries[i].data);
+				TracerStudy.Statistics.salaryTotalChart.series[s].pointStart = newSeries[i].pointStart;
+				s++;
+			}
+
+		});
+
+	},
+
+	updateFieldOfWorkPercentage: function () {
+
+		$.get(TracerStudy.API.fow.percentage, function (data) {
+
+			TracerStudy.Statistics.fowPercentageChart.series[0].setData(data);
+
+		});
+	},
+
+	updateFieldOfWorkTotal: function () {
+
+		$.get(TracerStudy.API.fow.total, function (data) {
+
+			var newSeries = data;
+
+			var s = 0;
+
+			for (var i in newSeries) {
+				TracerStudy.Statistics.fowTotalChart.series[s].setData(newSeries[i].data);
+				TracerStudy.Statistics.fowTotalChart.series[s].pointStart = newSeries[i].pointStart;
+				s++;
+			}
+
+		});
+	},
+
+	updateRelationPercentage: function () {
+
+		$.get(TracerStudy.API.relation.percentage, function (data) {
+
+			TracerStudy.Statistics.relationPercentageChart.series[0].setData(data);
+
+		});
+	},
+
+	updateRelationTotal: function () {
+
+		$.get(TracerStudy.API.relation.total, function (data) {
+
+			var newSeries = data;
+
+			var s = 0;
+
+			for (var i in newSeries) {
+				TracerStudy.Statistics.relationTotalChart.series[s].setData(newSeries[i].data);
+				TracerStudy.Statistics.relationTotalChart.series[s].pointStart = newSeries[i].pointStart;
+				s++;
+			}
+
+		});
+
+	}
 
 };
