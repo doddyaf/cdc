@@ -72,6 +72,21 @@
 							</div>
 						</div>
 
+						<hr>
+
+						<div class="edit-profile">
+							<form action="/api/information" method="post" class="form form--edit-profile">
+								<h2 class="box__subtitle">Edit Profile</h2>
+								<div class="form-group">
+									<label for="#field-edit-profile"></label>
+									<textarea name="profile" class="field-profile form-control" id="field-edit-profile"><%= profile %></textarea>
+								</div>
+								<input type="submit" class="btn btn-primary" value="Save">
+							</form>
+						</div>
+
+						<hr>
+
 						<form action="/api/gallery" method="post" class="form form--gallery" enctype="multipart/form-data">
 							
 							<h2 class="box__subtitle">Upload Gallery</h2>
@@ -89,6 +104,8 @@
 							<button class="btn btn-primary">Upload</button>
 
 						</form>
+
+						<hr>
 						
 					</div>
 				</div>

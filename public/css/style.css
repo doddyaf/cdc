@@ -6,6 +6,10 @@ body {
 	background: rgb(247, 247, 247);
 	font-family: 'Open Sans', sans-serif;
 }
+h1,
+.h1 {
+	font-size: 2em;
+}
 .form-control:focus {
 	box-shadow: none;
 }
@@ -56,10 +60,18 @@ body {
 .section {
 	padding: 20px 0;
 }
+.section--home {
+	background-image: url('../img/bakrie.jpg');
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-attachment: fixed;
+	min-height: 500px;
+}
 .section--login {
 	height: 90vh;
 	padding-top: 50px;
-	background-image: url('../img/bgr.jpg');
+	background-image: url('../img/bakrie.jpg');
 	background-size: cover;
 	background-repeat: no-repeat;
 }
@@ -67,7 +79,8 @@ body {
 	border-color: #fff;
 }
 .box__title,
-.box__subtitle {
+.box__subtitle,
+.jumbotron__title {
 	/*color: #03A9F4;*/
 	color: #0E5C83;
 }
@@ -76,13 +89,12 @@ body {
 	margin-bottom: 20px;
 	padding-bottom: 15px;
 	text-align: center;
-	/*font-size: 2.5em;*/
 	font-weight: bold;
-	/*font-family: 'Open Sans';*/
 	border-bottom: 1px solid #d5d5d5;
 }
 .navbar-primary {
 	background: #0E5C83;
+	box-shadow: 0 0 15px -5px #000;
 }
 .navbar-brand,
 .navbar-nav>li>a {
@@ -105,9 +117,10 @@ body {
 .footer {
 	/*margin-top: 25px;*/
 	padding: 20px;
-	background-color: #fff;
+	background-color: #212121;
 	border-top: 1px solid #e7e7e7;
 	border-bottom: 1px solid #e7e7e7;
+	color: #fff;
 }
 .post__user__name {
 	display: inline-block;
@@ -186,14 +199,124 @@ body {
 .navbar-brand:hover {
 	color: #fff;
 }
-.event {
-	padding-top: 10px;
-	padding-bottom: 10px;
-	border-bottom: 1px solid #cecece;
-}
 .event__image img {
 	max-width: 100%;
 	height: auto;
+}
+.home__title {
+	text-align: center;
+	font-size: 3em;
+	font-weight: bold;
+}
+.section--odd,
+.section--even {
+	padding-top: 45px;
+	padding-bottom: 45px;
+}
+.section--odd {
+	background: #fff;
+}
+.section--even {
+	background: #0E5C83;
+	color: #fff;
+}
+.information-title {
+	margin-bottom: 20px;
+	color: #0E5C83;
+	font-family: 'Helvetica';
+	font-weight: bold;
+}
+.listview {
+	margin:0;
+	padding:0;
+}
+.listview > li {
+	overflow: auto;
+	list-style: none;
+}
+.listview > li > a {
+	position: relative;
+	display: block;
+	text-decoration: none !important;
+}
+.listview > li > a:after {
+	content: "";
+	position: absolute;
+	display: block;
+	width: 22px;
+	height: 22px;
+	top: 2em;
+	right: 0.5em;
+	opacity: 0.4;
+	background-image: url("data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22iso-8859-1%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%3Csvg%20version%3D%221.1%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20%20width%3D%2214px%22%20height%3D%2214px%22%20viewBox%3D%220%200%2014%2014%22%20style%3D%22enable-background%3Anew%200%200%2014%2014%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cpolygon%20points%3D%223.404%2C2.051%208.354%2C7%203.404%2C11.95%205.525%2C14.07%2012.596%2C7%205.525%2C-0.071%20%22%2F%3E%3C%2Fsvg%3E");
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+.listview > li > a:hover::after {
+	opacity: 0.6;
+}
+.listview--news > li > a {
+	padding: 20px 0;
+	border-bottom: 1px solid #ccc;
+}
+.listview--news > li:first-child > a {
+	border-top: 1px solid #ccc;
+}
+.listview--events > li > a {
+	display: inline-block;
+	width: 100%;
+	margin-top: 4.5px;
+	margin-bottom: 4.5px;
+	border: 1px solid #999;
+	border-radius: 2px;
+}
+.listview--events > li > a:hover {
+	border-color: #333;
+}
+.listview--events > li > a:after {
+	top: 1.5em;
+}
+.section__title {
+	margin-bottom: 0.5em;
+	font-size: 2.2em;
+	text-transform: uppercase;
+}
+.section__subtitle {
+	margin-bottom: 0.1em;
+	font-weight: bold;
+	font-size: 1.1em;
+}
+.news__title {
+	font-weight: bold;
+}
+.news__date {
+	color: #808080;
+	font-style: italic;
+}
+.event__date {
+	color: #fff;
+	max-width: 70px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	text-align: center;
+	background-color: #0E5C83;
+	border-right: 1px solid #A9A9A9;
+}
+.event__date__day {
+	font-size: 25px;
+	font-weight: bold;
+}
+.event__date__month {
+	font-size: 15px;
+}
+.event__title {
+	padding-top: 20px;
+	color: #333;
+	font-size: 15px;
+}
+.field-profile {
+	min-height: 400px;
+	padding: 25px;
 }
 /* xs */
 @media (max-width: 767px) {

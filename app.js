@@ -98,6 +98,10 @@ connection.connect();
 
 var Helper = {
 
+	allowedUrls: [ '/', '/login', '/cdc', '/profile', '/ts-statistics', '/gallery' ],
+
+	notAllowedUrls: [ '/dashboard', '/ts-form' ],
+
 	inArray: function (needle, haystack) {
 		
 		var length = haystack.length;
@@ -108,11 +112,7 @@ var Helper = {
 
 		return false;
 
-	},
-
-	allowedUrls: [ '/', '/login', '/cdc', '/profile', '/ts-statistics', '/gallery' ],
-
-	notAllowedUrls: [ '/ts-form' ]
+	}
 
 };
 
@@ -888,12 +888,23 @@ var Dashboard = {
 
 	getAllInformation: function (callback) {
 
-		var queryGetAnswer = "SELECT ( SELECT COUNT(user.id) FROM user ) AS total_user, ( SELECT COUNT(answer.id) FROM answer ) AS total_answer, ( SELECT COUNT(answer.id) FROM answer WHERE status_id = '1' ) AS total_answer_work, ( SELECT COUNT(answer.id) FROM answer WHERE status_id = '2' ) AS total_answer_not_work, ( SELECT COUNT(post.id) FROM post ) AS total_post, ( SELECT COUNT(gallery.id) FROM gallery ) AS total_gallery";
+		var queryGetAnswer = "SELECT ( SELECT information.profile FROM information WHERE id = '1' ) as profile, ( SELECT COUNT(user.id) FROM user ) AS total_user, ( SELECT COUNT(answer.id) FROM answer ) AS total_answer, ( SELECT COUNT(answer.id) FROM answer WHERE status_id = '1' ) AS total_answer_work, ( SELECT COUNT(answer.id) FROM answer WHERE status_id = '2' ) AS total_answer_not_work, ( SELECT COUNT(post.id) FROM post ) AS total_post, ( SELECT COUNT(gallery.id) FROM gallery ) AS total_gallery";
 
 		connection.query(queryGetAnswer, function(err, rows, fields) {
 			if (err) throw err;
 
 			callback(rows[0]);
+		});
+
+	},
+
+	updateInformation: function (information, callback) {
+
+		var queryUpdateInformation = "UPDATE information SET profile = ?";
+
+		connection.query(queryUpdateInformation, information, function (err, result) {
+			if (err) throw err;
+			callback('profile updated');
 		});
 
 	}
@@ -911,6 +922,21 @@ router.use(User.checkSession);
 
 // REST API
 // ----------------------------------------------
+
+// Information
+router.post('/api/information', function (req, res) {
+	function responseResult (result) {
+		console.log(result);
+		res.redirect('/dashboard');
+	}
+
+	var information = {
+		id: 1,
+		profile: req.body.profile
+	};
+
+	Dashboard.updateInformation(information, responseResult);
+});
 
 // User
 router.get('/api/user', function (req, res) {
@@ -1186,7 +1212,11 @@ router.get('/gallery', function (req, res) {
 });
 
 router.get('/profile', function (req, res) {
-	res.render('profile');
+	function responseResult(result) {
+		res.render('profile', result);
+	}
+
+	Dashboard.getAllInformation(responseResult);
 });
 
 router.get('/faq', function (req, res) {
