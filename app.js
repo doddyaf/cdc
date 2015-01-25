@@ -13,7 +13,7 @@ var fs = require('fs');
 var crypto = require('crypto');
 var Q = require('Q');
 var favicon = require('serve-favicon');
-var morgan = require('morgan');
+var logger = require('morgan');
 var methodOverride = require('method-override');
 var multer = require('multer');
 var errorHandler = require('errorhandler');
@@ -62,7 +62,7 @@ app.set('view engine', 'ejs');
 app.use(favicon(__dirname + '/public/favicon.ico'));
 
 // setup the logger
-app.use(morgan('combined', {stream: accessLogStream}));
+app.use(logger('dev'));
 
 app.use(methodOverride());
 app.use(multer({
