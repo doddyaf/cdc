@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 18, 2015 at 01:39 PM
+-- Generation Time: Jan 25, 2015 at 02:29 PM
 -- Server version: 5.5.27
 -- PHP Version: 5.4.7
 
@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `gallery` (
   `description` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
 
 --
 -- Dumping data for table `gallery`
@@ -180,7 +180,30 @@ INSERT INTO `gallery` (`id`, `user_id`, `image`, `description`) VALUES
 (13, 1, 'teknik-mesin-1420946108520.jpg', 'Teknik Mesin'),
 (14, 1, 'teknik-sipil-1420946120649.jpg', 'Teknik Sipil'),
 (15, 1, 'otomotif-1420946135577.jpg', 'Otomotif'),
-(16, 1, 'lingkungan-kampus-1420946145880.jpg', 'Lingkungan Kampus');
+(16, 1, 'lingkungan-kampus-1420946145880.jpg', 'Lingkungan Kampus'),
+(17, 1, 'dm-pak-jk-1422188710983.png', 'DM');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `information`
+--
+
+CREATE TABLE IF NOT EXISTS `information` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `profile` text NOT NULL,
+  `visi` text NOT NULL,
+  `misi` text NOT NULL,
+  `contact` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `information`
+--
+
+INSERT INTO `information` (`id`, `profile`, `visi`, `misi`, `contact`) VALUES
+(1, 'Career Development Center Institut Teknologi Indonesia atau disingkat CDC ITI merupakan salah satu divisi yang berada di bawah Direktorat Lembaga Pengembangan dan Kesejahteraan Mahasiswa (LPKM) Institut Teknologi Indonesia yang dibentuk pada bulan Desember 2007\n\nSalah satu peran sebuah perguruan tinggi adalah menghasilkan lulusan yang mempunyai kompetensi memadai yang mencakup skill, knowledge dan attitude sehingga para lulusannya dapat diserap industri dan merupakan tanggung jawab ITI untuk dapat menghasilkan lulusan seperti tersebut di atas dengan ciri khas memiliki skill entrepreneur berbasis teknologi yang kemudian dapat disalurkan ke industri-industri yang membutuhkannya atau bahkan menciptakan sendiri peluang-peluang usaha\n\nSalah satu cara untuk menggali informasi berkaitan dengan transisi dari kuliah ke pekerjaan adalah dengan melaksanakan suatu studi yang disebut sebagai Tracer Study yang dimaksud dengan studi mengenai lulusan lembaga penyelenggara pendidikan tinggi.\n\nTracer Study dapat menyediakan informasi untuk kepentingan evaluasi hasil pendidikan tinggi dan selanjutnya dapat digunakan untuk penyempurnaan dan penjaminan kualitas lembaga pendidikan tinggi yang bersangkutan. Disamping itu Tracer Study juga menyediakan informasi berharga mengenai hubungan antara pendidikan tinggi dan dunia kerja professional, menilai relevansi pendidikan tinggi, informasi bagi para pemangku kepentingan, dan kelengkapan persyaratan bagi akreditasi pendidikan tinggi', 'Merupakan Pusat Pengembangan Sumberdaya Kewirausahaan Berbasis Teknologi yang Kompeten dan Berkualitas Bagi Lulusan ITI\r\n', '1. Menyiapkan program kewirausahaan (knowledge & soft skill) didalam kurikulum untuk menciptakan wirausahawan yang inovatif yang berbasis teknologi.\r\n\r\n2. Memberikan dukungan kepada dunia usaha dan pemerintah Indonesia dalam meningkatkan kemajuan dunia usaha melalui kontribusi SDM yang kompeten.\r\n\r\n3. Menjadi penghubung antara ITI dengan dunia industri dalam informasi	ketenagakerjaan dan peluang-peluang usaha.\r\n\r\n4. Update terhadap perkembangan teknologi dan dunia industri.\r\n\r\n5. Membangun citra ITI secara positif karena mampu menempatkan tenaga kerja yang handal di dunia industri.', 'Sekretariat CDC - ITI\r\n\r\nGedung CDC - ITI\r\n\r\nJl. Raya Puspiptek Serpong\r\n\r\nInstitut Teknologi Indonesia\r\n\r\nTelp (021) 7560545\r\n\r\nFax (021) 7560542\r\n\r\nWebsite : www.iti.ac.id\r\n\r\nHARI KERJA - SENIN S/D JUMAT\r\n\r\nJAM KERJA - 08.00 S/D 16.00');
 
 -- --------------------------------------------------------
 
@@ -196,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `post` (
   `post_category_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
 --
 -- Dumping data for table `post`
