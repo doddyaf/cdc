@@ -96,6 +96,26 @@ connection.connect();
 // CUSTOM FUNCTIONS
 // ==============================================
 
+var Helper = {
+
+	inArray: function (needle, haystack) {
+		
+		var length = haystack.length;
+
+		for(var i = 0; i < length; i++) {
+			if(haystack[i] == needle) return true;
+		}
+
+		return false;
+
+	},
+
+	allowedUrls: [ '/', '/login', '/cdc', '/profile', '/ts-statistics', '/gallery' ],
+
+	notAllowedUrls: [ '/ts-form' ]
+
+};
+
 var User = {
 
 	TAG_LOGIN: 'LOGIN',
@@ -105,8 +125,12 @@ var User = {
 	// Check Session for every request
 	checkSession: function (req, res, next) {
 
-		if (req.url != '/login') {
-			// if user go to page except login THEN check if user authenticated
+		var isNotAllowed = Helper.inArray(req.url, Helper.notAllowedUrls);
+
+		console.log('isNotAllowed : ' + isNotAllowed);
+
+		if ( isNotAllowed ) {
+			// if user go to page except register THEN check if user authenticated
 			if ( req.url == '/register' || req.session.user) {
 				return next();
 			}
@@ -123,7 +147,7 @@ var User = {
 			}
 		}
 		// continue doing what we were doing and go to the route
-		// next();
+		next();
 	},
 
 	authenticate: function (user_email, user_password, callback) {
@@ -1103,7 +1127,7 @@ router.post('/api/gallery', function (req, res) {
 // ----------------------------------------------
 
 router.get('/', function (req, res) {
-	res.render('index', req.session.user);
+	res.render('index');
 });
 
 router.get('/dashboard', function (req, res) {
