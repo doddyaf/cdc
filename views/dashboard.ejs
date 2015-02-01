@@ -43,7 +43,6 @@
 						</li>
 						<li><a href="/gallery">Gallery</a></li>
 						<li><a href="/profile"> Profile</a></li>
-						<!-- <li><a href="/faq">FAQ</a></li> -->
 						<li><a href="/logout">Logout</a></li>
 					</ul>
 				</div><!--/.navbar-collapse -->
@@ -51,63 +50,147 @@
 		</nav>
 		<main>
 			<section class="section section--dashboard">
-				<div class="container">
-					<div class="box">
-						<h1 class="box__title">CDC ITI - Dashboard</h1>
-						
-						<h2 class="box__subtitle">Informasi Pengguna</h2>
-						
-						<div class="information">
-							<div class="information__total_user">
-								Total pengguna yang terdaftar : <span id="total-user"><%= total_user %></span>
-							</div>
-							<div class="information__total_answer">
-								Total responden form Tracer Study : <span id="total-responden"><%= total_answer %></span>
-							</div>
-							<div class="information__total_post">
-								Total Jobs Posts : <span id="total-post"><%= total_post %></span>
-							</div>
-							<div class="information__total_gallery">
-								Total Gallery : <span id="total-gallery"><%= total_gallery %></span>
+				<div class="container-fluid">
+					<h1 class="box__title">CDC ITI - Dashboard</h1>
+					
+					<div class="row">
+						<div class="col-md-2" id="sidebar">
+							<div class="sidebar-menu btn-group-vertical" role="group" aria-label="...">
+								<a href="#general" class="btn btn-sidebar-menu btn-block" aria-controls="general" role="tab" data-toggle="tab">General</a>
+								<a href="#edit-profile" class="btn btn-sidebar-menu btn-block" aria-controls="edit-profile" role="tab" data-toggle="tab">Edit Profile</a>
+								<a href="#upload-gallery" class="btn btn-sidebar-menu btn-block" aria-controls="upload-gallery" role="tab" data-toggle="tab">Upload Gallery</a>
+								<a href="#add-news" class="btn btn-sidebar-menu btn-block" aria-controls="add-news" role="tab" data-toggle="tab">Add News</a>
+								<a href="#add-event" class="btn btn-sidebar-menu btn-block" aria-controls="add-event" role="tab" data-toggle="tab">Add Event</a>
 							</div>
 						</div>
+						
+						<div class="col-md-10" id="content">
 
-						<hr>
+							<div class="tab-content">
+							
+								<div class="box tab-pane active" id="general" role="tabpanel">
+							
+									<h2 class="box__subtitle">Informasi Pengguna</h2>
+									
+									<div class="information">
+										<div class="information__total_user">
+											Total pengguna yang terdaftar : <span id="total-user"><%= total_user %></span>
+										</div>
+										<div class="information__total_answer">
+											Total responden form Tracer Study : <span id="total-responden"><%= total_answer %></span>
+										</div>
+										<div class="information__total_post">
+											Total Jobs Posts : <span id="total-post"><%= total_post %></span>
+										</div>
+										<div class="information__total_gallery">
+											Total Gallery : <span id="total-gallery"><%= total_gallery %></span>
+										</div>
+									</div>
 
-						<div class="edit-profile">
-							<form action="/api/information" method="post" class="form form--edit-profile">
-								<h2 class="box__subtitle">Edit Profile</h2>
-								<div class="form-group">
-									<label for="#field-edit-profile"></label>
-									<textarea name="profile" class="field-profile form-control" id="field-edit-profile"><%= profile %></textarea>
 								</div>
-								<input type="submit" class="btn btn-primary" value="Save">
-							</form>
+
+								<div class="box tab-pane" id="edit-profile" role="tabpanel">
+
+									<div class="edit-profile">
+										<form action="/api/information" method="post" class="form form--edit-profile">
+											<h2 class="box__subtitle">Edit Profile</h2>
+											<div class="form-group">
+												<label for="#field-edit-profile"></label>
+												<textarea name="profile" class="field-profile form-control" id="field-edit-profile" required><%= profile %></textarea>
+											</div>
+											<input type="submit" class="btn btn-primary" value="Save">
+										</form>
+									</div>
+
+								</div>
+
+								<div class="box tab-pane" id="upload-gallery" role="tabpanel">
+
+									<form action="/api/gallery" method="post" class="form form--gallery" enctype="multipart/form-data">
+										
+										<h2 class="box__subtitle">Upload Gallery</h2>
+
+										<div class="form-group">
+											<label for="field-gallery-image">Image</label>
+											<input type="file" name="image" id="field-gallery-image" required>
+										</div>
+										
+										<div class="form-group">
+											<label for="field-gallery-description">Description</label>
+											<textarea name="description" class="form-control" id="field-gallery-description" required></textarea>
+										</div>
+										
+										<button class="btn btn-primary">Upload</button>
+
+									</form>
+
+								</div>
+
+								<div class="box tab-pane" id="add-news" role="tabpanel">
+
+									<form action="/api/news" method="post" class="form form--news" enctype="multipart/form-data">
+										
+										<h2 class="box__subtitle">Add News</h2>
+										
+										<div class="form-group">
+											<label for="field-news-title">Title</label>
+											<input type="text" name="title" class="form-control" id="field-news-title" required>
+										</div>
+
+										<div class="form-group">
+											<label for="field-news-image">Image</label>
+											<input type="file" name="image" class="form-control" id="field-news-image" required>
+										</div>
+
+										<div class="form-group">
+											<label for="field-news-content">Content</label>
+											<textarea name="content" class="form-control" id="field-news-content" required></textarea>
+										</div>
+										
+										<button class="btn btn-primary">Publish</button>
+
+									</form>
+
+								</div>
+
+								<div class="box tab-pane" id="add-event" role="tabpanel">
+
+									<form action="/api/event" method="post" class="form form--event" enctype="multipart/form-data">
+										
+										<h2 class="box__subtitle">Add Event</h2>
+										
+										<div class="form-group">
+											<label for="field-event-title">Event's Name</label>
+											<input type="text" name="name" class="form-control" id="field-event-title" required>
+										</div>
+
+										<div class="form-group">
+											<label for="field-event-date">Event's Date</label>
+											<input type="date" name="date" class="form-control" id="field-event-date" required>
+										</div>
+
+										<div class="form-group">
+											<label for="field-event-image">Event's Poster / Flyer</label>
+											<input type="file" name="image" class="form-control" id="field-event-image" required>
+										</div>
+
+
+										<div class="form-group">
+											<label for="field-event-content">Description</label>
+											<textarea name="description" class="form-control" id="field-event-content" required></textarea>
+										</div>
+										
+										<button class="btn btn-primary">Publish</button>
+
+									</form>
+
+								</div>
+								
+							</div>
+
 						</div>
-
-						<hr>
-
-						<form action="/api/gallery" method="post" class="form form--gallery" enctype="multipart/form-data">
-							
-							<h2 class="box__subtitle">Upload Gallery</h2>
-
-							<div class="form-group">
-								<label for="field-gallery-image">Image</label>
-								<input type="file" name="image" id="field-gallery-image">
-							</div>
-							
-							<div class="form-group">
-								<label for="field-gallery-description">Description</label>
-								<textarea name="description" class="form-control" id="field-gallery-description"></textarea>
-							</div>
-							
-							<button class="btn btn-primary">Upload</button>
-
-						</form>
-
-						<hr>
-						
 					</div>
+
 				</div>
 			</section>
 		</main>
@@ -116,7 +199,6 @@
 	            &copy; CDC &amp; TRACER STUDY - ITI
 	        </div>
 	    </footer>
-
 	    <!-- Scripts -->
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="/js/vendor/jquery-1.11.0.min.js"></script>

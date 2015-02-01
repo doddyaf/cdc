@@ -1,139 +1,99 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Career Development Center - ITI</title>
-		<meta name="description" content="">
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
-		<link rel="stylesheet" href="/css/bootstrap.min.css">
-		<link rel="stylesheet" href="/css/bootstrap-theme.min.css">
-		<link rel="stylesheet" href="/css/style.css">
-
-		<script src="/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-	</head>
-	<body>
-		<!--[if lt IE 7]>
-			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-		<![endif]-->
-
-		<!-- Menu Utama -->
-		<nav class="navbar navbar-primary navbar-fixed-top" role="navigation">
-		  	<div class="container">
-				<div class="navbar-header">
-				  	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-				  	</button>
-				  	<a class="navbar-brand" href="/">CDC - ITI</a>
-				</div>
-				<div class="navbar-collapse collapse">
-				  	<ul class="nav navbar-nav">
-						<li class="active"><a href="/cdc">CDC</a></li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tracer Study <span class="caret"></span></a>
-							<ul class="dropdown-menu" role="menu">
-								<li><a href="/ts-form">Isi Form</a></li>
-								<li><a href="/ts-statistics">Lihat Statistik</a></li>
-							</ul>
-						</li>
-						<li><a href="/gallery">Gallery</a></li>
-						<li><a href="/profile"> Profile</a></li>
-						<!-- <li><a href="/faq">FAQ</a></li> -->
-						<li><a href="/logout">Logout</a></li>
-					</ul>
-				</div><!--/.navbar-collapse -->
-		  	</div>
-		</nav><!-- Menu Utama End -->
-
-		<main>
-			<section class="section section--cdc">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2">
+<% include header.ejs %>
+	<main>
+		<section class="section section--cdc">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2">
 						
-							<div class="box box--form">
+						<h1 class="box__title">Job Vacancies</h1>
 
-								<h1 class="box__title">Jobs Posts</h1>
+						<% if ( typeof user != "undefined" && user != null ) { %>
+					
+						<div class="box box--form">
 
-								<!-- CDC Form -->
-								<form action="" id="cdc-form">
-									<!-- CDC Form Content -->
-									<div class="form-group">
-									  	<textarea name="content" class="cdc-form__content form-control" id="cdc-form-content" placeholder="Post descriptions"></textarea>
-									</div>
-									<!-- CDC Form Category -->
-									<div class="form-group">
-										<select name="category" class="cdc-form__category form-control" id="cdc-form-category">
-									  		<option value="1">Walk Interview</option>
-											<option value="2">Job Fair</option>
-										</select>
-									</div>
-									<!-- CDC Form Submit Button -->
-									<input class="btn-lg btn-primary btn-block" type="submit" value="Post">
-								</form><!-- CDC Form End -->
-							</div>
-
-							<!-- All CDC Posts -->
-							<div class="posts-container" id="posts"></div>
-							<!-- All CDC Posts End -->
-
+							<!-- CDC Form -->
+							<form action="" id="cdc-form">
+								<!-- CDC Form Content -->
+								<div class="form-group">
+									<label for="cdc-form-category">Descriptions</label>
+								  	<textarea name="content" class="cdc-form__content form-control" id="cdc-form-content" placeholder="Post descriptions"></textarea>
+								</div>
+								<!-- CDC Form Category -->
+								<div class="form-group">
+									<label for="cdc-form-category">Category</label>
+									<select name="category" class="cdc-form__category form-control" id="cdc-form-category">
+								  		<option value="1">Walk Interview</option>
+										<option value="2">Job Fair</option>
+									</select>
+								</div>
+								<!-- CDC Form Image -->
+								<div class="form-group">
+									<label for="cdc-form-image">Image</label>
+									<input type="file" name="image" class="cdc-form__image form-control" id="cdc-form-image">
+								</div>
+								<!-- CDC Form Submit Button -->
+								<input class="btn-lg btn-primary btn-block" type="submit" value="Post">
+							</form><!-- CDC Form End -->
 						</div>
+
+						<% } else { %>
+						<div class="well">Please <a href="/login">login</a> to post job vacancy</div>
+						<% } %>
+
+						<!-- All CDC Posts -->
+						<div class="posts-container" id="posts"></div>
+						<!-- All CDC Posts End -->
+
 					</div>
-				</div><!-- Container End -->
-			</section>
-		</main>
-
-		<footer class="footer">
-	        <div class="container">
-	            <p>&copy; CDC &amp; TRACER STUDY - ITI</p>
-	        </div>
-	    </footer>
-
-		<!-- Handlebars Templates -->
-		<script type="text/x-handlebars-template" id="cdc-post-template">
-			{{#each posts}}
-			<div class="box post" id="{{id}}">
-				<div class="post__user">
-					<a href="/user/{{user_id}}" class="post__user__name">{{first_name}} {{last_name}}</a>
 				</div>
-				<div class="post__content">{{breaklines content}}</div>
-				<div class="post__category"><span class="">Category : </span>{{category_name}}</div>
-			</div>
-			{{/each}}
-		</script>
+			</div><!-- Container End -->
+		</section>
+	</main>
 
-		<script type="text/x-handlebars-template" id="cdc-post-item-template">
-			<div class="box post" id="{{id}}">
-				<div class="post__user">
-					<a href="/user/{{user.id}}" class="post__user__name">{{user.first_name}} {{user.last_name}}</a>
-				</div>
-				<div class="post__content">{{breaklines content}}</div>
-				<div class="post__category"><span class="">Category : </span>{{category_name}}</div>
-			</div>
-		</script>
+	<footer class="footer">
+        <div class="container">
+            <p>&copy; CDC &amp; TRACER STUDY - ITI</p>
+        </div>
+    </footer>
 
-		<script type="text/x-handlebars-template" id="cdc-post-with-image-item-template">
-			<div class="box post" id="{{id}}">
-				<div class="post__user">
-					<img src="/images/{{user_image}}" class="post__user__picture" alt="PP"> <a href="/user/{{user.id}}" class="post__user__name">{{user.first_name}} {{user.last_name}}</a>
-				</div>
-				<div class="post__content">{{breaklines content}}</div>
-				<div class="post__category"><span class="">Category : </span>{{category_name}}</div>
+	<!-- Handlebars Templates -->
+	<script type="text/x-handlebars-template" id="cdc-post-template">
+		{{#each posts}}
+		<div class="box post" id="{{id}}">
+			<div class="post__user">
+				<a href="/user/{{user_id}}" class="post__user__name">{{first_name}} {{last_name}}</a>
 			</div>
-		</script>
-		
-	    <!-- Scripts -->
-		<script src="/socket.io/socket.io.js"></script>
-		<script src="/js/vendor/jquery-1.11.0.min.js"></script>
-		<script src="/js/vendor/bootstrap.min.js"></script>
-		<script src="/js/vendor/handlebars-v2.0.0.js"></script>
-		<script src="/js/cdc.js"></script>
-	</body>
+			<div class="post__content">{{breaklines content}}</div>
+			<div class="post__category"><span class="">Category : </span>{{category_name}}</div>
+		</div>
+		{{/each}}
+	</script>
+
+	<script type="text/x-handlebars-template" id="cdc-post-item-template">
+		<div class="box post" id="{{id}}">
+			<div class="post__user">
+				<a href="/user/{{user.id}}" class="post__user__name">{{user.first_name}} {{user.last_name}}</a>
+			</div>
+			<div class="post__content">{{breaklines content}}</div>
+			<div class="post__category"><span class="">Category : </span>{{category_name}}</div>
+		</div>
+	</script>
+
+	<script type="text/x-handlebars-template" id="cdc-post-with-image-item-template">
+		<div class="box post" id="{{id}}">
+			<div class="post__user">
+				<img src="/images/{{user_image}}" class="post__user__picture" alt="PP"> <a href="/user/{{user.id}}" class="post__user__name">{{user.first_name}} {{user.last_name}}</a>
+			</div>
+			<div class="post__content">{{breaklines content}}</div>
+			<div class="post__category"><span class="">Category : </span>{{category_name}}</div>
+		</div>
+	</script>
+	
+    <!-- Scripts -->
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/js/vendor/jquery-1.11.0.min.js"></script>
+	<script src="/js/vendor/bootstrap.min.js"></script>
+	<script src="/js/vendor/handlebars-v2.0.0.js"></script>
+	<script src="/js/cdc.js"></script>
+</body>
 </html>

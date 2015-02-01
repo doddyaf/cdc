@@ -1,0 +1,23 @@
+<% include header.ejs %>
+	<main>
+		<section class="section section--user">
+			<div class="container">
+				<div class="row">
+					<div class="box col-md-8 col-lg-offset-2 col-md-offset-2">
+						<h1 class="box__title">Event</h1>
+						<div class="event">
+							<h2 class="event__name box__subtitle"><%= name %></h2>
+							<div class="event__date__container">
+								Event's Date : <span class="event__date"><%= stringToDate(date) %></span>
+							</div>
+							<div class="image-container">
+								<img src="/uploads/<%= image %>" class="event__image" alt="<%= name %>">
+							</div>
+							<div class="event__description"><%= description %></div>
+						</div>
+					</div><!-- Box End -->
+				</div>
+			</div>
+		</section>
+	</main>
+<% include footer.ejs %>

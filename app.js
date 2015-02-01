@@ -93,6 +93,23 @@ app.set('title', 'Career Development Center - ITI');
 // Connect to MySQL 
 connection.connect();
 
+// Helpers
+// ==============================================
+app.locals.uploadDir = '/uploads/';
+app.locals.stringToDate = function(text) {
+	var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+	var date = new Date(text);
+	text = date.getDate() + ' ' + monthNames[ date.getMonth() ] + ' ' + date.getFullYear();
+  return (text);
+};
+
+app.locals.stringToSimpleDate = function(text) {
+	var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+	var date = new Date(text);
+	text = monthNames[ date.getMonth() ] + ' ' + date.getDate() + ', ' + date.getFullYear();
+  return (text);
+};
+
 // CUSTOM FUNCTIONS
 // ==============================================
 
@@ -884,6 +901,88 @@ var Gallery = {
 
 };
 
+var News = {
+
+	TABLE_NAME: 'news',
+
+	insert: function (news, callback) {
+
+		var query = connection.query('INSERT INTO news SET ?', news, function(err, result) {
+			if (err) throw err;
+			callback(err, result);
+		});
+
+	},
+
+	getLatestNews: function (callback) {
+
+		var queryGetAllNews = 'SELECT * FROM ' + News.TABLE_NAME + ' ORDER BY id DESC LIMIT 4';
+
+		connection.query(queryGetAllNews, function (err, rows, fields) {
+			if (err) throw err;
+
+			var jsonAllNews = JSON.stringify(rows);
+
+			callback(jsonAllNews);
+		});
+
+	},
+
+	getById: function (id, callback) {
+
+		var queryGetEvent = 'SELECT * FROM ' + News.TABLE_NAME + ' WHERE id = ?';
+
+		connection.query(queryGetEvent, id, function(err, rows, fields) {
+			if (err) throw err;
+
+			callback(rows[0]);
+		});
+
+	}
+
+};
+
+var Event = {
+
+	TABLE_NAME: 'event',
+
+	insert: function (theEvent, callback) {
+
+		var query = connection.query('INSERT INTO event SET ?', theEvent, function(err, result) {
+			if (err) throw err;
+			callback(err, result);
+		});
+
+	},
+
+	getRecentEvents: function (callback) {
+
+		var queryGetAllEvents = 'SELECT * FROM ' + Event.TABLE_NAME + ' ORDER BY id DESC LIMIT 4';
+
+		connection.query(queryGetAllEvents, function (err, rows, fields) {
+			if (err) throw err;
+
+			var jsonAllEvents = JSON.stringify(rows);
+
+			callback(jsonAllEvents);
+		});
+
+	},
+
+	getById: function (id, callback) {
+
+		var queryGetEvent = 'SELECT * FROM ' + Event.TABLE_NAME + ' WHERE id = ?';
+
+		connection.query(queryGetEvent, id, function(err, rows, fields) {
+			if (err) throw err;
+
+			callback(rows[0]);
+		});
+
+	}
+
+};
+
 var Dashboard = {
 
 	getAllInformation: function (callback) {
@@ -1148,17 +1247,71 @@ router.post('/api/gallery', function (req, res) {
 
 });
 
+// News
+router.post('/api/news', function (req, res) {
+
+	function responseResult (result) {
+		res.redirect('/dashboard');
+	}
+
+	var news = {
+		title: req.body.title,
+		content: req.body.content,
+		image: req.files.image.name
+	};
+
+	console.log('News : ' + news.title);
+
+	News.insert(news, responseResult);
+
+});
+
+router.get('/api/news', function (req, res) {
+
+	function responseResult (result) { res.json(result); }
+
+	News.getLatestNews(responseResult);
+
+});
+
+// Event
+router.post('/api/event', function (req, res) {
+
+	function responseResult (result) {
+		res.redirect('/dashboard');
+	}
+
+	var theEvent = {
+		name: req.body.name,
+		date: req.body.date,
+		description: req.body.description,
+		image: req.files.image.name
+	};
+
+	Event.insert(theEvent, responseResult);
+
+});
+
+router.get('/api/event', function (req, res) {
+
+	function responseResult (result) { res.json(result); }
+
+	Event.getRecentEvents(responseResult);
+
+});
 
 // UI
 // ----------------------------------------------
 
 router.get('/', function (req, res) {
-	res.render('index');
+	var data = { user: req.session.user };
+	res.render('index', data);
 });
 
 router.get('/dashboard', function (req, res) {
 
 	function responseResult(result) {
+		result.user = req.session.user;
 		res.render('dashboard', result);
 	}
 
@@ -1185,34 +1338,64 @@ router.get('/user/:id', function (req, res) {
 	var userId = req.params.id;
 
 	function responseResult(err, result) {
+		result.user = req.session.user;
 		res.render('user', result);
 	}
 
 	User.getUser(userId, responseResult);
 });
 
+router.get('/news/:id', function (req, res) {
+	var newsId = req.params.id;
+
+	function responseResult(result) {
+		console.log('News : ' + result);
+		result.user = req.session.user;
+		res.render('news', result);
+	}
+
+	News.getById(newsId, responseResult);
+});
+
+router.get('/event/:id', function (req, res) {
+	var eventId = req.params.id;
+
+	function responseResult(result) {
+		console.log('Event : ' + result.name);
+		result.user = req.session.user;
+		res.render('event', result);
+	}
+
+	Event.getById(eventId, responseResult);
+});
+
 router.get('/cdc', function (req, res) {
-	res.render('cdc');
+	var data = { user: req.session.user };
+	res.render('cdc', data);
 });
 
 router.get('/ts-form', function (req, res) {
-	res.render('ts-form');
+	var data = { user: req.session.user };
+	res.render('ts-form', data);
 });
 
 router.get('/ts-statistics', function (req, res) {
-	res.render('ts-statistics');
+	var data = { user: req.session.user };
+	res.render('ts-statistics', data);
 });
 
 router.get('/gallery', function (req, res) {
-	// res.render('gallery');
-
-	function responseResult (result) { res.render('gallery', result); }
+	function responseResult (result) {
+		result.user = req.session.user;
+		res.render('gallery', result);
+	}
 
 	Gallery.getAllGallery(responseResult);
 });
 
 router.get('/profile', function (req, res) {
 	function responseResult(result) {
+		result.user = req.session.user;
 		res.render('profile', result);
 	}
 
@@ -1220,26 +1403,28 @@ router.get('/profile', function (req, res) {
 });
 
 router.get('/faq', function (req, res) {
-	res.render('faq');
+	var data = {
+		user: req.session.user
+	};
+	res.render('faq', data);
 });
 
 router.get('/login', function (req, res) {
-	res.render('login');
+	var data = {
+		user: req.session.user
+	};
+	res.render('login', data);
 });
 
 router.post('/login', function (req, res) {
-
 	var user_email = req.body.user_email,
 		user_password = req.body.user_password;
 
 	function responseResult (user) {
-
 		if (user) {
 			req.session.user = user;
 		}
-
 		res.redirect('/');
-
 	}
 
 	User.authenticate(user_email, user_password, responseResult);

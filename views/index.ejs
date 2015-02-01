@@ -2,27 +2,36 @@
 	<main>
 		<section class="section section--home">
 			<div class="container">
-					<h1 class="home__title">CDC - Institut Teknologi Indonesia</h1>
+					<h1 class="home__title">
+						<p>CDC - Tracer Study</p>
+						<p>Institut Teknologi Indonesia</p>
+					</h1>
 				</div>
 			</div>
 		</section>
 		<section class="section section--odd">
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-6 col-md-6">
+					<div class="col-md-6">
 						<div class="section__title">CDC</div>
 						<div class="section__subtitle">Lorem ipsum dolor sit amet</div>
 						<div class="section__content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas nemo laboriosam veritatis, numquam repellat quo porro natus assumenda eius inventore libero architecto expedita provident corrupti a accusantium iste laudantium officia.</div>
 					</div>
-					<div class="col-lg-6 col-md-6"></div>
+					<div class="col-md-6">
+						<!-- Gambar CDC -->
+						<img src="/uploads/job-offer-web.jpg" alt="CDC">
+					</div>
 				</div>
 			</div>
 		</section>
 		<section class="section section--even">
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-6 col-md-6"></div>
-					<div class="col-lg-6 col-md-6">
+					<div class="col-md-6">
+						<!-- Gambar Tracer Study -->
+						<img src="/uploads/Quiet.jpg" alt="Tracer Study">
+					</div>
+					<div class="col-md-6">
 						<div class="section__title">Tracer Study</div>
 						<div class="section__subtitle">Lorem ipsum dolor sit amet</div>
 						<div class="section__content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam minus at nam sequi tempora, temporibus impedit ipsa quo quidem. Dolores esse laudantium incidunt consequuntur maiores assumenda hic fuga quo aut!</div>
@@ -33,78 +42,53 @@
 		<section class="section section--odd">
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-6 col-md-6">
+					<div class="col-md-6">
 						<h2 class="information-title">Recent News</h1>
-						<ul class="listview listview--news">
-							<li>
-								<a href="#">
-									<div class="news__title">Judul Berita 1</div>
-									<small class="news__date">Jan 20, 2015</small>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<div class="news__title">Judul Berita 1</div>
-									<small class="news__date">Jan 20, 2015</small>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<div class="news__title">Judul Berita 1</div>
-									<small class="news__date">Jan 20, 2015</small>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<div class="news__title">Judul Berita 1</div>
-									<small class="news__date">Jan 20, 2015</small>
-								</a>
-							</li>
-						</ul>
+						<ul class="listview listview--news" id="news-container"></ul>
 					</div><!-- .col -->
-					<div class="col-lg-6 col-md-6">
+					<div class="col-md-6">
 						<h2 class="information-title">Events</h1>
-						<ul class="listview listview--events">
-							<li>
-								<a href="#">
-									<div class="event__date col-lg-2 col-md-2 col-sm-2 col-xs-2">
-										<div class="event__date__day">14</div>
-										<div class="event__date__month">Feb</div>
-									</div>
-									<div class="event__title col-lg-10 colmd-10 col-xs-10">Event's Title</div>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<div class="event__date col-lg-2 col-md-2 col-sm-2 col-xs-2">
-										<div class="event__date__day">14</div>
-										<div class="event__date__month">Feb</div>
-									</div>
-									<div class="event__title col-lg-10 colmd-10 col-xs-10">Event's Title</div>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<div class="event__date col-lg-2 col-md-2 col-sm-2 col-xs-2">
-										<div class="event__date__day">14</div>
-										<div class="event__date__month">Feb</div>
-									</div>
-									<div class="event__title col-lg-10 colmd-10 col-xs-10">Event's Title</div>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<div class="event__date col-lg-2 col-md-2 col-sm-2 col-xs-2">
-										<div class="event__date__day">14</div>
-										<div class="event__date__month">Feb</div>
-									</div>
-									<div class="event__title col-lg-10 colmd-10 col-xs-10">Event's Title</div>
-								</a>
-							</li>
-						</ul>
+						<ul class="listview listview--events" id="event-container"></ul>
 					</div><!-- .col -->
 				</div>
 			</div>
 		</section>
 	</main>
+
+	<!-- Handlebars Templates -->
+	
+	<script type="text/x-handlebars-template" id="news-template">
+		{{#each news}}
+		<li>
+			<a href="/news/{{ id }}">
+				<div class="row">
+					<div class="col-xs-2">
+						<div class="news__thumbnail__container">
+							<img src="/uploads/{{ image }}" class="news__thumbnail" alt="{{ title }}">
+						</div>
+					</div>
+					<div class="col-xs-10">
+						<div class="news__title">{{ title }}</div>
+						<small class="news__date">{{ convertToDate insert_date }}</small>
+					</div>
+				</div>
+			</a>
+		</li>
+		{{/each}}
+	</script>
+
+	<script type="text/x-handlebars-template" id="event-template">
+		{{#each events}}
+		<li>
+			<a href="/event/{{ id }}">
+				<div class="event__date col-lg-2 col-md-2 col-sm-2 col-xs-2">
+					<div class="event__date__day">{{ getDate date }}</div>
+					<div class="event__date__month">{{ getMonth date }}</div>
+				</div>
+				<div class="event__name col-lg-10 colmd-10 col-xs-10">{{ name }}</div>
+			</a>
+		</li>
+		{{/each}}
+	</script>
+
 <% include footer.ejs %>

@@ -1,0 +1,21 @@
+<% include header.ejs %>
+	<main>
+		<section class="section section--user">
+			<div class="container">
+				<div class="row">
+					<div class="box col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2">
+						<h1 class="box__title">News</h1>
+						<div class="news">
+							<h2 class="box__subtitle"><%= title %></h2>
+							<small class="news__date"><%= stringToSimpleDate(insert_date) %></small>
+							<div class="image-container">
+								<img src="/uploads/<%= image %>" class="news__image" alt="<%= title %>">
+							</div>
+							<div class="news__content"><%= content %></div>
+						</div>
+					</div><!-- Box End -->
+				</div>
+			</div>
+		</section>
+	</main>
+<% include footer.ejs %>

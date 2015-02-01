@@ -13,6 +13,14 @@ h1,
 .form-control:focus {
 	box-shadow: none;
 }
+.row img {
+	max-width: 100%;
+	height: auto;
+}
+.image-container {
+	overflow: hidden;
+	text-align: center;
+}
 .loader {
 	display: block;
 	margin: 25px auto;
@@ -59,6 +67,9 @@ h1,
 }
 .section {
 	padding: 20px 0;
+}
+.section--dashboard {
+	min-height: 100vh;
 }
 .section--home {
 	background-image: url('../img/bakrie.jpg');
@@ -204,14 +215,16 @@ h1,
 	height: auto;
 }
 .home__title {
-	text-align: center;
+	margin-top: 4em;
 	font-size: 3em;
 	font-weight: bold;
+	text-align: center;
+	text-shadow: 0 6px 15px #fff, 0 -6px 15px #fff;
 }
 .section--odd,
 .section--even {
-	padding-top: 45px;
-	padding-bottom: 45px;
+	padding-top: 60px;
+	padding-bottom: 60px;
 }
 .section--odd {
 	background: #fff;
@@ -231,7 +244,7 @@ h1,
 	padding:0;
 }
 .listview > li {
-	overflow: auto;
+	overflow: hidden;
 	list-style: none;
 }
 .listview > li > a {
@@ -293,7 +306,19 @@ h1,
 	color: #808080;
 	font-style: italic;
 }
-.event__date {
+.news__content,
+.news__image {
+	margin-top: 25px;
+}
+.news__thumbnail__container {
+	height: 40px;
+}
+.listview .event__name {
+	padding-top: 20px;
+	color: #333;
+	font-size: 15px;
+}
+.listview .event__date {
 	color: #fff;
 	max-width: 70px;
 	padding-top: 5px;
@@ -309,14 +334,38 @@ h1,
 .event__date__month {
 	font-size: 15px;
 }
-.event__title {
-	padding-top: 20px;
-	color: #333;
-	font-size: 15px;
+.event__date__container {
+	color: #0E5C83;
+}
+.event__date {
+	font-weight: bold;
+}
+.event__image {
+	margin-top: 20px;
+}
+.event__description {
+	margin-top: 20px;
 }
 .field-profile {
 	min-height: 400px;
 	padding: 25px;
+}
+.sidebar-menu {
+	width: 100%;
+}
+.btn-sidebar-menu {
+	padding-left: 10px;
+	padding-right: 10px;
+	text-align: left;
+}
+.btn-sidebar-menu:active,
+.btn-sidebar-menu:focus {
+	box-shadow: none;
+}
+.visi,
+.misi,
+.alamat {
+	margin-top: 50px;
 }
 /* xs */
 @media (max-width: 767px) {
