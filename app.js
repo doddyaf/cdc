@@ -1260,8 +1260,6 @@ router.post('/api/news', function (req, res) {
 		image: req.files.image.name
 	};
 
-	console.log('News : ' + news.title);
-
 	News.insert(news, responseResult);
 
 });
