@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 25, 2015 at 02:29 PM
+-- Generation Time: Feb 01, 2015 at 01:07 PM
 -- Server version: 5.5.27
 -- PHP Version: 5.4.7
 
@@ -29,17 +29,17 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `alumni_email` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(50) NOT NULL,
-  `is_registered` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `alumni_email`
 --
 
-INSERT INTO `alumni_email` (`id`, `email`, `is_registered`) VALUES
-(1, 'f.rahman.id@gmail.com', 1),
-(2, 'rudi53007@gmail.com', 0);
+INSERT INTO `alumni_email` (`id`, `email`) VALUES
+(1, 'f.rahman.id@gmail.com'),
+(2, 'rudi53007@gmail.com'),
+(3, 'doddyaf@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -151,6 +151,30 @@ INSERT INTO `class` (`id`, `year`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `event`
+--
+
+CREATE TABLE IF NOT EXISTS `event` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `description` text NOT NULL,
+  `date` varchar(10) NOT NULL,
+  `image` text NOT NULL,
+  `insert_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `event`
+--
+
+INSERT INTO `event` (`id`, `name`, `description`, `date`, `image`, `insert_date`) VALUES
+(1, 'Seminar LPKM', 'Lembaga Pengembangan dan Kesejahteraan Mahasiswa(LPKM) -ITI telah menyelenggarakan Seminar "Masih Mau Cuek dengan Kuliahmu?" dengan pembicara Rivalino Shaffar pada tanggal 31 Maret 2010 yang dihadiri oleh kurang lebih 250 mahasiswa dan beberapa dosen dari berbagai Program Studi.', '2014-02-02', 'seminar-lpkm.jpg', '2015-01-31 12:53:34'),
+(2, 'Entrepreneurship Camp Korea-ITI', '16 mahasiwa Korea Selatan dan 16 mahasiswa Indonesia akan ikut serta dalam “KC Startup Festival 2014”, yaitu sebuah entrepreneurship camp di kampus Institut Teknologi Indonesia, Serpong, yang berlangsung dari hari Senin sampai Rabu, tanggal 22 – 24 Desember 2014.\r\n\r\n \r\n\r\nKegiatan selama 3 hari ini merupakan kerjasama antara Korean Entrepreneurship Foundation (KEF) dan Institut Teknologi Indonesia (ITI), dalam rangka merangsang dan mengembangkan minat dan bakat mahasiswa di bidang kewirausahaan.\r\n\r\nInstitut Teknologi Indonesia (ITI), yang berusia 30 tahun di 2014 ini, adalah perguruan tinggi swasta yang berorientasi technopreneur dan menuju visinya sebagai “the Technology based Entrepreneur University”. ITI didirikan atas inisiatif Persatuan Insinyur Indonesia (PII) pada tahun 1984 dan pada saat ini Ketua Dewan Pembinanya adalah Prof. BJ Habibie, yang merupakan salah satu pendirinya.\r\n\r\nFokus dari entrepreneurship camp ini terletak pada pendekatan dan solusi inovatif untuk membangun masa depan yang lebih baik. Sebagai suatu pertemuan kerjasama orang-orang muda yang tertarik pada perubahan dan inovasi, kegiatan ini sangat menghargai pengetahuan, ketrampilan dan pengalaman yang beraneka ragam dari para peserta camp.\r\n\r\nDi hari pertama Senin, peserta memilih tema dan membawa gagasan dan perspektif masing-masing untuk menginspirasi anggota-anggota timnya. Pada hari kedua dan ketiga, tim-tim bekerjasama menguji idenya di pasar dan mengembangkan gagasan prototipnya. Pada hari Rabu, masing-masing tim memaparkan ide solusinya dalam bentuk video clip dan memperoleh umpan balik berharga dari panel pakar dari Korea Selatan.\r\n\r\nKegiatan ini akan menjadi salah satu upaya dalam kerangka memperat hubungan Indonesia-Korea Selatan dan memotivasi generasi muda di Indonesia maupun Korea Selatan untuk membangun jejaring kerjasama kewirausahaan di masa depan. Hal ini selaras dengan arah kebijakan pemerintah saat ini, sebagaimana yang telah diutarakan oleh Presiden Joko Widodo dalam kunjungannya ke Korea Selatan belum lama ini.', '2015-02-20', 'camp-korea-1422786269458.jpg', '2015-02-01 10:24:29');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `gallery`
 --
 
@@ -204,6 +228,29 @@ CREATE TABLE IF NOT EXISTS `information` (
 
 INSERT INTO `information` (`id`, `profile`, `visi`, `misi`, `contact`) VALUES
 (1, 'Career Development Center Institut Teknologi Indonesia atau disingkat CDC ITI merupakan salah satu divisi yang berada di bawah Direktorat Lembaga Pengembangan dan Kesejahteraan Mahasiswa (LPKM) Institut Teknologi Indonesia yang dibentuk pada bulan Desember 2007\n\nSalah satu peran sebuah perguruan tinggi adalah menghasilkan lulusan yang mempunyai kompetensi memadai yang mencakup skill, knowledge dan attitude sehingga para lulusannya dapat diserap industri dan merupakan tanggung jawab ITI untuk dapat menghasilkan lulusan seperti tersebut di atas dengan ciri khas memiliki skill entrepreneur berbasis teknologi yang kemudian dapat disalurkan ke industri-industri yang membutuhkannya atau bahkan menciptakan sendiri peluang-peluang usaha\n\nSalah satu cara untuk menggali informasi berkaitan dengan transisi dari kuliah ke pekerjaan adalah dengan melaksanakan suatu studi yang disebut sebagai Tracer Study yang dimaksud dengan studi mengenai lulusan lembaga penyelenggara pendidikan tinggi.\n\nTracer Study dapat menyediakan informasi untuk kepentingan evaluasi hasil pendidikan tinggi dan selanjutnya dapat digunakan untuk penyempurnaan dan penjaminan kualitas lembaga pendidikan tinggi yang bersangkutan. Disamping itu Tracer Study juga menyediakan informasi berharga mengenai hubungan antara pendidikan tinggi dan dunia kerja professional, menilai relevansi pendidikan tinggi, informasi bagi para pemangku kepentingan, dan kelengkapan persyaratan bagi akreditasi pendidikan tinggi', 'Merupakan Pusat Pengembangan Sumberdaya Kewirausahaan Berbasis Teknologi yang Kompeten dan Berkualitas Bagi Lulusan ITI\r\n', '1. Menyiapkan program kewirausahaan (knowledge & soft skill) didalam kurikulum untuk menciptakan wirausahawan yang inovatif yang berbasis teknologi.\r\n\r\n2. Memberikan dukungan kepada dunia usaha dan pemerintah Indonesia dalam meningkatkan kemajuan dunia usaha melalui kontribusi SDM yang kompeten.\r\n\r\n3. Menjadi penghubung antara ITI dengan dunia industri dalam informasi	ketenagakerjaan dan peluang-peluang usaha.\r\n\r\n4. Update terhadap perkembangan teknologi dan dunia industri.\r\n\r\n5. Membangun citra ITI secara positif karena mampu menempatkan tenaga kerja yang handal di dunia industri.', 'Sekretariat CDC - ITI\r\n\r\nGedung CDC - ITI\r\n\r\nJl. Raya Puspiptek Serpong\r\n\r\nInstitut Teknologi Indonesia\r\n\r\nTelp (021) 7560545\r\n\r\nFax (021) 7560542\r\n\r\nWebsite : www.iti.ac.id\r\n\r\nHARI KERJA - SENIN S/D JUMAT\r\n\r\nJAM KERJA - 08.00 S/D 16.00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `news`
+--
+
+CREATE TABLE IF NOT EXISTS `news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) NOT NULL,
+  `content` text NOT NULL,
+  `image` text NOT NULL,
+  `insert_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `news`
+--
+
+INSERT INTO `news` (`id`, `title`, `content`, `image`, `insert_date`) VALUES
+(1, 'Prestasi Mahasiswa Mesin ITI', 'Tim mahasiswa Teknik Mesin ITI angkatan 2013/2014 berhasil menempati urutan 6 pada lomba  " Aplikasi Disain Sistem Transmisi pada non Ferrous Frame Bike" yang diselenggarakan Universitas Brawijaya Malang tanggal 20 dan 21 November 2014', 'mesin-iti.jpg', '2015-01-31 12:52:27'),
+(2, ' ITI dalam Majalah Internasional "Campus"', 'ITI masuk ke Majalah Internasional "Campus"', 'vol2-1422785595360.bmp', '2015-02-01 10:13:15');
 
 -- --------------------------------------------------------
 
