@@ -367,6 +367,10 @@ h1,
 .alamat {
 	margin-top: 50px;
 }
+.post__date {
+	color: #808080;
+	font-style: italic;
+}
 /* xs */
 @media (max-width: 767px) {
 	.section {
