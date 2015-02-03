@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 01, 2015 at 01:07 PM
--- Server version: 5.5.27
--- PHP Version: 5.4.7
+-- Generation Time: Feb 03, 2015 at 08:10 AM
+-- Server version: 5.6.16
+-- PHP Version: 5.5.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `answer` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `status_id` (`status_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `answer`
@@ -95,7 +95,8 @@ INSERT INTO `answer` (`id`, `user_id`, `bekerja_studi`, `jenis_bekerja_studi_id`
 (16, 16, 1, 2, 1, 1, 5, 5, 'pt nusa dua', 2, 1, 1, 0, 0, 2, 2, 'owner', 'bsd', 'Ya', 'bla ', 'bla'),
 (17, 17, 1, 1, 1, 1, 4, 7, 'cv bahtera', 2, 3, 1, 4, 9, 3, 3, 'marketing', 'bsd nusa loka', 'Ya', 'bla bla', 'bla bla'),
 (18, 18, 2, 0, 2, 2, 0, 0, '', 0, 0, 0, 0, 0, 0, 0, '', '', 'Ya', 'bla ', 'bla'),
-(19, 19, 1, 1, 1, 1, 1, 8, 'cv lokasari', 3, 2, 2, 1, 8, 2, 1, 'konsultan', 'granada bsd', 'Ya', 'bla ', 'bla');
+(19, 19, 1, 1, 1, 1, 1, 8, 'cv lokasari', 3, 2, 2, 1, 8, 2, 1, 'konsultan', 'granada bsd', 'Ya', 'bla ', 'bla'),
+(20, 20, 1, 1, 1, 1, 2, 2, 'bewei', 3, 0, 1, 4, 11, 4, 1, 'brogrammer', 'periuk jaya permai', 'Ya', 'semoga lebih baik', 'semoga lebih maju');
 
 -- --------------------------------------------------------
 
@@ -264,6 +265,7 @@ CREATE TABLE IF NOT EXISTS `post` (
   `content` text NOT NULL,
   `image` text NOT NULL,
   `post_category_id` int(11) NOT NULL,
+  `insert_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
@@ -272,19 +274,19 @@ CREATE TABLE IF NOT EXISTS `post` (
 -- Dumping data for table `post`
 --
 
-INSERT INTO `post` (`id`, `user_id`, `content`, `image`, `post_category_id`) VALUES
-(1, 1, 'a', '', 1),
-(2, 2, 'Aa', '', 1),
-(3, 5, 'Ada job fair nih', '', 2),
-(4, 3, 'aaa', '', 1),
-(5, 3, 'tes', '', 1),
-(6, 3, 'tes2', '', 2),
-(7, 1, 'Tes', '', 1),
-(8, 1, '!@#', '', 1),
-(9, 12, 'PT NUSA BANGSA \n\nRequiretment\nProgrammer java \nminimal S1 teknik informatika\nsallary < 3 juta\n\ncontact person : 12345678', '', 1),
-(10, 12, '- LOWONGAN KANTOR PROMOTOR MUSIC INTERNATIONAL -\n\nSedang membuka lowongan nih. Trilogylive merupakan promotor konser international yang sudah membawa Boyz II Men , Keane , David Cook dan masih banyak lagi , lowongannya :\n\n1. Staff IT Programmer\n2. Web design \n\ncontact person : 94857403', '', 2),
-(11, 1, 'Lowongan PT Unilever\nbla bla bla', '', 2),
-(15, 1, 'Lowongan Kerja\n\nMembuka Lowongan', '', 1);
+INSERT INTO `post` (`id`, `user_id`, `content`, `image`, `post_category_id`, `insert_date`) VALUES
+(1, 1, 'a', '', 1, '2015-02-03 03:21:39'),
+(2, 2, 'Aa', '', 1, '2015-02-03 03:21:39'),
+(3, 5, 'Ada job fair nih', '', 2, '2015-02-03 03:21:39'),
+(4, 3, 'aaa', '', 1, '2015-02-03 03:21:39'),
+(5, 3, 'tes', '', 1, '2015-02-03 03:21:39'),
+(6, 3, 'tes2', '', 2, '2015-02-03 03:21:39'),
+(7, 1, 'Tes', '', 1, '2015-02-03 03:21:39'),
+(8, 1, '!@#', '', 1, '2015-02-03 03:21:39'),
+(9, 12, 'PT NUSA BANGSA \n\nRequiretment\nProgrammer java \nminimal S1 teknik informatika\nsallary < 3 juta\n\ncontact person : 12345678', '', 1, '2015-02-03 03:21:39'),
+(10, 12, '- LOWONGAN KANTOR PROMOTOR MUSIC INTERNATIONAL -\n\nSedang membuka lowongan nih. Trilogylive merupakan promotor konser international yang sudah membawa Boyz II Men , Keane , David Cook dan masih banyak lagi , lowongannya :\n\n1. Staff IT Programmer\n2. Web design \n\ncontact person : 94857403', '', 2, '2015-02-03 03:21:39'),
+(11, 1, 'Lowongan PT Unilever\nbla bla bla', '', 2, '2015-02-03 03:21:39'),
+(15, 1, 'Lowongan Kerja\n\nMembuka Lowongan', '', 1, '2015-02-03 03:21:39');
 
 -- --------------------------------------------------------
 
@@ -357,7 +359,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `address` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `program_id` (`program_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `user`
@@ -382,7 +384,8 @@ INSERT INTO `user` (`id`, `first_name`, `last_name`, `email`, `password`, `dob`,
 (16, 'alumni', 'arsitek', 'alumni_arsitek@gmail.com', '202cb962ac59075b964b07152d234b70', '1989-02-05', 'user', 4, 2008, '021374893', 'pamulang 2'),
 (17, 'alumni', 'mesin', 'alumni_mesin@gmail.com', '202cb962ac59075b964b07152d234b70', '1985-12-11', 'user', 7, 2007, '02732312', 'pamulang 3'),
 (18, 'alumni', 'mesin', 'alumni_mesin1@gmail.com', '202cb962ac59075b964b07152d234b70', '1989-12-08', 'user', 7, 2006, '02139485940', 'nusa indah'),
-(19, 'alumni', 'mekatronika', 'alumni_mekatronika1@gmail.com', '202cb962ac59075b964b07152d234b70', '1990-02-08', 'user', 10, 2010, '0213948402', 'permata pamulang');
+(19, 'alumni', 'mekatronika', 'alumni_mekatronika1@gmail.com', '202cb962ac59075b964b07152d234b70', '1990-02-08', 'user', 10, 2010, '0213948402', 'permata pamulang'),
+(20, 'norris', 'damianus', 'damianus_noris@yahoo.com', '1f78a83bfebd05c7533f4cd1491273e2', '2015-01-07', 'user', 1, 2010, '0818182953', 'ruko newton barat\r\nruko newron barat');
 
 --
 -- Constraints for dumped tables
