@@ -63,6 +63,7 @@
 			<div class="post__user">
 				<a href="/user/{{user_id}}" class="post__user__name">{{first_name}} {{last_name}}</a>
 			</div>
+			<small class="post__date">{{convertToDate insert_date}}</small>
 			<div class="post__content">{{breaklines content}}</div>
 			<div class="post__category"><span class="">Category : </span>{{category_name}}</div>
 		</div>
@@ -74,6 +75,7 @@
 			<div class="post__user">
 				<a href="/user/{{user.id}}" class="post__user__name">{{user.first_name}} {{user.last_name}}</a>
 			</div>
+			<small class="post__date">{{convertToDate insert_date}}</small>
 			<div class="post__content">{{breaklines content}}</div>
 			<div class="post__category"><span class="">Category : </span>{{category_name}}</div>
 		</div>
@@ -84,6 +86,7 @@
 			<div class="post__user">
 				<img src="/images/{{user_image}}" class="post__user__picture" alt="PP"> <a href="/user/{{user.id}}" class="post__user__name">{{user.first_name}} {{user.last_name}}</a>
 			</div>
+			<small class="post__date">{{convertToDate insert_date}}</small>
 			<div class="post__content">{{breaklines content}}</div>
 			<div class="post__category"><span class="">Category : </span>{{category_name}}</div>
 		</div>

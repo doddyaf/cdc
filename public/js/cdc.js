@@ -18,10 +18,19 @@ var CDC = {
 
 	init: function () {
 
+		var monthShortNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+
 		Handlebars.registerHelper('breaklines', function(text) {
 			text = Handlebars.Utils.escapeExpression(text);
 			text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
 			return new Handlebars.SafeString(text);
+		});
+
+		Handlebars.registerHelper('convertToDate', function( text ) {
+			text = Handlebars.Utils.escapeExpression( text );
+			var date = new Date(text);
+			text = monthShortNames[ date.getMonth() ] + ' ' + date.getDate() + ', ' + date.getFullYear();
+			return new Handlebars.SafeString( text );
 		});
 
 		CDC.sourceCdcPost = $("#cdc-post-template").html();
